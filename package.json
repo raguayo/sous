@@ -38,6 +38,8 @@
     "redux": "^3.6.0",
     "redux-logger": "^2.8.1",
     "redux-thunk": "^2.2.0",
+    "semantic-ui-css": "^2.2.12",
+    "semantic-ui-react": "^0.71.3",
     "sequelize": "^4.3.1",
     "socket.io": "^2.0.3"
   },
