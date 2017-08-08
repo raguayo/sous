@@ -1,0 +1,39 @@
+{
+  "parser": "babel-eslint",
+  "env": {
+    "browser": true
+  },
+  "plugins": [
+    "react"
+  ],
+  "extends": [
+    "airbnb"
+  ],
+  "rules": {
+    "react/jsx-filename-extension": [
+      2,
+      {
+        "extensions": [
+          ".js",
+          ".jsx"
+        ]
+      }
+    ],
+    "react/forbid-prop-types": [
+      0
+    ],
+    "react/require-default-props": [
+      0
+    ],
+    "global-require": [
+      0
+    ],
+    "func-names": 0,
+    "no-param-reassign": 0,
+    "semi": 1,
+    "no-unused-vars": 1,
+    "comma-dangle": 1,
+    "max-len": 0,
+    "linebreak-style": 0
+  }
+}
