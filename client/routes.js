@@ -1,18 +1,18 @@
-import React, {Component} from 'react'
-import {connect} from 'react-redux'
-import {Router} from 'react-router'
-import {Route, Switch} from 'react-router-dom'
-import PropTypes from 'prop-types'
-import history from './history'
-import {Main, Login, Signup, UserHome} from './components'
-import {me} from './store'
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { Router } from 'react-router';
+import { Route, Switch } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import history from './history';
+import { Main, Login, Signup, UserHome } from './components';
+import { me } from './store';
 
 /**
  * COMPONENT
  */
 class Routes extends Component {
-  componentDidMount () {
-    this.props.loadInitialData()
+  componentDidMount() {
+    this.props.loadInitialData();
   }
 
   render () {
