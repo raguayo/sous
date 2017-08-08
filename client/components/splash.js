@@ -7,7 +7,7 @@ import {
   Image,
   Segment,
 } from 'semantic-ui-react';
-import Link from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 export default class Splash extends Component {
   state = {}
@@ -18,7 +18,7 @@ export default class Splash extends Component {
         <Segment
           inverted
           textAlign='center'
-          style={{ minHeight: 700, padding: '1em 0em' }}
+          style={{ minHeight: 700, padding: '1em 0em', backgroundImage: "url('https://ak9.picdn.net/shutterstock/videos/4879691/thumb/1.jpg')" }}
           vertical
         >
 
@@ -35,7 +35,7 @@ export default class Splash extends Component {
               inverted
               style={{ fontSize: '1.7em', fontWeight: 'normal' }}
             />
-            <Button primary size="large" as={Link} to='/login'>
+            <Button as={Link} to='/login' primary size="large" >
               Log In
               </Button>
             <Button primary size="large" as={Link} to='/signup'>
