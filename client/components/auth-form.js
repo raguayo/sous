@@ -1,4 +1,5 @@
-// import React from 'react'
+import React from 'react';
+import { Form, Grid, Header, Image, Message, Segment } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
@@ -7,35 +8,8 @@ import { auth } from '../store';
 // /**
 //  * COMPONENT
 //  */
-// const AuthForm = (props) => {
-//   const {name, displayName, handleSubmit, error} = props
-
-//   return (
-//     <div>
-//       <form onSubmit={handleSubmit} name={name}>
-//         <div>
-//           <label htmlFor='email'><small>Email</small></label>
-//           <input name='email' type='text' />
-//         </div>
-//         <div>
-//           <label htmlFor='password'><small>Password</small></label>
-//           <input name='password' type='password' />
-//         </div>
-//         <div>
-//           <button type='submit'>{displayName}</button>
-//         </div>
-//         {error && error.response && <div> {error.response.data} </div>}
-//       </form>
-//       <a href='/auth/google'>{displayName} with Google</a>
-//     </div>
-//   )
-// }
-
-import React from 'react'
-import { Button, Form, Grid, Header, Image, Message, Segment } from 'semantic-ui-react'
-
 const AuthForm = ({ name, displayName, handleSubmit, error }) => (
-  <div className='login-form'>
+  <div className="login-form">
     <style>{`
       body > div,
       body > div > div,
@@ -44,37 +18,37 @@ const AuthForm = ({ name, displayName, handleSubmit, error }) => (
       }
     `}</style>
     <Grid
-      textAlign='center'
+      textAlign="center"
       style={{ height: '100%' }}
-      verticalAlign='middle'
+      verticalAlign="middle"
     >
       <Grid.Column style={{ maxWidth: 450 }}>
-        <Header as='h2' color='teal' textAlign='center'>
-          <Image src='/Icon-Placeholder.png' />
+        <Header as="h2" color="teal" textAlign="center">
+          <Image src="/Icon-Placeholder.png" />
           {
             displayName === 'Login' ? 'Log-in to your account' : 'Create an account!'
           }
         </Header>
-        <Form size='large' onSubmit={handleSubmit} name={name}>
+        <Form size="large" onSubmit={handleSubmit} name={name}>
           <Segment stacked>
             <Form.Input
               name="email"
               fluid
-              icon='user'
-              iconPosition='left'
-              placeholder='E-mail address'
+              icon="user"
+              iconPosition="left"
+              placeholder="E-mail address"
             />
             <Form.Input
               name="password"
               fluid
-              icon='lock'
-              iconPosition='left'
-              placeholder='Password'
-              type='password'
+              icon="lock"
+              iconPosition="left"
+              placeholder="Password"
+              type="password"
             />
 
-            <Form.Button color='teal' fluid size='large'>{displayName}</Form.Button>
-            <Form.Button color='standard' fluid size='large' as='a' href='/auth/google' >{displayName} with Google</Form.Button>
+            <Form.Button color="teal" fluid size="large">{displayName}</Form.Button>
+            <Form.Button color="standard" fluid size="large" as="a" href="/auth/google" >{displayName} with Google</Form.Button>
           </Segment>
         </Form>
         {
@@ -83,10 +57,10 @@ const AuthForm = ({ name, displayName, handleSubmit, error }) => (
         {
           displayName === 'Login' ?
             <Message>
-              New to us? <Link to='/signup'>Sign Up</Link>
+              New to us? <Link to="/signup">Sign Up</Link>
             </Message> :
             <Message>
-              Already have an account? <Link to='/login'>Login</Link>
+              Already have an account? <Link to="/login">Login</Link>
             </Message>
         }
       </Grid.Column>
@@ -122,16 +96,16 @@ const mapDispatch = (dispatch) => {
   return {
     handleSubmit(evt) {
       evt.preventDefault()
-      const formName = evt.target.name
-      const email = evt.target.email.value
-      const password = evt.target.password.value
-      dispatch(auth(email, password, formName))
+      const formName = evt.target.name;
+      const email = evt.target.email.value;
+      const password = evt.target.password.value;
+      dispatch(auth(email, password, formName));
     }
   }
 }
 
-export const Login = connect(mapLogin, mapDispatch)(AuthForm)
-export const Signup = connect(mapSignup, mapDispatch)(AuthForm)
+export const Login = connect(mapLogin, mapDispatch)(AuthForm);
+export const Signup = connect(mapSignup, mapDispatch)(AuthForm);
 
 /**
  * PROP TYPES
@@ -140,5 +114,5 @@ AuthForm.propTypes = {
   name: PropTypes.string.isRequired,
   displayName: PropTypes.string.isRequired,
   handleSubmit: PropTypes.func.isRequired,
-  error: PropTypes.object
+  error: PropTypes.object,
 }
