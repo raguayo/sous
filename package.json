@@ -1,0 +1,20 @@
+{
+  "name": "fsa",
+  "version": "1.0.0",
+  "description": "",
+  "main": "polo.js",
+  "dependencies": {
+    "color": "^1.0.3",
+    "moment": "^2.18.1",
+    "prop-types": "^15.5.10",
+    "react-native-extended-stylesheet": "^0.4.0",
+    "shapeshift": "^1.0.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

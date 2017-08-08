@@ -1,0 +1,9 @@
+# .babelrc in root breaks react-native packager see issue #1
+.babelrc
+.editorconfig
+.eslintrc
+.jscsrc
+.idea
+.travis.yml
+/coverage
+/hooks

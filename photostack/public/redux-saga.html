@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Redux-Saga">
+    <meta name="author" content="Rick Aguayo">
+    <title>Redux-Saga</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+  </head>
+  <body>
+    <div>
+      <h1 style="text-align: center;">What is Redux Saga?</h1>
+      <ul>
+        <li>redux-saga is a library that aims to make handling side-effects (i.e. asynchronous things like data fetching) on React/Redux applications easier and better.</li>
+        <li>A saga is like a separate thread in your application that's solely responsible for side effects.</li>
+        <li>ES6 Generators are used to make your async code look more synchronous making it easier to read, write and test.</li>
+      </ul>
+    </div>
+    <div>
+      <h1 style="text-align: center;">Redux Saga Watchers & Workers</h1>
+      <ul>
+        <li>The main saga file is usually split into two different types of sagas: workers & watchers</li>
+        <li>Watcher saga's see every action this is dispatched to the redux store, if it matches the action they are told to handle, they assign it to their worker saga</li>
+      </ul>
+    </div>
+    <div>
+      <h1 style="text-align: center;">Saga Helpers</h1>
+      <ul>
+        <li>takeEvery - takes eery matching action and runs the instructed worker saga, can run concurrent tasks</li>
+        <li>takeLatest - takes every matching action and runs the instructed saga but cancels any previous saga tasks if still running</li>
+      </ul>
+    </div>
+    <div>
+      <h1 style="text-align: center;">Redux Saga Advantages</h1>
+      <ul>
+        <li>Synchronous looking code (hides away asynchronicity)</li>
+        <li>Easy to write test with little to no mocking (for asynchronous code by checking values as iterating through generated function and yielding)</li>
+        <li>Sagas are composable (*yield)</li>
+        <li>Action creators are pure</li>
+        <li>Isolated side-effect code to a single area of the application (sagas.js)</li>
+        <li>Many helper functions & solid documentation</li>
+      </ul>
+    </div>
+    <div>
+      <h1 style="text-align: center;">Immutable.js</h1>
+        <ul>
+          <li><a href="http://thomastuts.com/blog/immutable-js-101-maps-lists.html">Immutable.js 101</a></li>
+        </ul>
+      </p>
+    </div>
+      <script src="./bundle.js"></script>
+    </body>
+  </html>
