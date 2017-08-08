@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import history from './history';
 import { Main, Login, Signup, UserHome } from './components';
 import { me } from './store';
-
+import Splash from './components/splash';
 /**
  * COMPONENT
  */
@@ -33,7 +33,7 @@ class Routes extends Component {
                 </Switch>
             }
             {/* Displays our Login component as a fallback */}
-            <Route component={Login} />
+            <Route component={Splash} />
           </Switch>
         </Main>
       </Router>

@@ -8,7 +8,6 @@ import {
   Segment,
 } from 'semantic-ui-react';
 import Link from 'react-router-dom';
-import Footer from './footer';
 
 export default class Splash extends Component {
   state = {}
@@ -81,9 +80,6 @@ export default class Splash extends Component {
               </Grid.Column>
             </Grid.Row>
           </Grid>
-        </Segment>
-        <Segment>
-          <Footer />
         </Segment>
       </div>
     );

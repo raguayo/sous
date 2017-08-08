@@ -2,7 +2,7 @@ import React from 'react';
 import { Segment, Container, Grid, Header, List } from 'semantic-ui-react';
 
 
-export default Footer = () => (
+const Footer = () => (
   <Segment inverted vertical style={{ padding: '5em 0em' }}>
     <Container>
       <Grid divided inverted stackable>
@@ -36,4 +36,6 @@ export default Footer = () => (
       </Grid>
     </Container>
   </Segment>
-)
+);
+
+export default Footer;
