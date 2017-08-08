@@ -31,6 +31,16 @@ const AuthForm = ({ name, displayName, handleSubmit, error }) => (
         </Header>
         <Form size="large" onSubmit={handleSubmit} name={name}>
           <Segment stacked>
+            {
+              displayName === 'Sign Up' ?
+                <Form.Input
+                  name="username"
+                  fluid
+                  icon="id badge"
+                  iconPosition="left"
+                  placeholder="Name"
+                /> : null
+            }
             <Form.Input
               name="email"
               fluid
@@ -95,11 +105,12 @@ const mapSignup = (state) => {
 const mapDispatch = (dispatch) => {
   return {
     handleSubmit(evt) {
-      evt.preventDefault()
+      evt.preventDefault();
       const formName = evt.target.name;
       const email = evt.target.email.value;
       const password = evt.target.password.value;
-      dispatch(auth(email, password, formName));
+      const username = evt.target.username.value;
+      dispatch(auth(email, password, username, formName));
     }
   }
 }

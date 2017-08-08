@@ -18,7 +18,8 @@ router.post('/login', (req, res, next) => {
 })
 
 router.post('/signup', (req, res, next) => {
-  User.create(req.body)
+  const { email, password, username } = req.body;
+  User.create({ email, password, name: username })
     .then(user => {
       req.login(user, err => err ? next(err) : res.json(user))
     })
