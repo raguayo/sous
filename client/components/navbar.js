@@ -1,19 +1,21 @@
 import React from 'react';
 import { Button, Container, Menu } from 'semantic-ui-react';
 import { connect } from 'react-redux';
+import { logout } from '../store/user';
 
-function Navbar() {
+function Navbar(props) {
+  const user = props.currentUser
   return (
-    <Menu fixed='top' size='large'>
+    <Menu fixed="top" size="large">
       <Container>
         <Menu.Item as='a'>Logo</Menu.Item>
         <Menu.Item as='a' active>List</Menu.Item>
         <Menu.Item as='a'>Grocery List</Menu.Item>
         <Menu.Item as='a'>Recipe History</Menu.Item>
-        <Menu.Item as='a'>User</Menu.Item>
+        <Menu.Item as='a'>{user.name}</Menu.Item>
         <Menu.Menu position='right'>
           <Menu.Item className='item'>
-            <Button as='a'>Log out</Button>
+            <Button as='a' onClick={props.logout}>Log out</Button>
           </Menu.Item>
         </Menu.Menu>
       </Container>
@@ -21,4 +23,14 @@ function Navbar() {
   );
 }
 
-export default connect(null, null)(Navbar);
+const mapState = state => ({
+  currentUser: state.user,
+});
+
+const mapDispatch = dispatch => ({
+  logout: () => {
+    dispatch(logout());
+  },
+});
+
+export default connect(mapState, mapDispatch)(Navbar);

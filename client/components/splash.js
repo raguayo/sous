@@ -17,28 +17,28 @@ export default class Splash extends Component {
       <div>
         <Segment
           inverted
-          textAlign='center'
-          style={{ minHeight: 700, padding: '1em 0em', backgroundImage: "url('https://ak9.picdn.net/shutterstock/videos/4879691/thumb/1.jpg')" }}
+          textAlign="center"
+          style={styles.backgroundImage}
           vertical
         >
 
           <Container text>
             <Header
-              as='h1'
-              content='A la Cart'
+              as="h1"
+              content="A la Cart"
               inverted
-              style={{ fontSize: '4em', fontWeight: 'normal', marginBottom: 0, marginTop: '3em' }}
+              style={styles.headText}
             />
             <Header
-              as='h2'
-              content='Sous for You!'
+              as="h2"
+              content="Sous for You!"
               inverted
-              style={{ fontSize: '1.7em', fontWeight: 'normal' }}
+              style={styles.subText}
             />
-            <Button as={Link} to='/login' primary size="large" >
+            <Button as={Link} to="/login" primary size="large" >
               Log In
               </Button>
-            <Button primary size="large" as={Link} to='/signup'>
+            <Button primary size="large" as={Link} to="/signup">
               Sign In
               </Button>
           </Container>
@@ -48,17 +48,17 @@ export default class Splash extends Component {
           <Grid container stackable verticalAlign='middle'>
             <Grid.Row>
               <Grid.Column width={8}>
-                <Header as='h3' style={{ fontSize: '2em' }}>YUM YUM</Header>
+                <Header as="h3" style={{ fontSize: '2em' }}>YUM YUM</Header>
                 <p style={{ fontSize: '1.33em' }}>
                   Get all your food in one place!
                 </p>
               </Grid.Column>
-              <Grid.Column floated='right' width={6}>
+              <Grid.Column floated="right" width={6}>
                 <Image
                   bordered
                   rounded
-                  size='large'
-                  src='/assets/images/wireframe/white-image.png'
+                  size="large"
+                  src="/assets/images/wireframe/white-image.png"
                 />
               </Grid.Column>
             </Grid.Row>
@@ -85,3 +85,26 @@ export default class Splash extends Component {
     );
   }
 }
+
+let styles = {
+  backgroundImage: {
+    minHeight: 700,
+    padding: '1em 0em',
+    backgroundImage: "url('https://ak9.picdn.net/shutterstock/videos/4879691/thumb/1.jpg",
+    backgroundSize: 'cover',
+  },
+  headText: {
+    color: '#CC1100',
+    fontFamily: 'Livory',
+    fontSize: '6em',
+    fontWeight: 'normal',
+    marginBottom: 0,
+    marginTop: '3em',
+  },
+  subText: {
+    color: '#CC1100',
+    fontFamily: 'sans-serif',
+    fontSize: '3em',
+    fontWeight: 'normal',
+  },
+};

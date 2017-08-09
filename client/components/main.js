@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { logout } from '../store';
 import Footer from './footer';
+import Navbar from './navbar';
 
 /**
  * COMPONENT
@@ -12,10 +12,12 @@ import Footer from './footer';
  *  rendered out by the component's `children`.
  */
 const Main = (props) => {
-  const { children, handleClick, isLoggedIn } = props;
+  const { children, isLoggedIn } = props;
 
   return (
     <div>
+      {isLoggedIn ?
+        <Navbar /> : null }
       {children}
       <Footer />
     </div>
@@ -27,21 +29,13 @@ const Main = (props) => {
  */
 const mapState = (state) => {
   return {
-    isLoggedIn: !!state.user.id
-  };
-};
-
-const mapDispatch = (dispatch) => {
-  return {
-    handleClick() {
-      dispatch(logout())
-    },
+    isLoggedIn: !!state.user.id,
   };
 };
 
 // The `withRouter` wrapper makes sure that updates are not blocked
 // when the url changes
-export default withRouter(connect(mapState, mapDispatch)(Main))
+export default withRouter(connect(mapState, null)(Main));
 
 /**
  * PROP TYPES
@@ -49,5 +43,5 @@ export default withRouter(connect(mapState, mapDispatch)(Main))
 Main.propTypes = {
   children: PropTypes.object,
   handleClick: PropTypes.func.isRequired,
-  isLoggedIn: PropTypes.bool.isRequired
+  isLoggedIn: PropTypes.bool.isRequired,
 }
