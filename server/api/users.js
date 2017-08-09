@@ -10,5 +10,5 @@ router.get('/', (req, res, next) => {
     attributes: ['id', 'email']
   })
     .then(users => res.json(users))
-    .catch(next)
-})
+    .catch(next);
+});
