@@ -30,27 +30,28 @@ router.post('/', (req, res, next) => {
       numServings: req.body.numServings,
     },
   })
-    .spread((newRecipe, isCreated) => {
-      if (isCreated) {
-        const arrIngredients = req.body.ingredients.split(',');
-        const arrObjIngredients = [];
-        arrIngredients.forEach((ingredient) => {
-          Ingredient.findOrCreate({
-            where: {
-              name: ingredient,
-            },
-          })
-            .spread((objIngredient) => {
-              newRecipe.addIngredient(objIngredient);
-            })
-            .catch(next);
-        });
-        res.status(201).json(newRecipe);
-      } else {
-        console.log('Recipe already existed.');
-        next();
-      }
-    });
+  .spread((newRecipe, isCreated) => {
+    if (isCreated) {
+      const arrIngredients = req.body.ingredients.split(',');
+      const arrIngredientPromises = arrIngredients.map((ingredient) => {
+        return Ingredient.findOrCreate({
+          where: {
+            name: ingredient,
+          },
+        })
+        .then(([ing, blnCreated]) => ing)
+        .catch(next);
+      });
+      return Promise.all([newRecipe, ...arrIngredientPromises])
+      .then(([recipe, ...ingredients]) => {
+        return recipe.addIngredients(ingredients);
+      })
+      .then((nuevoRecipe) => res.status(201).json(nuevoRecipe))
+      .catch(next);
+    } else {
+      res.sendStatus(304);
+    }
+  });
 });
 
 router.put('/:id', (req, res, next) => {
