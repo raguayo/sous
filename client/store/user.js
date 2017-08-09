@@ -28,7 +28,7 @@ export const me = () =>
         dispatch(getUser(res.data || defaultUser)))
       .catch(err => console.log(err))
 
-export const auth = (email, password, username, method) =>
+export const auth = (email, password, method, username) =>
   dispatch =>
     axios.post(`/auth/${method}`, { email, password, username })
       .then(res => {
