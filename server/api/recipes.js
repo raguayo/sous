@@ -16,15 +16,9 @@ router.get('/:id', (req, res, next) => {
 });
 
 router.post('/', (req, res, next) => {
-  console.log('I am here!!!!!!!!!!!!!!!!')
   console.log('req.body: ', req.body);
-  Recipe.findOrCreate({
-    where: {
-      title: req.body.title,
-      author: req.body.author,
-    },
-  })
-    .spread((newRecipe, isCreated) => {
+  Recipe.create(req.body)
+    .then((newRecipe) => {
       res.status(201).json(newRecipe);
     });
 });

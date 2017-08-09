@@ -10,11 +10,11 @@ const Recipe = db.define('recipe', {
   },
   author: {
     type: Sequelize.STRING,
-    // allowNull: false,
+    allowNull: false,
   },
   recipeUrl: {
     type: Sequelize.STRING,
-    // allowNull: false,
+    allowNull: false,
     // validate: {
     //   isUrl: true,
     // },
@@ -24,7 +24,7 @@ const Recipe = db.define('recipe', {
   },
   siteName: {
     type: Sequelize.STRING,
-    // allowNull: false,
+    allowNull: false,
   },
   tags: {
     type: Sequelize.ARRAY(Sequelize.STRING),
