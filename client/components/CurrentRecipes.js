@@ -4,10 +4,10 @@ import { Container, Grid, Header, Image, Message, Segment } from 'semantic-ui-re
 export default function CurrentRecipe() {
   return (
     <Container style={{ padding: '5em 0em' }}>
-      <Header as='h2'>Attached Content</Header>
+      <Header as='h2'>Your Currently Selected Recipes</Header>
       <Segment.Group>
         <Segment>
-          <p>Top</p>
+          <p>Your currently selected recipes:</p>
         </Segment>
         <Segment.Group>
           <Segment>
@@ -21,21 +21,7 @@ export default function CurrentRecipe() {
           </Segment>
         </Segment.Group>
         <Segment>
-          <p>Middle</p>
-        </Segment>
-        <Segment.Group horizontal>
-          <Segment>
-            <p>Top</p>
-          </Segment>
-          <Segment>
-            <p>Middle</p>
-          </Segment>
-          <Segment>
-            <p>Bottom</p>
-          </Segment>
-        </Segment.Group>
-        <Segment>
-          <p>Bottom</p>
+          <p>Clear Recipe List</p>
         </Segment>
       </Segment.Group>
     </Container>
