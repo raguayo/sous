@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Button, Container, Menu } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { logout } from '../store/user';
@@ -15,7 +16,7 @@ function Navbar(props) {
         <Menu.Item as='a'>{user.name}</Menu.Item>
         <Menu.Menu position='right'>
           <Menu.Item className='item'>
-            <Button as='a' onClick={props.logout}>Log out</Button>
+            <Button as={Link} to={'/'}onClick={props.logout}>Log out</Button>
           </Menu.Item>
         </Menu.Menu>
       </Container>
