@@ -6,7 +6,7 @@ const Recipe = db.define('recipe', {
   title: {
     type: Sequelize.STRING,
     unique: true,
-    // allowNull: false,
+    allowNull: false,
   },
   author: {
     type: Sequelize.STRING,
@@ -28,10 +28,6 @@ const Recipe = db.define('recipe', {
   },
   tags: {
     type: Sequelize.ARRAY(Sequelize.STRING),
-  },
-  isFavorite: {
-    type: Sequelize.BOOLEAN,
-    defaultValue: false,
   },
   numServings: {
     type: Sequelize.INTEGER,
