@@ -1,17 +1,17 @@
 import React from 'react';
-import { Container, Grid, Header, Image, Message, Segment } from 'semantic-ui-react';
+import { Container, Grid, Header, Image, Message, Segment, Button } from 'semantic-ui-react';
 
 export default function CurrentRecipe() {
   return (
     <Container style={{ padding: '5em 0em' }}>
       <Header as='h2'>Your Currently Selected Recipes</Header>
       <Segment.Group>
-        <Segment>
-          <p>Your currently selected recipes:</p>
-        </Segment>
         <Segment.Group>
           <Segment>
-            <p>Nested Top</p>
+            <Grid>
+              <Grid.Column floated='left' width={12}><p>Nested Top</p></Grid.Column>
+              <Grid.Column floated='right' width={4}><p>Test</p></Grid.Column>
+            </Grid>
           </Segment>
           <Segment>
             <p>Nested Middle</p>
@@ -21,9 +21,12 @@ export default function CurrentRecipe() {
           </Segment>
         </Segment.Group>
         <Segment>
-          <p>Clear Recipe List</p>
+          <Button>View Your Grocery List!</Button>
+          <Button>Clear Recipe List</Button>
         </Segment>
       </Segment.Group>
     </Container>
   );
 }
+
+
