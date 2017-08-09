@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { Recipe } = require('../db/models');
+const { Recipe, Ingredient } = require('../db/models');
 
 module.exports = router;
 
@@ -32,8 +32,19 @@ router.post('/', (req, res, next) => {
   })
     .spread((newRecipe, isCreated) => {
       if (isCreated) {
-        console.log('req.body.ingredients: ', req.body.ingredients);
-        // newRecipe.addIngredients(req.body.ingredients);
+        const arrIngredients = req.body.ingredients.split(',');
+        const arrObjIngredients = [];
+        arrIngredients.forEach((ingredient) => {
+          Ingredient.findOrCreate({
+            where: {
+              name: ingredient,
+            },
+          })
+            .spread((objIngredient) => {
+              newRecipe.addIngredient(objIngredient);
+            })
+            .catch(next);
+        });
         res.status(201).json(newRecipe);
       } else {
         console.log('Recipe already existed.');
