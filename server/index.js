@@ -73,7 +73,7 @@ const startListening = () => {
 
 }
 
-const isForceOn = false;
+const isForceOn = true;
 const syncDb = () => db.sync({ force: isForceOn })
 
 // This evaluates as true when this file is run directly from the command line,

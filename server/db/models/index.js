@@ -3,6 +3,7 @@ const Recipe = require('./recipe');
 const Ingredient = require('./ingredient');
 const GroceryList = require('./grocery-list');
 const RecipeIngredient = require('./recipe-ingredient');
+const UserRecipe = require('./user-recipe');
 
 /**
  * If we had any associations to make, this would be a great place to put them!
@@ -29,5 +30,5 @@ GroceryList.belongsToMany(Recipe, { through: 'recipes_grocery_lists' });
  * instead of: const User = require('../db/models/user')
  */
 module.exports = {
-  User, Recipe, Ingredient, GroceryList, RecipeIngredient,
+  User, Recipe, Ingredient, GroceryList, RecipeIngredient, UserRecipe,
 };
