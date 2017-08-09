@@ -30,8 +30,13 @@ router.post('/', (req, res, next) => {
       numServings: req.body.numServings,
     },
   })
-    .then((newRecipe) => {
-      res.status(201).json(newRecipe);
+    .spread((newRecipe, isCreated) => {
+      if (isCreated) {
+        newRecipe.addIngredients(req.body.ingredients);
+        res.status(201).json(newRecipe);
+      } else {
+        console.log('Recipe already existed.');
+      }
     });
 });
 
@@ -53,6 +58,7 @@ router.delete('/:id', (req, res, next) => {
     where: { id: req.params.id }
   })
     .then((rowsDeleted) => {
+      console.log('rows deleted: ', rowsDeleted);
       res.sendStatus(204);
     })
     .catch(next);
