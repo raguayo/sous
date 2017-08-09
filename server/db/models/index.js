@@ -10,10 +10,16 @@ const GroceryList = require('./grocery-list');
  *    BlogPost.belongsTo(User)
  */
 User.belongsTo(GroceryList);
-User.belongsTo(GroceryList, { through: 'users_groceryLists' });
+// User.belongsTo(GroceryList, { through: 'users_groceryLists' });
+
 User.belongsToMany(Recipe, { through: 'users_recipes' });
+Recipe.belongsToMany(User, { through: 'users_recipes' });
+
 Recipe.belongsToMany(Ingredient, { through: 'recipes_ingredients' });
+Ingredient.belongsToMany(Recipe, { through: 'recipes_ingredients' });
+
 Recipe.belongsToMany(GroceryList, { through: 'recipes_grocery_lists' });
+GroceryList.belongsToMany(Recipe, { through: 'recipes_grocery_lists' });
 
 /**
  * We'll export all of our models here, so that any time a module needs a model,

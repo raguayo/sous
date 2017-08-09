@@ -15,15 +15,16 @@ router.get('/:id', (req, res, next) => {
     .catch(next);
 });
 
-// router.post('/', (req, res, next) => {
-//   console.log('req.body: ', req.body);
-//   Recipe.findOrCreate({
-//     where: {
-//       title: req.body.title,
-//       author: req.body.author,
-//     },
-//   })
-//     .spread((newRecipe, isCreated) => {
-//       res.status(201).json(newRecipe);
-//     });
-// });
+router.post('/', (req, res, next) => {
+  console.log('I am here!!!!!!!!!!!!!!!!')
+  console.log('req.body: ', req.body);
+  Recipe.findOrCreate({
+    where: {
+      title: req.body.title,
+      author: req.body.author,
+    },
+  })
+    .spread((newRecipe, isCreated) => {
+      res.status(201).json(newRecipe);
+    });
+});
