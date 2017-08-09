@@ -32,10 +32,12 @@ router.post('/', (req, res, next) => {
   })
     .spread((newRecipe, isCreated) => {
       if (isCreated) {
-        newRecipe.addIngredients(req.body.ingredients);
+        console.log('req.body.ingredients: ', req.body.ingredients);
+        // newRecipe.addIngredients(req.body.ingredients);
         res.status(201).json(newRecipe);
       } else {
         console.log('Recipe already existed.');
+        next();
       }
     });
 });
