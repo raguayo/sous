@@ -14,7 +14,7 @@ import Navbar from './navbar';
  */
 const Main = (props) => {
 
-  const { children, isLoggedIn, handleClick } = props;
+  const { children, isLoggedIn } = props;
 
   return (
     <div>
