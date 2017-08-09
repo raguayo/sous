@@ -89,9 +89,9 @@ db.sync({ force: true })
     return Promise.all([chicken, buns, cobbler, bread, steak, user1, user2, user3, list1, list2, list3]);
   })
   .then(([chicken, buns, cobbler, bread, steak, user1, user2, user3, list1, list2, list3]) => {
-    user1.setGroceryList(list1);
-    user2.setGroceryList(list2);
-    user3.setGroceryList(list3);
+    user1.setGrocerylist(list1);
+    user2.setGrocerylist(list2);
+    user3.setGrocerylist(list3);
 
     return Promise.all([
       Ingredient.create({
@@ -154,8 +154,14 @@ db.sync({ force: true })
         unit: 'pound',
         searchTerms: ['chicken']
       }),
-      chicken, buns, cobbler, bread, steak,
-      list1, list2, list3,
+      chicken,
+      buns,
+      cobbler,
+      bread,
+      steak,
+      list1,
+      list2,
+      list3,
     ]);
   })
   .then(([milk, eggs, butter, sugar, peaches, blueberries, basil, garlic, worcestershire, chickenIng, chicken, buns, cobbler, bread, steak, list1, list2, list3]) => {
@@ -167,9 +173,10 @@ db.sync({ force: true })
 
     return Promise.all([buns, cobbler, bread, steak, chicken, list1, list2, list3])
   })
-  .then((buns, cobbler, bread, steak, chicken, list1, list2, list3) => {
-    list1.addRecipes([chicken, cobbler]);
-    list2.addRecipes([buns, steak]);
+  .then(([buns, cobbler, bread, steak, chicken, list1, list2, list3]) => {
+    const promise1 = list1.addRecipes([chicken, cobbler]);
+    const promise2 = list2.addRecipes([buns, steak]);
+    return Promise.all([promise1, promise2]);
   })
   .then(() => {
     console.log('finished seeding');
