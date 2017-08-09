@@ -4,7 +4,15 @@ import { Router } from 'react-router';
 import { Route, Switch } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import history from './history';
-import { Main, Login, Signup, UserHome, CurrentRecipes, Splash } from './components';
+import {
+  Main,
+  Login,
+  Signup,
+  UserHome,
+  CurrentRecipes,
+  Splash,
+  GroceryList,
+} from './components';
 import { me } from './store';
 /**
  * COMPONENT
@@ -30,6 +38,7 @@ class Routes extends Component {
                   {/* Routes placed here are only available after logging in */}
                   <Route path="/home" component={UserHome} />
                   <Route path="/recipes" component={CurrentRecipes} />
+                  <Route path="/grocery-list" component={GroceryList} />
                 </Switch>
             }
             {/* Displays our Login component as a fallback */}
