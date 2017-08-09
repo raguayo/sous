@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+
 import { withRouter } from 'react-router-dom';
 import Footer from './footer';
 import Navbar from './navbar';
@@ -12,6 +13,7 @@ import Navbar from './navbar';
  *  rendered out by the component's `children`.
  */
 const Main = (props) => {
+
   const { children, isLoggedIn, handleClick } = props;
 
   return (
