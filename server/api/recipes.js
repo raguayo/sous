@@ -24,7 +24,7 @@ router.post('/', (req, res, next) => {
 
 router.put('/:id', (req, res, next) => {
   Recipe.findById(req.params.id)
-    .then(recipe => {
+    .then((recipe) => {
       if (!recipe) {
         return res.sendStatus(404);
       } else {
@@ -39,7 +39,7 @@ router.delete('/:id', (req, res, next) => {
   Recipe.destroy({
     where: { id: req.params.id }
   })
-    .then(rowsDeleted => {
+    .then((rowsDeleted) => {
       res.sendStatus(204);
     })
     .catch(next);
