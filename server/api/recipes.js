@@ -16,9 +16,31 @@ router.get('/:id', (req, res, next) => {
 });
 
 router.post('/', (req, res, next) => {
-  console.log('req.body: ', req.body);
   Recipe.create(req.body)
     .then((newRecipe) => {
       res.status(201).json(newRecipe);
     });
 });
+
+router.put('/:id', (req, res, next) => {
+  Recipe.findById(req.params.id)
+    .then(recipe => {
+      if (!recipe) {
+        return res.sendStatus(404);
+      } else {
+        return recipe.update(req.body);
+      }
+    })
+    .then(updatedRecipe => res.send(updatedRecipe))
+    .catch(next);
+});
+
+router.delete('/:id', (req, res, next) => {
+  Recipe.destroy({
+    where: { id: req.params.id }
+  })
+    .then(rowsDeleted => {
+      res.sendStatus(204);
+    })
+    .catch(next);
+})
