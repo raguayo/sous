@@ -16,9 +16,17 @@ router.get('/:id', (req, res, next) => {
 });
 
 router.post('/', (req, res, next) => {
-  GroceryList.create(req.body)
-    .then((newGroceryList) => {
-      res.status(201).json(newGroceryList);
+  GroceryList.findOrCreate({
+    where: {
+      name: req.body.name,
+    },
+  })
+    .spread((newGroceryList, isCreated) => {
+      if (isCreated) {
+        res.status(201).json(newGroceryList);
+      } else {
+        console.log('Grocery list already existed.');
+      }
     });
 });
 

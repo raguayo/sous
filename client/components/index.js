@@ -9,4 +9,4 @@ export { Login, Signup } from './auth-form';
 export { default as CurrentRecipes } from './CurrentRecipes';
 export { default as Splash } from './splash';
 export { default as GroceryList } from './groceryList';
-
+export { default as RecipeHistory } from './history';
