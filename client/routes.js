@@ -16,7 +16,7 @@ import {
   GroceryList,
 } from './components';
 
-import { me } from './store';
+import { me, fetchPrevRecipes } from './store';
 /**
  * COMPONENT
  */
@@ -39,7 +39,6 @@ class Routes extends Component {
               isLoggedIn &&
                 <Switch>
                   {/* Routes placed here are only available after logging in */}
-                  <Route path="/home" component={UserHome} />
                   <Route path="/recipes" component={CurrentRecipes} />
                   <Route path="/grocery-list" component={GroceryList} />
                   <Route path="/history" component={RecipeHistory} />
@@ -69,6 +68,7 @@ const mapDispatch = (dispatch) => {
   return {
     loadInitialData() {
       dispatch(me());
+      dispatch(fetchPrevRecipes())
     }
   }
 }
