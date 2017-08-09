@@ -8,3 +8,4 @@ export { default as UserHome } from './user-home';
 export { Login, Signup } from './auth-form';
 export { default as CurrentRecipes } from './CurrentRecipes';
 export { default as Splash } from './splash';
+export { default as RecipeHistory } from './history';
