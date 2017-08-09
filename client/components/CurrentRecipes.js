@@ -1,23 +1,48 @@
 import React from 'react';
-import { Container, Grid, Header, Image, Message, Segment, Button } from 'semantic-ui-react';
+import { Container, Grid, Header, Image, Message, Segment, Button, Icon, Input } from 'semantic-ui-react';
 
 export default function CurrentRecipe() {
   return (
     <Container style={{ padding: '5em 0em' }}>
-      <Header as='h2'>Your Currently Selected Recipes</Header>
+      <Grid textAlign="center">
+        <Grid.Row>
+          <Header as='h2'>Welcome [Insert Name]</Header>
+        </Grid.Row>
+        <Grid.Row>
+          <Grid.Column width={12}>
+            <Grid.Row className="add-recipe-url-wrapper">
+              <Input
+                className="add-recipe-url-bar"
+                action={{ color: 'teal', labelPosition: 'left', icon: 'add', content: 'Add Recipe' }}
+                actionPosition='right'
+                placeholder='Recipe url...'
+              />
+            </Grid.Row>
+          </Grid.Column>
+        </Grid.Row>
+      </Grid>
       <Segment.Group>
+          <Segment>
+            <p>Your currently selected recipes:</p>
+          </Segment>
         <Segment.Group>
           <Segment>
             <Grid>
-              <Grid.Column floated='left' width={12}><p>Nested Top</p></Grid.Column>
-              <Grid.Column floated='right' width={4}><p>Test</p></Grid.Column>
+              <Grid.Column floated='left' width={13} verticalAlign="middle"><p>Nested Top</p></Grid.Column>
+              <Grid.Column floated='right' width={3} textAlign="right"><Icon onClick={() => {console.log('hi')}} name="delete" /></Grid.Column>
             </Grid>
           </Segment>
           <Segment>
-            <p>Nested Middle</p>
+            <Grid>
+              <Grid.Column floated='left' width={13} verticalAlign="middle"><p>Nested Middle</p></Grid.Column>
+              <Grid.Column floated='right' width={3} textAlign="right"><Icon onClick={() => {console.log('hi')}} name="delete" /></Grid.Column>
+            </Grid>
           </Segment>
           <Segment>
-            <p>Nested Bottom</p>
+            <Grid>
+              <Grid.Column floated='left' width={13} verticalAlign="middle"><p>Nested Bottom</p></Grid.Column>
+              <Grid.Column floated='right' width={3} textAlign="right"><Icon onClick={() => {console.log('hi')}} name="delete" /></Grid.Column>
+            </Grid>
           </Segment>
         </Segment.Group>
         <Segment>
@@ -28,5 +53,3 @@ export default function CurrentRecipe() {
     </Container>
   );
 }
-
-
