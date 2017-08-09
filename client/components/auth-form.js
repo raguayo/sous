@@ -58,7 +58,7 @@ const AuthForm = ({ name, displayName, handleSubmit, error }) => (
             />
 
             <Form.Button color="teal" fluid size="large">{displayName}</Form.Button>
-            <Form.Button color="standard" fluid size="large" as="a" href="/auth/google" >{displayName} with Google</Form.Button>
+            <Form.Button color="standard" size="large" as="a" href="/auth/google" >{displayName} with Google</Form.Button>
           </Segment>
         </Form>
         {
@@ -109,8 +109,12 @@ const mapDispatch = (dispatch) => {
       const formName = evt.target.name;
       const email = evt.target.email.value;
       const password = evt.target.password.value;
-      const username = evt.target.username.value;
-      dispatch(auth(email, password, username, formName));
+      if (evt.target.username) {
+        const username = evt.target.username.value;
+        dispatch(auth(email, password, formName, username));
+      } else {
+        dispatch(auth(email, password, formName));
+      }
     }
   }
 }

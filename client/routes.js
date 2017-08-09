@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { Router } from 'react-router';
-import { Route, Switch } from 'react-router-dom';
-import PropTypes from 'prop-types';
-import history from './history';
-import { Main, Login, Signup, UserHome } from './components';
-import { me } from './store';
+import React, {Component} from 'react'
+import {connect} from 'react-redux'
+import { Router } from 'react-router'
+import { Route, Switch } from 'react-router-dom'
+import PropTypes from 'prop-types'
+import history from './history'
+import { Main, Login, Signup, UserHome, CurrentRecipes } from './components';
+import { me } from './store'
 import Splash from './components/splash';
 /**
  * COMPONENT
@@ -15,8 +15,8 @@ class Routes extends Component {
     this.props.loadInitialData();
   }
 
-  render () {
-    const {isLoggedIn} = this.props
+  render() {
+    const { isLoggedIn } = this.props
 
     return (
       <Router history={history}>
@@ -30,6 +30,7 @@ class Routes extends Component {
                 <Switch>
                   {/* Routes placed here are only available after logging in */}
                   <Route path='/home' component={UserHome} />
+                  <Route path='/recipes' component={CurrentRecipes} />
                 </Switch>
             }
             {/* Displays our Login component as a fallback */}
