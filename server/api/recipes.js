@@ -39,14 +39,14 @@ router.post('/', (req, res, next) => {
             name: ingredient,
           },
         })
-        .then(([ing, blnCreated]) => ing)
+        .then(([foundIngredient, isCreated]) => ing)
         .catch(next);
       });
       return Promise.all([newRecipe, ...arrIngredientPromises])
       .then(([recipe, ...ingredients]) => {
         return recipe.addIngredients(ingredients);
       })
-      .then((nuevoRecipe) => res.status(201).json(nuevoRecipe))
+      .then((recipeWithIngredients) => res.status(201).json(recipeWithIngredients))
       .catch(next);
     } else {
       res.sendStatus(304);
