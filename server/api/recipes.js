@@ -43,4 +43,4 @@ router.delete('/:id', (req, res, next) => {
       res.sendStatus(204);
     })
     .catch(next);
-})
+});
