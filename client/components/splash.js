@@ -39,7 +39,7 @@ export default class Splash extends Component {
               Log In
               </Button>
             <Button primary size="large" as={Link} to="/signup">
-              Sign In
+              Sign Up
               </Button>
           </Container>
         </Segment>
