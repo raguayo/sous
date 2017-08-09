@@ -1,5 +1,6 @@
 import React from 'react';
-import { Container, Grid, Header, Image, Message, Segment, Button, Icon, Input } from 'semantic-ui-react';
+import { Container, Grid, Header, Segment, Button, Icon, Input } from 'semantic-ui-react';
+import { Link } from 'react-router-dom';
 
 export default function CurrentRecipe() {
   return (
@@ -46,7 +47,7 @@ export default function CurrentRecipe() {
           </Segment>
         </Segment.Group>
         <Segment>
-          <Button>View Your Grocery List!</Button>
+          <Button as={Link} to={'./grocery-list'}>View Your Grocery List!</Button>
           <Button>Clear Recipe List</Button>
         </Segment>
       </Segment.Group>

@@ -9,13 +9,13 @@ function Navbar(props) {
   return (
     <Menu fixed="top" size="large">
       <Container>
-        <Menu.Item as='a'>Logo</Menu.Item>
-        <Menu.Item as='a' active>List</Menu.Item>
-        <Menu.Item as='a'>Grocery List</Menu.Item>
-        <Menu.Item as='a'>Recipe History</Menu.Item>
-        <Menu.Item as='a'>{user.name}</Menu.Item>
-        <Menu.Menu position='right'>
-          <Menu.Item className='item'>
+        <Menu.Item as={Link} to={'/'}>Logo</Menu.Item>
+        <Menu.Item as={Link} to={'/recipes'} >Recipe List</Menu.Item>
+        <Menu.Item as={Link} to={'/grocery-list'}>Grocery List</Menu.Item>
+        <Menu.Item as={Link} to={'/history'}>Recipe History</Menu.Item>
+        <Menu.Item as={Link} to={'/home'}>{user.name}</Menu.Item>
+        <Menu.Menu position="right">
+          <Menu.Item className="item">
             <Button as={Link} to={'/'}onClick={props.logout}>Log out</Button>
           </Menu.Item>
         </Menu.Menu>
@@ -26,6 +26,7 @@ function Navbar(props) {
 
 const mapState = state => ({
   currentUser: state.user,
+  isLoggedIn: !!state.user.id,
 });
 
 const mapDispatch = dispatch => ({
