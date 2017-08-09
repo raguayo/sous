@@ -16,9 +16,21 @@ router.get('/:id', (req, res, next) => {
 });
 
 router.post('/', (req, res, next) => {
-  Ingredient.create(req.body)
-    .then((newIngredient) => {
-      res.status(201).json(newIngredient);
+  Ingredient.findOrCreate({
+    where: {
+      name: req.body.name,
+    },
+    defaults: {
+      estimatedPrice: req.body.estimatedPrice,
+      unit: req.body.unit,
+    }
+  })
+    .spread((newIngredient, isCreated) => {
+      if (isCreated) {
+        res.status(201).json(newIngredient);
+      } else {
+        console.log('Ingredient already existed.');
+      }
     });
 });
 

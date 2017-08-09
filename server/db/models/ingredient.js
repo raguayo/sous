@@ -9,11 +9,9 @@ const Ingredient = db.define('ingredient', {
   },
   estimatedPrice: {
     type: Sequelize.FLOAT,
-    allowNull: false,
   },
   unit: {
     type: Sequelize.STRING,
-    allowNull: false,
   },
   searchTerms: {
     type: Sequelize.ARRAY(Sequelize.STRING),
