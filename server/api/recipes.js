@@ -16,7 +16,20 @@ router.get('/:id', (req, res, next) => {
 });
 
 router.post('/', (req, res, next) => {
-  Recipe.create(req.body)
+  Recipe.findOrCreate({
+    where: {
+      title: req.body.title,
+      author: req.body.author,
+    },
+    defaults: {
+      recipeUrl: req.body.recipeUrl,
+      imageUrl: req.body.imageUrl,
+      siteName: req.body.siteName,
+      tags: req.body.tags,
+      isFavorite: req.body.isFavorite,
+      numServings: req.body.numServings,
+    },
+  })
     .then((newRecipe) => {
       res.status(201).json(newRecipe);
     });
