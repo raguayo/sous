@@ -4,9 +4,11 @@ const { Recipe, Ingredient } = require('../db/models');
 module.exports = router;
 
 router.get('/', (req, res, next) => {
-  Recipe.findAll()
-    .then(recipes => res.json(recipes))
-    .catch(next);
+  req.user.getRecipes()
+  .then((prevRecipes) => {
+    res.json(prevRecipes);
+  })
+  .catch(next);
 });
 
 router.get('/:id', (req, res, next) => {
@@ -59,21 +61,25 @@ router.put('/:id', (req, res, next) => {
     .then((recipe) => {
       if (!recipe) {
         return res.sendStatus(404);
-      } else {
-        return recipe.update(req.body);
       }
+      return recipe.update(req.body);
     })
     .then(updatedRecipe => res.send(updatedRecipe))
     .catch(next);
 });
 
 router.delete('/:id', (req, res, next) => {
-  Recipe.destroy({
-    where: { id: req.params.id }
-  })
-    .then((rowsDeleted) => {
-      console.log('rows deleted: ', rowsDeleted);
+  req.user.removeRecipe(req.params.id)
+    .then(() => {
       res.sendStatus(204);
     })
     .catch(next);
+  // Recipe.destroy({
+  //   where: { id: req.params.id }
+  // })
+  //   .then((rowsDeleted) => {
+  //     console.log('rows deleted: ', rowsDeleted);
+  //     res.sendStatus(204);
+  //   })
+  //   .catch(next);
 });
