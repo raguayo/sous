@@ -1,6 +1,6 @@
 const models = require('./server/db/models');
 
-const { User, Recipe, Ingredient, GroceryList } = models;
+const { User, Recipe, Ingredient, GroceryList, RecipeIngredient } = models;
 
 const db = require('./server/db/db');
 
@@ -98,61 +98,61 @@ db.sync({ force: true })
         name: 'milk',
         estimatedPrice: 3.00,
         unit: 'gallon',
-        searchTerms: ['milk']
+        searchTerms: ['milk'],
       }),
       Ingredient.create({
         name: 'eggs',
         estimatedPrice: 2.00,
         unit: 'dozen',
-        searchTerms: ['eggs']
+        searchTerms: ['eggs'],
       }),
       Ingredient.create({
         name: 'butter',
         estimatedPrice: 0.50,
         unit: 'stick',
-        searchTerms: ['butter']
+        searchTerms: ['butter'],
       }),
       Ingredient.create({
         name: 'sugar',
         estimatedPrice: 0.10,
         unit: 'cup',
-        searchTerms: ['sugar']
+        searchTerms: ['sugar'],
       }),
       Ingredient.create({
         name: 'peaches',
         estimatedPrice: 2.50,
         unit: 'pound',
-        searchTerms: ['peaches']
+        searchTerms: ['peaches'],
       }),
       Ingredient.create({
         name: 'blueberries',
         estimatedPrice: 4.00,
         unit: 'cup',
-        searchTerms: ['blueberries']
+        searchTerms: ['blueberries'],
       }),
       Ingredient.create({
         name: 'basil',
         estimatedPrice: 0.50,
         unit: 'tablespoons',
-        searchTerms: ['basil']
+        searchTerms: ['basil'],
       }),
       Ingredient.create({
         name: 'garlic',
         estimatedPrice: 1.00,
         unit: 'bunch',
-        searchTerms: ['garlic']
+        searchTerms: ['garlic'],
       }),
       Ingredient.create({
         name: 'worcestershire sauce',
         estimatedPrice: 0.77,
         unit: 'cup',
-        searchTerms: ['worcestershire']
+        searchTerms: ['worcestershire'],
       }),
       Ingredient.create({
         name: 'chicken',
         estimatedPrice: 0.77,
         unit: 'pound',
-        searchTerms: ['chicken']
+        searchTerms: ['chicken'],
       }),
       chicken,
       buns,
@@ -171,12 +171,21 @@ db.sync({ force: true })
     steak.addIngredients([worcestershire, garlic, basil]);
     chicken.addIngredients([chickenIng, butter, garlic]);
 
-    return Promise.all([buns, cobbler, bread, steak, chicken, list1, list2, list3])
+    return Promise.all([buns, cobbler, bread, steak, chicken, list1, list2, list3]);
   })
-  .then(([buns, cobbler, bread, steak, chicken, list1, list2, list3]) => {
+  .then(([buns, cobbler, steak, chicken, bread, list1, list2]) => {
     const promise1 = list1.addRecipes([chicken, cobbler]);
     const promise2 = list2.addRecipes([buns, steak]);
-    return Promise.all([promise1, promise2]);
+    return Promise.all([buns, cobbler, steak, chicken, promise1, promise2]);
+  })
+  .then(() => {
+    return RecipeIngredient.findAll()
+  })
+  .then((foundRecipies) => {
+    return Promise.all(foundRecipies.map((recipeIngredient) => {
+      const quantity = Math.ceil(Math.random() * 5);
+      return recipeIngredient.update({ quantity });
+    }));
   })
   .then(() => {
     console.log('finished seeding');

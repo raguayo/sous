@@ -68,17 +68,17 @@ const mapDispatch = (dispatch) => {
   return {
     loadInitialData() {
       dispatch(me());
-      dispatch(fetchPrevRecipes())
+      dispatch(fetchPrevRecipes());
     }
   }
 }
 
-export default connect(mapState, mapDispatch)(Routes)
+export default connect(mapState, mapDispatch)(Routes);
 
 /**
  * PROP TYPES
  */
 Routes.propTypes = {
   loadInitialData: PropTypes.func.isRequired,
-  isLoggedIn: PropTypes.bool.isRequired
+  isLoggedIn: PropTypes.bool.isRequired,
 }
