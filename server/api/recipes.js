@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const { Recipe, Ingredient } = require('../db/models');
+const { microformatScraper } = require('../scraper/microformat');
 
 module.exports = router;
 
@@ -18,42 +19,56 @@ router.get('/:id', (req, res, next) => {
 });
 
 router.post('/', (req, res, next) => {
-  Recipe.findOrCreate({
-    where: {
-      title: req.body.title,
-      author: req.body.author,
-    },
-    defaults: {
-      recipeUrl: req.body.recipeUrl,
-      imageUrl: req.body.imageUrl,
-      siteName: req.body.siteName,
-      tags: req.body.tags,
-      isFavorite: req.body.isFavorite,
-      numServings: req.body.numServings,
-    },
+  const { url } = req.body;
+  microformatScraper(url)
+  .then((data) => {
+    const title = data.properties.name[0];
+    const ingredientArr = data.properties.ingredient;
+    const imageUrl = data.properties.photo[0];
+    const recipePromise = Recipe.findOrCreate({
+      where: {
+        title,
+        // author: req.body.author,
+      },
+      defaults: {
+        recipeUrl: url,
+        imageUrl,
+        // siteName: req.body.siteName,
+        // tags: req.body.tags,
+        // isFavorite: req.body.isFavorite,
+        // numServings: req.body.numServings,
+      },
+    });
+    return Promise.all([recipePromise, ...ingredientArr])
   })
-  .spread((newRecipe, isCreated) => {
+  .then(([recipeArr, ...ingredientArr]) => {
+    const newRecipe = recipeArr[0];
+    req.user.addRecipes([newRecipe]);
+    const isCreated = recipeArr[1];
     if (isCreated) {
-      const arrIngredients = req.body.ingredients.split(',');
-      const arrIngredientPromises = arrIngredients.map((ingredient) => {
+      // const arrIngredients = req.body.ingredients.split(',');
+      const arrIngredientPromises = ingredientArr.map((ingredient) => {
         return Ingredient.findOrCreate({
           where: {
             name: ingredient,
           },
         })
-        .then(([foundIngredient, isCreated]) => ing)
+        .then(([foundIngredient, isCreated]) => foundIngredient)
         .catch(next);
       });
       return Promise.all([newRecipe, ...arrIngredientPromises])
-      .then(([recipe, ...ingredients]) => {
-        return recipe.addIngredients(ingredients);
-      })
-      .then((recipeWithIngredients) => res.status(201).json(recipeWithIngredients))
-      .catch(next);
+        .then(([recipe, ...ingredients]) => {
+          const ingArr = recipe.addIngredients(ingredients);
+          return Promise.all([newRecipe, ingArr])
+        })
+        .then(([recipe, ingredientsArr]) => Recipe.findById(recipe.id))
+        .then(recipeWithIngredients => res.status(201).json(recipeWithIngredients))
+        .catch(next);
     } else {
       res.sendStatus(304);
     }
-  });
+  })
+  .catch(next);
 });
 
 router.put('/:id', (req, res, next) => {
