@@ -9,11 +9,38 @@ router.get('/', (req, res, next) => {
     .catch(next);
 });
 
-// router.get('/:id', (req, res, next) => {
-//   GroceryList.findById(req.params.id)
-//     .then(groceryList => res.json(groceryList))
-//     .catch(next);
-// });
+router.get('/recipes', (req, res, next) => {
+  req.user.getGrocerylist()
+    .then((groceryLists) => {
+      res.json(groceryLists.recipes);
+    })
+    .catch(next);
+});
+
+router.delete('/recipes/:id', (req, res, next) => {
+  req.user.getGrocerylist()
+    .then((groceryLists) => {
+      return groceryLists.removeRecipe(req.params.id);
+    })
+    .then(() => {
+      res.sendStatus(204);
+    })
+    .catch(next);
+});
+
+router.delete('/recipes', (req, res, next) => {
+  req.user.getGrocerylist()
+    .then((groceryLists) => {
+      groceryLists.recipes.forEach((recipe) => {
+        groceryLists.removeRecipe(recipe.id);
+      });
+      return groceryLists;
+    })
+    .then(() => {
+      res.sendStatus(204);
+    })
+    .catch(next);
+});
 
 router.get('/ingredients', (req, res, next) => {
   const userId = req.user.id;
