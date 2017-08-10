@@ -2,7 +2,8 @@ import React from 'react';
 import { Container, Grid, Header, Segment, Button, Icon, Input } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 
-export default function CurrentRecipe() {
+export default function CurrentRecipe(props) {
+  console.log('props: ', props);
   return (
     <Container style={{ padding: '5em 0em' }}>
       <Grid textAlign="center">
