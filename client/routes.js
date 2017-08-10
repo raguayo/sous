@@ -16,7 +16,7 @@ import {
   GroceryList,
 } from './components';
 
-import { me, fetchPrevRecipes } from './store';
+import { me, fetchPrevRecipes, fetchCurrRecipes } from './store';
 /**
  * COMPONENT
  */
@@ -69,6 +69,7 @@ const mapDispatch = (dispatch) => {
     loadInitialData() {
       dispatch(me());
       dispatch(fetchPrevRecipes());
+      dispatch(fetchCurrRecipes());
     }
   }
 }

@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { GroceryList } = require('../db/models');
+const { GroceryList, UserRecipe } = require('../db/models');
 
 module.exports = router;
 
@@ -7,6 +7,40 @@ router.get('/', (req, res, next) => {
   GroceryList.findAll()
     .then(groceryLists => res.json(groceryLists))
     .catch(next);
+});
+
+router.get('/recipes', (req, res, next ) => {
+  req.user.getGrocerylist()
+  .then((groceryLists) => {
+    res.json(groceryLists.recipes);
+  })
+  .catch(next);
+});
+
+router.delete('/recipes/:id', (req, res, next) => {
+  req.user.getGrocerylist()
+  .then((groceryLists) => {
+    return groceryLists.removeRecipe(req.params.id);
+  })
+  .then(() => {
+    res.sendStatus(204);
+  })
+  .catch(next);
+});
+
+router.delete('/recipes', (req, res, next) => {
+  req.user.getGrocerylist()
+  .then((groceryLists) => {
+    // console.log('groceryLists.recipes: ', groceryLists.recipes);
+    groceryLists.recipes.forEach((recipe) => {
+      groceryLists.removeRecipe(recipe.id);
+    });
+    return groceryLists;
+  })
+  .then(() => {
+    res.sendStatus(204);
+  })
+  .catch(next);
 });
 
 router.get('/:id', (req, res, next) => {
