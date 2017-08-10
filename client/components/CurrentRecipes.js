@@ -58,7 +58,6 @@ function CurrentRecipe({ handleAddRecipe, handleDeleteRecipe, handleDeleteRecipe
 
 const mapState = (state) => {
   return {
-    favRecipes: state.prevRecipes.filter(recipeObj => recipeObj.isFavorite),
     currRecipes: state.currRecipes,
     user: state.user,
   };
