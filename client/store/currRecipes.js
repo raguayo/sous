@@ -27,7 +27,7 @@ const removeCurrRecipes = () => ({ type: REMOVE_CURR_RECIPES });
  // get grocery list off user and then return the recipes on the grocery list
 export const fetchCurrRecipes = () =>
   dispatch =>
-    axios.get('/api/grocerylists/recipes')
+    axios.get('/api/grocery-list/recipes')
       .then(res => res.data)
       .then((currRecipes) => {
         dispatch(getCurrRecipes(currRecipes));
@@ -36,7 +36,7 @@ export const fetchCurrRecipes = () =>
 
 export const deleteCurrRecipe = currRecipeId =>
   dispatch =>
-    axios.delete(`/api/grocerylists/recipes/${currRecipeId}`)
+    axios.delete(`/api/grocery-list/recipes/${currRecipeId}`)
       .then(res => res.data)
       .then(() => {
         dispatch(removeCurrRecipe(currRecipeId));
@@ -45,7 +45,7 @@ export const deleteCurrRecipe = currRecipeId =>
 
 export const deleteCurrRecipes = () =>
   dispatch =>
-    axios.delete('/api/grocerylists/recipes')
+    axios.delete('/api/grocery-list/recipes')
       .then((res) => {
         return res.data;
       })
