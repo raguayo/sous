@@ -31,7 +31,6 @@ router.delete('/recipes/:id', (req, res, next) => {
 router.delete('/recipes', (req, res, next) => {
   req.user.getGrocerylist()
   .then((groceryLists) => {
-    // console.log('groceryLists.recipes: ', groceryLists.recipes);
     groceryLists.recipes.forEach((recipe) => {
       groceryLists.removeRecipe(recipe.id);
     });
