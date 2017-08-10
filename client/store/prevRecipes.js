@@ -47,7 +47,6 @@ export const postNewRecipe = url =>
     axios.post('/api/recipes', { url })
       .then(res => res.data)
       .then(newRecipe => {
-        console.log('New Recipe', newRecipe)
         dispatch(addRecipe(newRecipe))
       })
       .catch(console.error);
