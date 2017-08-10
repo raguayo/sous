@@ -3,7 +3,7 @@ const router = require('express').Router();
 module.exports = router;
 
 router.use('/users', require('./users'));
-router.use('/grocerylists', require('./grocery-lists'));
+router.use('/grocery-list', require('./groceryLists'));
 router.use('/recipes', require('./recipes'));
 router.use('/ingredients', require('./ingredients'));
 
