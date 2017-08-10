@@ -5,7 +5,8 @@ import history from '../history';
  * ACTION TYPES
  */
 const GET_PREV_RECIPES = 'GET_PREV_RECIPES';
-const REMOVE_PREV_RECIPE = 'REMOVE_RECIPE';
+const REMOVE_PREV_RECIPE = 'REMOVE_PREV_RECIPE';
+const ADD_NEW_RECIPE = 'ADD_NEW_RECIPE';
 
 /**
  * INITIAL STATE
@@ -15,8 +16,9 @@ const defaultPrevRecipes = [];
 /**
  * ACTION CREATORS
  */
-const getPrevRecipes = prevRecipes => ({ type: GET_PREV_RECIPES, prevRecipes })
-const removePrevRecipe = prevRecipeId => ({ type: REMOVE_PREV_RECIPE, prevRecipeId })
+const getPrevRecipes = prevRecipes => ({ type: GET_PREV_RECIPES, prevRecipes });
+const removePrevRecipe = prevRecipeId => ({ type: REMOVE_PREV_RECIPE, prevRecipeId });
+const addRecipe = newRecipe => ({ type: ADD_NEW_RECIPE, newRecipe });
 
 /**
  * THUNK CREATORS
@@ -40,6 +42,15 @@ export const deletePrevRecipe = prevRecipeId =>
       })
       .catch(err => console.log(err));
 
+export const postNewRecipe = url =>
+  dispatch =>
+    axios.post('/api/recipes', { url })
+      .then(res => res.data)
+      .then(newRecipe => {
+        console.log('New Recipe', newRecipe)
+        dispatch(addRecipe(newRecipe))
+      })
+      .catch(console.error);
 
 /**
  * REDUCER
@@ -50,6 +61,8 @@ export default function (state = defaultPrevRecipes, action) {
       return action.prevRecipes;
     case REMOVE_PREV_RECIPE:
       return state.filter(prevRecipe => prevRecipe.id !== action.prevRecipeId);
+    case ADD_NEW_RECIPE:
+      return [action.newRecipe, ...state];
     default:
       return state;
   }
