@@ -22,16 +22,16 @@ const removeFromList = ingredientId => ({
  */
 
 export const fetchGroceryList = () => (dispatch) => {
-  axios.get('/api/groceryList/ingredients')
+  axios.get('/api/grocery-list/ingredients')
     .then(res => res.data)
     .then((groceryList) => {
-      dispatch(getGroceryList(groceryList))
+      dispatch(getGroceryList(groceryList));
     })
     .catch(err => console.log(err));
 };
 
 export const removeIngredientFromList = ingredientId => (dispatch) =>
-  axios.delete(`/api/groceryList/ingredients/${ingredientId}`)
+  axios.delete(`/api/grocery-list/ingredients/${ingredientId}`)
     .then(res => res.data)
     .then(() => {
       dispatch(removeFromList(ingredientId))
@@ -45,7 +45,7 @@ export const removeIngredientFromList = ingredientId => (dispatch) =>
 export default function (state = {}, action) {
   switch (action.type) {
     case GET_GROCERY_LIST:
-      return action.getGroceryList;
+      return action.groceryList;
 
     default:
       return state;
