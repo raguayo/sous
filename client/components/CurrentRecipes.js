@@ -12,7 +12,7 @@ function CurrentRecipe({ handleAddRecipe, handleDeleteRecipe, handleDeleteRecipe
         <Grid.Row>
           <Header as="h2">Welcome {user.name}</Header>
         </Grid.Row>
-        <Grid.Row>
+        <Grid.Row >
           <Grid.Column width={12}>
             <Grid.Row className="add-recipe-url-wrapper">
               <Form onSubmit={handleAddRecipe}>
