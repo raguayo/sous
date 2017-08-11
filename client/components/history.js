@@ -2,9 +2,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Container, Grid, Header, Image, Message, Segment, Button, Icon } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
-import { deletePrevRecipe } from '../store/recipes';
+import { deleteRecipeFromHistory } from '../store/recipes';
 
-function PrevRecipes({ favRecipes, prevRecipes, handleDelete }) {
+function RecipeHistory({ favRecipes, prevRecipes, handleDelete }) {
   return (
     <Container style={{ padding: '5em 0em' }}>
       <Header as='h2'>Your favorite recipes:</Header>
@@ -64,13 +64,14 @@ const mapState = (state) => {
 
 const mapDispatch = (dispatch) => {
   return {
-    handleDelete: id => dispatch(deletePrevRecipe(id)),
+    handleDelete: id => dispatch(deleteRecipeFromHistory(id)),
   };
 };
 
-export default connect(mapState, mapDispatch)(PrevRecipes);
+export default connect(mapState, mapDispatch)(RecipeHistory);
 
-PrevRecipes.propTypes = {
+RecipeHistory.propTypes = {
   favRecipes: PropTypes.array.isRequired,
   prevRecipes: PropTypes.array.isRequired,
+  handleDelete: PropTypes.func.isRequired,
 };
