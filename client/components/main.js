@@ -13,7 +13,6 @@ import Navbar from './navbar';
  *  rendered out by the component's `children`.
  */
 const Main = (props) => {
-
   const { children, isLoggedIn } = props;
 
   return (
@@ -21,7 +20,9 @@ const Main = (props) => {
       {isLoggedIn ?
         <Navbar /> : null }
       {children}
-      <Footer />
+      <div >
+        <Footer />
+      </div>
     </div>
   );
 };
