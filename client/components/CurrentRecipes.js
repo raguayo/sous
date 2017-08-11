@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Container, Grid, Header, Segment, Button, Icon, Input, Form } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
-import { postNewRecipe } from '../store/prevRecipes';
+import { postNewRecipe, deleteRecipeFromList, deleteRecipesFromList } from '../store/recipes';
 import { deleteCurrRecipe, deleteCurrRecipes } from '../store/currRecipes';
 
 function CurrentRecipe({ handleAddRecipe, handleDeleteRecipe, handleDeleteRecipes, currRecipes, user }) {
@@ -36,8 +36,8 @@ function CurrentRecipe({ handleAddRecipe, handleDeleteRecipe, handleDeleteRecipe
         <Segment.Group>
           {currRecipes && currRecipes.map((currRecipe) => {
             return (
-              <Segment key={currRecipes.id}>
-                <Grid>
+              <Segment >
+                <Grid key={currRecipes.id}>
                    <Grid.Column floated="left" width={10} verticalAlign="middle">
                     <a href={currRecipe.recipeUrl} target="_blank" rel="noopener noreferrer" >{currRecipe.title}</a>
                   </Grid.Column>
@@ -58,7 +58,7 @@ function CurrentRecipe({ handleAddRecipe, handleDeleteRecipe, handleDeleteRecipe
 
 const mapState = (state) => {
   return {
-    currRecipes: state.currRecipes,
+    currRecipes: state.recipes.filter(recipe => recipe.inGroceryList),
     user: state.user,
   };
 };
@@ -69,9 +69,9 @@ const mapDispatch = (dispatch) => {
       e.preventDefault();
       dispatch(postNewRecipe(e.target.recipeUrl.value));
     },
-    handleDeleteRecipe: id => dispatch(deleteCurrRecipe(id)),
+    handleDeleteRecipe: id => dispatch(deleteRecipeFromList(id)),
     handleDeleteRecipes: () => {
-      dispatch(deleteCurrRecipes());
+      dispatch(deleteRecipesFromList());
     },
   };
 };

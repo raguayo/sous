@@ -6,9 +6,18 @@ module.exports = router;
 
 router.get('/', (req, res, next) => {
   req.user.getRecipes()
-  .then((prevRecipes) => {
-    res.json(prevRecipes);
+  .then((recipes) => {
+    const arrOfPromises = recipes.map((recipe) => {
+      return recipe.isInUserGroceryList(req.user.id)
+      .then((bool) => {
+        recipe.dataValues.inGroceryList = bool;
+        return recipe;
+      })
+      .catch(next);
+    });
+    return Promise.all(arrOfPromises);
   })
+  .then(recipesWithFlag => res.json(recipesWithFlag))
   .catch(next);
 });
 
