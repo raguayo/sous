@@ -46,9 +46,9 @@ export const deletePrevRecipe = prevRecipeId =>
       })
       .catch(err => console.log(err));
 
-export const postNewRecipe = url =>
+export const postNewRecipe = (url, inGroceryList) =>
   dispatch =>
-    axios.post('/api/recipes', { url })
+    axios.post('/api/recipes', { url, inGroceryList })
       .then(res => res.data)
       .then((newRecipe) => {
         dispatch(addRecipe(newRecipe));

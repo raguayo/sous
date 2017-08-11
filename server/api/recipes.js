@@ -28,7 +28,7 @@ router.get('/:id', (req, res, next) => {
 });
 
 router.post('/', (req, res, next) => {
-  const { url } = req.body;
+  const { url, inGroceryList } = req.body;
   microformatScraper(url)
   .then((data) => {
     const title = data.properties.name[0];
@@ -48,12 +48,19 @@ router.post('/', (req, res, next) => {
         // numServings: req.body.numServings,
       },
     });
-    return Promise.all([recipePromise, ...ingredientArr])
+    // get grocery list
+    const groceryListPromise = req.user.getGrocerylist();
+    return Promise.all([recipePromise, groceryListPromise, ...ingredientArr])
   })
-  .then(([recipeArr, ...ingredientArr]) => {
+  .then(([recipeArr, grocerylist, ...ingredientArr]) => {
     const newRecipe = recipeArr[0];
-    req.user.addRecipes([newRecipe]);
     const isCreated = recipeArr[1];
+    req.user.addRecipes([newRecipe]);
+
+    if (inGroceryList) {
+      grocerylist.addRecipes([newRecipe]);
+    }
+
     if (isCreated) {
       // const arrIngredients = req.body.ingredients.split(',');
       const arrIngredientPromises = ingredientArr.map((ingredient) => {
@@ -62,7 +69,7 @@ router.post('/', (req, res, next) => {
             name: ingredient,
           },
         })
-        .then(([foundIngredient, isCreated]) => foundIngredient)
+        .then(([foundIngredient, IngIsCreated]) => foundIngredient)
         .catch(next);
       });
       return Promise.all([newRecipe, ...arrIngredientPromises])
@@ -71,10 +78,16 @@ router.post('/', (req, res, next) => {
           return Promise.all([newRecipe, ingArr])
         })
         .then(([recipe, ingredientsArr]) => Recipe.findById(recipe.id))
-        .then(recipeWithIngredients => res.status(201).json(recipeWithIngredients))
+        .then((recipe) => {
+          if (inGroceryList) recipe.dataValues.inGroceryList = true;
+          else recipe.dataValues.inGroceryList = false;
+          res.status(201).json(recipe)
+        })
         .catch(next);
     } else {
-      res.sendStatus(304);
+      if (inGroceryList) newRecipe.dataValues.inGroceryList = true;
+      else newRecipe.dataValues.inGroceryList = false;
+      res.status(201).json(newRecipe);
     }
   })
   .catch(next);
