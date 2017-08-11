@@ -3,8 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Container, Grid, Header, Segment, Button, Icon, Input, Form } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
-import { postNewRecipe } from '../store/prevRecipes';
-import { deleteCurrRecipe, deleteCurrRecipes } from '../store/currRecipes';
+import { postNewRecipe, deleteRecipeFromList, deleteRecipesFromList } from '../store/recipes';
 
 function CurrentRecipe({ handleAddRecipe, handleDeleteRecipe, handleDeleteRecipes, currRecipes, user }) {
   return (
@@ -36,10 +35,10 @@ function CurrentRecipe({ handleAddRecipe, handleDeleteRecipe, handleDeleteRecipe
         <Segment.Group>
           {currRecipes && currRecipes.map((currRecipe) => {
             return (
-              <Segment key={currRecipes.id}>
+              <Segment key={currRecipe.id}>
                 <Grid>
                    <Grid.Column floated="left" width={10} verticalAlign="middle">
-                    <a href={currRecipe.recipeUrl} target="_blank" rel="noopener noreferrer" >{currRecipe.title}</a>
+                    <a href={currRecipe.recipeUrl} target="_blank" rel="noopener noreferrer">{currRecipe.title}</a>
                   </Grid.Column>
                   <Grid.Column floated="right" width={3} textAlign="right"><Icon onClick={() => handleDeleteRecipe(currRecipe.id)} name="delete" /></Grid.Column>
                 </Grid>
@@ -58,7 +57,7 @@ function CurrentRecipe({ handleAddRecipe, handleDeleteRecipe, handleDeleteRecipe
 
 const mapState = (state) => {
   return {
-    currRecipes: state.currRecipes,
+    currRecipes: state.recipes.filter(recipe => recipe.inGroceryList),
     user: state.user,
   };
 };
@@ -67,11 +66,11 @@ const mapDispatch = (dispatch) => {
   return {
     handleAddRecipe: (e) => {
       e.preventDefault();
-      dispatch(postNewRecipe(e.target.recipeUrl.value));
+      dispatch(postNewRecipe(e.target.recipeUrl.value, true));
     },
-    handleDeleteRecipe: id => dispatch(deleteCurrRecipe(id)),
+    handleDeleteRecipe: id => dispatch(deleteRecipeFromList(id)),
     handleDeleteRecipes: () => {
-      dispatch(deleteCurrRecipes());
+      dispatch(deleteRecipesFromList());
     },
   };
 };

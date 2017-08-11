@@ -2,11 +2,11 @@ import { createStore, combineReducers, applyMiddleware } from 'redux';
 import createLogger from 'redux-logger';
 import thunkMiddleware from 'redux-thunk';
 import user from './user';
-import prevRecipes from './prevRecipes';
+import recipes from './recipes';
 import groceryList from './groceryList';
-import currRecipes from './currRecipes';
 
-const reducer = combineReducers({ user, prevRecipes, groceryList, currRecipes });
+
+const reducer = combineReducers({ user, recipes, groceryList });
 
 const middleware = applyMiddleware(thunkMiddleware, createLogger({ collapsed: true }));
 
@@ -14,6 +14,6 @@ const store = createStore(reducer, middleware);
 
 export default store;
 export * from './user';
-export * from './prevRecipes';
+export * from './recipes';
 export * from './groceryList';
-export * from './currRecipes';
+
