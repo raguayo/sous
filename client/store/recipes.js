@@ -5,7 +5,7 @@ import history from '../history';
  * ACTION TYPES
  */
 const GET_RECIPES = 'GET_RECIPES';
-const REMOVE_PREV_RECIPE = 'REMOVE_PREV_RECIPE';
+const REMOVE_RECIPE_FROM_HISTORY = 'REMOVE_RECIPE_FROM_HISTORY';
 const ADD_NEW_RECIPE = 'ADD_NEW_RECIPE';
 const REMOVE_RECIPE_FROM_LIST = 'REMOVE_RECIPE_FROM_LIST';
 const CLEAR_LIST = 'CLEAR_LIST';
@@ -19,7 +19,7 @@ const defaultRecipes = [];
  * ACTION CREATORS
  */
 const getRecipes = recipes => ({ type: GET_RECIPES, recipes });
-const removePrevRecipe = prevRecipeId => ({ type: REMOVE_PREV_RECIPE, prevRecipeId });
+const removeRecipeFromHistory = recipeId => ({ type: REMOVE_RECIPE_FROM_HISTORY, recipeId });
 const addRecipe = newRecipe => ({ type: ADD_NEW_RECIPE, newRecipe });
 const removeRecipeFromList = recipeId => ({ type: REMOVE_RECIPE_FROM_LIST, recipeId });
 const clearList = () => ({ type: CLEAR_LIST });
@@ -37,12 +37,12 @@ export const fetchRecipes = () =>
       })
       .catch(err => console.log(err));
 
-export const deletePrevRecipe = prevRecipeId =>
+export const deleteRecipeFromHistory = recipeId =>
   dispatch =>
-    axios.delete(`/api/recipes/${prevRecipeId}`)
+    axios.delete(`/api/recipes/${recipeId}`)
       .then(res => res.data)
       .then(() => {
-        dispatch(removePrevRecipe(prevRecipeId))
+        dispatch(removeRecipeFromHistory(recipeId));
       })
       .catch(err => console.log(err));
 
@@ -83,8 +83,8 @@ export default function (state = defaultRecipes, action) {
   switch (action.type) {
     case GET_RECIPES:
       return action.recipes;
-    case REMOVE_PREV_RECIPE:
-      return state.filter(prevRecipe => prevRecipe.id !== action.prevRecipeId);
+    case REMOVE_RECIPE_FROM_HISTORY:
+      return state.filter(recipe => recipe.id !== action.recipeId);
     case ADD_NEW_RECIPE:
       return [action.newRecipe, ...state];
     case REMOVE_RECIPE_FROM_LIST:

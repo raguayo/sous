@@ -108,8 +108,12 @@ router.put('/:id', (req, res, next) => {
 router.delete('/:id', (req, res, next) => {
   req.user.removeRecipe(req.params.id)
     .then(() => {
-      res.sendStatus(204);
+      return req.user.getGrocerylist();
     })
+    .then((userGroceryList) => {
+      userGroceryList.removeRecipe(req.params.id);
+    })
+    .then(() => res.sendStatus(204))
     .catch(next);
   // Recipe.destroy({
   //   where: { id: req.params.id }

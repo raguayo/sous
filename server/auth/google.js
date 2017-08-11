@@ -1,7 +1,7 @@
 const passport = require('passport')
 const router = require('express').Router()
 const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
-const { User } = require('../db/models')
+const { User, GroceryList } = require('../db/models')
 
 module.exports = router;
 
@@ -26,15 +26,23 @@ const googleConfig = {
 }
 
 const strategy = new GoogleStrategy(googleConfig, (token, refreshToken, profile, done) => {
-  const googleId = profile.id
-  const name = profile.displayName
-  const email = profile.emails[0].value
+  const googleId = profile.id;
+  const name = profile.displayName;
+  const email = profile.emails[0].value;
 
   User.find({ where: { googleId } })
     .then(user => user
       ? done(null, user)
       : User.create({ name, email, googleId })
-        .then(user => done(null, user))
+        .then((createdUser) => {
+          const groceryPromise = GroceryList.create()
+          return Promise.all([groceryPromise, createdUser])
+        })
+        .then(([groceryList, createdUser]) => createdUser.setGrocerylist(groceryList))
+        .then((assocUser) => {
+          done(null, assocUser);
+        })
+        .catch(done)
     )
     .catch(done);
 });
