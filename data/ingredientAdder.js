@@ -1,4 +1,5 @@
 var Peapod = require('./moduleClone');
+let Bluebird = require('bluebird');
 const Ingredient = require('../server/db/models/ingredient');
 
 var config = {
@@ -26,6 +27,8 @@ var peapod = new Peapod(config);
 //       console.log(didSucceed);
 //     });
 // });
+
+// const search = Bluebird.promisify(peapod.search);
 
 const arrOfIng = ['Onions Vidalia', 'garlic', 'Chef\'s Choice Beef Sirloin (Culotte) Steak Prime Cut Fresh', 'Peapod Cumin Ground', 'McCormick Black Pepper Pure Ground', 'Peapod Chili Powder', 'Peapod Paprika', 'Nature\'s Promise Organics Thyme', 'McCormick Marjoram Leaves', 'Simply Organic Basil Dried', 'Jim Beam Bourbon Whiskey', 'Kikkoman Soy Sauce All-Purpose', 'French\'s Classic Yellow Mustard 100% Natural', 'Peapod Worcestershire Sauce', 'Frank\'s RedHot Hot Sauce Spicy Sweet & Sour', 'Miller Lite Beer - 24 pk', 'Herb-Ox Bouillon Beef Cubes - 25 ct', 'Pork Tenderloin Roast Boneless Vacuum Sealed Fresh', 'A & W Root Beer - 24 pk', 'Sweet Baby Ray\'s Barbecue Sauce', 'Centrella Hamburger Buns Enriched - 8 ct', 'Peaches', 'Domino Premium Pure Cane Granulated Sugar', 'Morton Salt Iodized', 'Peapod All-Purpose Flour', 'Argo 100% Pure Corn Starch', 'Peapod 100% Lemon Juice from Concentrate', 'Nature\'s Promise Organic Cayenne Pepper', 'Peapod Cinnamon Ground', 'Peapod Pie Crust Graham Cracker', 'LAND O LAKES Butter Salted Sticks - 4 qrtrs', 'Peapod Cream Heavy Whipping Ultra Pasteurized'];
 
@@ -69,8 +72,10 @@ const arrOfIng4 = [
  'Frank\'s RedHot Cayenne Pepper Sauce Original',
 ]
 
-arrOfIng4.forEach(ingName => {
-  peapod.search(ingName, function(err, results) {
+const ingredientsArr = [...arrOfIng, ...arrOfIng2, ...arrOfIng3, ...arrOfIng4];
+
+function addIngredients(index) {
+  peapod.search(ingredientsArr[index], function (err, results) {
     if (err) {
       console.log(err)
     } else {
@@ -82,14 +87,22 @@ arrOfIng4.forEach(ingName => {
 
       console.log(typeof name, typeof prodId, typeof unitMeasure, typeof price, typeof size.slice(0, size.indexOf(unitMeasure)))
 
-      Ingredient.findOrCreate({where: {
-        name, prodId, unitMeasure, price, size: size.slice(0, size.indexOf(unitMeasure)),
-      } })
-      .then(ing => {
-        console.log(name + 'added')
+      Ingredient.findOrCreate({
+        where: {
+          name,
+        },
+        defaults: {
+          prodId, unitMeasure, price, size: size.slice(0, size.indexOf(unitMeasure)),
+        }
       })
-      .catch(console.error);
+        .then(ing => {
+          console.log(name + 'added')
+          if (index < ingredientsArr.length) addIngredients(index + 1);
+          else console.log('Done');
+        })
+        .catch(console.error);
     }
   });
-});
+}
 
+addIngredients(0);
