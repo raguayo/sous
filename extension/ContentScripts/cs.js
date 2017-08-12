@@ -1,3 +1,5 @@
+console.log('content script ran')
+
 document.addEventListener('DOMContentLoaded', () => {
   const author = document.getElementsByClassName('submitter__name')[0].textContent;
   const title = document.getElementsByClassName('recipe-summary__h1')[0].textContent;
@@ -5,11 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const imageUrl = document.getElementsByClassName('rec-photo')[0].currentSrc;
   const siteName = 'All Recipes';
   const ingredientElements = document.getElementsByClassName('recipe-ingred_txt');
-  const ingredients = [...ingredientElements].map((ingNode) => {
-    const ingText = ingNode.textContent;
-    if (ingText && ingText !== 'Add all ingredients to list') return ingText;
-    return null;
-  }).filter(el => !!el);
+  const ingredients = parseIngredientElements(ingredientElements);
 
   const servingsEl = document.querySelector('[ng-bind="adjustedServings"]');
   const observer = new MutationObserver((mutations) => {
