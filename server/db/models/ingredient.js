@@ -7,6 +7,9 @@ const Ingredient = db.define('ingredient', {
     unique: true,
     allowNull: false,
   },
+  peapodName: {
+    type: Sequelize.STRING,
+  },
   price: {
     type: Sequelize.INTEGER,
   },

@@ -30,56 +30,91 @@ var peapod = new Peapod(config);
 
 // const search = Bluebird.promisify(peapod.search);
 
-const arrOfIng = ['Onions Vidalia', 'garlic', 'Chef\'s Choice Beef Sirloin (Culotte) Steak Prime Cut Fresh', 'Peapod Cumin Ground', 'McCormick Black Pepper Pure Ground', 'Peapod Chili Powder', 'Peapod Paprika', 'Nature\'s Promise Organics Thyme', 'McCormick Marjoram Leaves', 'Simply Organic Basil Dried', 'Jim Beam Bourbon Whiskey', 'Kikkoman Soy Sauce All-Purpose', 'French\'s Classic Yellow Mustard 100% Natural', 'Peapod Worcestershire Sauce', 'Frank\'s RedHot Hot Sauce Spicy Sweet & Sour', 'Miller Lite Beer - 24 pk', 'Herb-Ox Bouillon Beef Cubes - 25 ct', 'Pork Tenderloin Roast Boneless Vacuum Sealed Fresh', 'A & W Root Beer - 24 pk', 'Sweet Baby Ray\'s Barbecue Sauce', 'Centrella Hamburger Buns Enriched - 8 ct', 'Peaches', 'Domino Premium Pure Cane Granulated Sugar', 'Morton Salt Iodized', 'Peapod All-Purpose Flour', 'Argo 100% Pure Corn Starch', 'Peapod 100% Lemon Juice from Concentrate', 'Nature\'s Promise Organic Cayenne Pepper', 'Peapod Cinnamon Ground', 'Peapod Pie Crust Graham Cracker', 'LAND O LAKES Butter Salted Sticks - 4 qrtrs', 'Peapod Cream Heavy Whipping Ultra Pasteurized'];
+const arrOfIng = [
+  { name: 'garlic', peapodName: 'garlic', },
+  { name: 'beef sirloin', peapodName: 'Chef\'s Choice Beef Sirloin (Culotte) Steak Prime Cut Fresh', },
+  { name: 'onion', peapodName: 'Onions Vidalia', },
+  { name: 'cumin ground', peapodName: 'Peapod Cumin Ground', },
+  { name: 'black pepper', peapodName: 'McCormick Black Pepper Pure Ground', },
+  { name: 'chili powder', peapodName: 'Peapod Chili Powder', },
+  { name: 'paprika', peapodName: 'Peapod Paprika', },
+  { name: 'thyme', peapodName: 'Nature\'s Promise Organics Thyme', },
+  { name: 'marjoram leaves', peapodName: 'McCormick Marjoram Leaves', },
+  { name: 'basil dried', peapodName: 'Simply Organic Basil Dried', },
+  { name: 'whiskey', peapodName: 'Jim Beam Bourbon Whiskey', },
+  { name: 'soy sauce', peapodName: 'Kikkoman Soy Sauce All-Purpose', },
+  { name: 'yellow mustard', peapodName: 'French\'s Classic Yellow Mustard 100% Natural', },
+  { name: 'worcestershire sauce', peapodName: 'Peapod Worcestershire Sauce', },
+  { name: 'hot sauce', peapodName: 'Frank\'s RedHot Hot Sauce Spicy Sweet & Sour', },
+  { name: 'beer', peapodName: 'Miller Lite Beer - 24 pk', },
+  { name: 'beef bouillon', peapodName: 'Herb-Ox Bouillon Beef Cubes - 25 ct', },
+  { name: 'pork tenderloin', peapodName: 'Pork Tenderloin Roast Boneless Vacuum Sealed Fresh', },
+  { name: 'root beer', peapodName: 'A & W Root Beer - 24 pk', },
+  { name: 'barbecue sauce', peapodName: 'Sweet Baby Ray\'s Barbecue Sauce', },
+  { name: 'hamburger buns', peapodName: 'Centrella Hamburger Buns Enriched - 8 ct', },
+  { name: 'peaches', peapodName: 'Peaches', },
+  { name: 'sugar', peapodName: 'Domino Premium Pure Cane Granulated Sugar', },
+  { name: 'salt', peapodName: 'Morton Salt Iodized', },
+  { name: 'flour', peapodName: 'Peapod All-Purpose Flour', },
+  { name: 'corn starch', peapodName: 'Argo 100% Pure Corn Starch', },
+  { name: 'lemon juice', peapodName: 'Peapod 100% Lemon Juice from Concentrate', },
+  { name: 'cayenne pepper', peapodName: 'Nature\'s Promise Organic Cayenne Pepper', },
+  { name: 'cinnamon ground', peapodName: 'Peapod Cinnamon Ground', },
+  { name: 'pie crust', peapodName: 'Peapod Pie Crust Graham Cracker', },
+  { name: 'butter', peapodName: 'LAND O LAKES Butter Salted Sticks - 4 qrtrs', },
+  { name: 'heavy whipping cream', peapodName: 'Peapod Cream Heavy Whipping Ultra Pasteurized', },
+];
 
 // Baked Chicken and Zucchini
 const arrOfIng2 = [
- 'Peapod White Eggs Grade A Large',
- 'Morton Salt Iodized',
- 'McCormick Black Pepper Pure Ground',
- 'Peapod Bread Crumbs Italian Style',
- 'O-Live & Co Olive Oil Extra Virgin',
- 'Peapod Chicken Breasts Boneless Skinless Value Pack Fresh',
- 'Peapod Garlic Minced in Water',
- 'Squash Zucchini',
- 'Tomatoes Beefsteak',
- 'Peapod Mozzarella Cheese Part Skim Shredded Natural',
- 'Green Giant Basil Fresh'
+ { name: 'eggs', peapodName: 'Peapod White Eggs Grade A Large', },
+ { name: 'salt', peapodName: 'Morton Salt Iodized', },
+ { name: 'black pepper', peapodName: 'McCormick Black Pepper Pure Ground', },
+ { name: 'bread crumbs', peapodName: 'Peapod Bread Crumbs Italian Style', },
+ { name: 'olive oil', peapodName: 'O-Live & Co Olive Oil Extra Virgin', },
+ { name: 'chicken breast', peapodName: 'Peapod Chicken Breasts Boneless Skinless Value Pack Fresh', },
+ { name: 'garlic', peapodName: 'Peapod Garlic Minced in Water', },
+ { name: 'zucchini', peapodName: 'Squash Zucchini', },
+ { name: 'tomatoes', peapodName: 'Tomatoes Beefsteak', },
+ { name: 'mozzarella cheese', peapodName: 'Peapod Mozzarella Cheese Part Skim Shredded Natural', },
+ { name: 'basil', peapodName: 'Green Giant Basil Fresh', },
 ]
 
 // Spinach Enchiladas
 const arrOfIng3 = [
- 'Peapod Sweet Cream Butter Salted Sticks - 4 qrtrs',
- 'Peapod Garlic Minced in Water',
- 'Birds Eye Spinach Chopped All Natural',
- 'Galbani Ricotta Cheese Deli Style Whole Milk',
- 'Daisy Sour Cream',
- 'Peapod Monterey Jack Cheese Finely Shredded Natural',
- 'El Milagro Corn Tortillas - 12 ct',
- 'Old El Paso Enchilada Sauce Red Mild',
+ { name: 'butter', peapodName: 'Peapod Sweet Cream Butter Salted Sticks - 4 qrtrs', },
+ { name: 'garlic', peapodName: 'Peapod Garlic Minced in Water', },
+ { name: 'spinach', peapodName: 'Birds Eye Spinach Chopped All Natural', },
+ { name: 'ricotta cheese', peapodName: 'Galbani Ricotta Cheese Deli Style Whole Milk', },
+ { name: 'sour cream', peapodName: 'Daisy Sour Cream', },
+ { name: 'monterey jack cheese', peapodName: 'Peapod Monterey Jack Cheese Finely Shredded Natural', },
+ { name: 'corn tortillas', peapodName: 'El Milagro Corn Tortillas - 12 ct', },
+ { name: 'enchilada sauce', peapodName: 'Old El Paso Enchilada Sauce Red Mild', },
 ]
 
 // Best Steak Marinade in Existence
 const arrOfIng4 = [
- 'Kikkoman Soy Sauce All-Purpose Less Sodium',
- 'O-Live & Co Olive Oil Extra Virgin',
- 'Peapod 100% Lemon Juice from Concentrate',
- 'Lea & Perrins Worcestershire Sauce',
- 'Peapod Garlic Minced in Water',
- 'Green Giant Basil Fresh',
- 'Peapod Parsley Flakes',
- 'McCormick Gourmet White Pepper Ground Organic',
- 'Frank\'s RedHot Cayenne Pepper Sauce Original',
+ { name: 'soy sauce', peapodName: 'Kikkoman Soy Sauce All-Purpose Less Sodium', },
+ { name: 'olive oil', peapodName: 'O-Live & Co Olive Oil Extra Virgin', },
+ { name: 'lemon juice', peapodName: 'Peapod 100% Lemon Juice from Concentrate', },
+ { name: 'worcestershire sauce', peapodName: 'Lea & Perrins Worcestershire Sauce', },
+ { name: 'garlic', peapodName: 'Peapod Garlic Minced in Water', },
+ { name: 'basil fresh', peapodName: 'Green Giant Basil Fresh', },
+ { name: 'parsley', peapodName: 'Peapod Parsley Flakes', },
+ { name: 'white pepper', peapodName: 'McCormick Gourmet White Pepper Ground Organic', },
+ { name: 'hot sauce', peapodName: 'Frank\'s RedHot Cayenne Pepper Sauce Original', },
 ]
 
 const ingredientsArr = [...arrOfIng, ...arrOfIng2, ...arrOfIng3, ...arrOfIng4];
 
 function addIngredients(index) {
-  peapod.search(ingredientsArr[index], function (err, results) {
+  if (index === ingredientsArr.length) return;
+  peapod.search(ingredientsArr[index].peapodName, function (err, results) {
     if (err) {
       console.log(err)
     } else {
-      const name = results.products[0].name;
+      const name = ingredientsArr[index].name;
+      const peapodName = results.products[0].name;
       const prodId = results.products[0].prodId;
       const unitMeasure = results.products[0].unitMeasure;
       const price = results.products[0].price;
@@ -92,7 +127,7 @@ function addIngredients(index) {
           name,
         },
         defaults: {
-          prodId, unitMeasure, price, size: size.slice(0, size.indexOf(unitMeasure)),
+          peapodName, prodId, unitMeasure, price, size: size.slice(0, size.indexOf(unitMeasure)),
         }
       })
         .then(ing => {
