@@ -3,6 +3,16 @@ const unitArr = ['tablespoon', 'teaspoon', 'cup', 'clove', 'package', 'can', 'po
 
 const unitRegex = new RegExp("^(" + unitArr.join("|") + ")(s?)$");
 
+function convertQuantityToNumber(quantity) {
+  if (typeof quantity === 'string') {
+    const index = quantity.indexOf('/');
+    quantity = index === -1 ?
+      Number.parseFloat(quantity) :
+      Number.parseFloat(quantity) + (+quantity[index-1] / +quantity[index+1])
+  }
+  return quantity;
+}
+
 function parseIngredientElements(ingElementArr) {
   const ingSentenceArr = [...ingElementArr].map((ingNode) => {
     const ingText = ingNode.textContent;
@@ -37,7 +47,7 @@ function parseIngredientElements(ingElementArr) {
     }
 
     const ingObj = {
-      quantity,
+      quantity: convertQuantityToNumber(quantity),
       unit,
       name,
     };
@@ -47,3 +57,4 @@ function parseIngredientElements(ingElementArr) {
 
   return ingObjArr;
 }
+
