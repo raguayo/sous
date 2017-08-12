@@ -7,15 +7,21 @@ const Ingredient = db.define('ingredient', {
     unique: true,
     allowNull: false,
   },
-  estimatedPrice: {
-    type: Sequelize.FLOAT,
-  },
-  unit: {
+  peapodName: {
     type: Sequelize.STRING,
   },
-  searchTerms: {
-    type: Sequelize.ARRAY(Sequelize.STRING),
+  price: {
+    type: Sequelize.INTEGER,
   },
+  unitMeasure: {
+    type: Sequelize.STRING,
+  },
+  prodId: {
+    type: Sequelize.INTEGER,
+  },
+  size: {
+    type: Sequelize.STRING,
+  }
 });
 
 module.exports = Ingredient;
