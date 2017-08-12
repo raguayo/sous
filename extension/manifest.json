@@ -1,0 +1,27 @@
+{
+  "name": "Sous",
+  "version": "0.1",
+  "description": "Your personal recipe assistant",
+  "permissions": [
+    "tabs",
+    "storage",
+    "http://*/*",
+    "https://*/*"
+  ],
+  "browser_action": {
+    "default_icon": {
+      "19": "images.png"
+    },
+    "default_title": "Sous",
+    "default_popup": "./Popup/popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["http://allrecipes.com/*", "https://allrecipes.com/*"],
+      "js": ["./ContentScripts/cs.js"],
+      "run_at": "document_start",
+      "all_frames": true
+    }
+  ],
+  "manifest_version": 2
+}
