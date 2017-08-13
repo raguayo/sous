@@ -116,22 +116,36 @@ function addIngredients(index) {
       const name = ingredientsArr[index].name;
       const peapodName = results.products[0].name;
       const prodId = results.products[0].prodId;
-      const unitMeasure = results.products[0].unitMeasure;
+      let unitMeasure = results.products[0].unitMeasure;
       const price = results.products[0].price;
-      const size = results.products[0].size;
+      let size = results.products[0].size;
 
-      console.log(typeof name, typeof prodId, typeof unitMeasure, typeof price, typeof size.slice(0, size.indexOf(unitMeasure)))
+      const newUnitArr = ['OZ', 'CT', 'PINT', 'LB', 'LTR', 'ML']
+      const newUnitRegEx = new RegExp("\\b(" + newUnitArr.join("|") + ")\\b")
+
+      if (size.slice(0, 3) === 'APX') size = size.slice(4);
+      if (size.indexOf(unitMeasure) !== -1) size = size.slice(0, size.indexOf(unitMeasure));
+      else {
+        const newUnitMatchArr = size.match(newUnitRegEx);
+        if (newUnitMatchArr) {
+          unitMeasure = newUnitMatchArr[0];
+          size = size.slice(0, size.indexOf(unitMeasure));
+        } else {
+          unitMeasure = 'CT';
+        }
+      }
+      if (size.indexOf('-') !== -1) size = size[1];
 
       Ingredient.findOrCreate({
         where: {
           name,
         },
         defaults: {
-          peapodName, prodId, unitMeasure, price, size: size.slice(0, size.indexOf(unitMeasure)),
-        }
+          peapodName, prodId, unitMeasure, price, size: +size,
+        },
       })
         .then(ing => {
-          console.log(name + 'added')
+          console.log(name + ' added')
           if (index < ingredientsArr.length) addIngredients(index + 1);
           else console.log('Done');
         })
