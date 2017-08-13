@@ -1,20 +1,20 @@
 const unitArr = [
-  { recipeUnit: 'tablespoon', dbUnit: },
-  { recipeUnit: 'teaspoon', dbUnit: },
-  { recipeUnit: 'cup', dbUnit: },
-  { recipeUnit: 'clove', dbUnit: },
-  { recipeUnit: 'package', dbUnit: },
-  { recipeUnit: 'can', dbUnit: },
-  { recipeUnit: 'pound', dbUnit: },
-  { recipeUnit: 'cube', dbUnit: },
-  { recipeUnit: 'bottle', dbUnit: },
-  { recipeUnit: 'pinch', dbUnit: },
-  { recipeUnit: 'square', dbUnit: },
-  { recipeUnit: 'fluid ounce', dbUnit: },
-  { recipeUnit: 'ounce', dbUnit: },
+  'tablespoon',
+  'teaspoon',
+  'cup',
+  'clove',
+  'package',
+  'can',
+  'pound',
+  'cube',
+  'bottle',
+  'pinch',
+  'square',
+  'fluid ounce',
+  'ounce',
 ];
 
-const unitRegex = new RegExp("^(" + unitArr.map(el => el.recipeUnit).join("|") + ")(s?)$");
+const unitRegex = new RegExp("^(" + unitArr.join("|") + ")(s?)$");
 
 function convertQuantityToNumber(quantity) {
   if (typeof quantity === 'string') {
@@ -30,10 +30,16 @@ function convertQuantityToNumber(quantity) {
   return quantity;
 }
 
+function mapUnitToDB(recipeUnit, recipeQuantity, dbObj) {
+  // recipeUnit might be undefined
+
+  return [newUnit, newQuantity];
+}
+
 function findDatabaseMatch(ingDescription) {
   console.log('Input: ', ingDescription)
   const bestMatch = {
-    name: null,
+    obj: null,
     rating: 0,
   };
   for (let i = 0; i < ingredientsFromDBArr.length; i++) {
@@ -54,16 +60,12 @@ function findDatabaseMatch(ingDescription) {
     });
     if (rating > bestMatch.rating) {
       bestMatch.rating = rating;
-      bestMatch.name = currDBCandidate.name;
+      bestMatch.obj = currDBCandidate;
     }
   }
-  if (!bestMatch.name) console.log('No match!!!!!')
-  console.log('Output: ', bestMatch.name)
-  return bestMatch.name;
-}
-
-function mapUnitToDB() {
-
+  if (!bestMatch.obj) console.log('No match!!!!!')
+  console.log('Output: ', bestMatch.obj.name)
+  return bestMatch.obj;
 }
 
 function parseIngredientElements(ingElementArr) {
@@ -90,7 +92,7 @@ function parseIngredientElements(ingElementArr) {
     }
     // convert recipe name to database name
     const recipeName = wordArr.slice(splitIdx + 1).join(' ');
-    const name = findDatabaseMatch(recipeName)
+    const dbMatch = findDatabaseMatch(recipeName)
 
     // check if it has other units in parens e.g. '1 (10 oz) package'
     const newUnit = quantity.match(/\(.+\)/i)
@@ -100,13 +102,15 @@ function parseIngredientElements(ingElementArr) {
       quantity *= +newUnitArr[0];
       unit = newUnitArr.slice(1).join(' ');
     }
-
+    if (!unit) unit = 'count';
     // map convert unit and quantity to dbd
+    [unit, quantity] = mapUnitToDB(unit, quantity, dbMatch);
+    // **********
 
     const ingObj = {
       quantity: convertQuantityToNumber(quantity),
-      unit: unit ? unit : 'count',
-      name,
+      unit,
+      name: dbMatch.name,
     };
 
     return ingObj;

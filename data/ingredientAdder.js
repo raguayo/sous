@@ -5,7 +5,7 @@ const Ingredient = require('../server/db/models/ingredient');
 var config = {
     username: 'wraedy@gmail.com',
     password: 'BI!!yg0at7117',
-}
+};
 
 var peapod = new Peapod(config);
 
