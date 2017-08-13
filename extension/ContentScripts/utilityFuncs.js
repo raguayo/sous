@@ -1,5 +1,3 @@
-
-
 const unitArr = ['tablespoon', 'teaspoon', 'cup', 'clove', 'package', 'can', 'pound', 'cube', 'bottle', 'pinch', 'square', 'fluid ounce', 'ounce'];
 
 const unitRegex = new RegExp("^(" + unitArr.join("|") + ")(s?)$");
@@ -7,9 +5,13 @@ const unitRegex = new RegExp("^(" + unitArr.join("|") + ")(s?)$");
 function convertQuantityToNumber(quantity) {
   if (typeof quantity === 'string') {
     const index = quantity.indexOf('/');
-    quantity = index === -1 ?
-      Number.parseFloat(quantity) :
-      Number.parseFloat(quantity) + (+quantity[index - 1] / +quantity[index + 1])
+    if (index === 1) {
+      quantity = +quantity[index - 1] / +quantity[index + 1];
+    } else if (index === -1) {
+      quantity = Number.parseFloat(quantity);
+    } else {
+      quantity = Number.parseFloat(quantity) + (+quantity[index - 1] / +quantity[index + 1]);
+    }
   }
   return quantity;
 }
@@ -40,11 +42,6 @@ function findDatabaseMatch(ingDescription) {
       bestMatch.rating = rating;
       bestMatch.name = currDBCandidate.name;
     }
-    // if (ingDescription.toLowerCase().includes(ingObj.name) && ingObj.name.length > bestMatch.length) {
-    //   if (ingDescription.length === ingObj.name.length) return ingObj.name;
-    //   bestMatch.name = ingObj.name;
-    //   bestMatch.length = ingObj.length;
-    // }
   }
   if (!bestMatch.name) console.log('No match!!!!!')
   console.log('Output: ', bestMatch.name)
@@ -88,7 +85,7 @@ function parseIngredientElements(ingElementArr) {
 
     const ingObj = {
       quantity: convertQuantityToNumber(quantity),
-      unit,
+      unit: unit ? unit : 'count',
       name,
     };
 

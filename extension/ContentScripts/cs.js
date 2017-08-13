@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const observer = new MutationObserver((mutations) => {
     const numServings = +document.querySelector('[ng-bind="adjustedServings"]').textContent;
     const recipeObj = {
-      title, author, recipeUrl, imageUrl, siteName, numServings
+      title, author, recipeUrl, imageUrl, siteName, numServings,
     }
     chrome.runtime.onMessage.addListener((req, sender, sendResponse) => {
       sendResponse({ recipe: recipeObj, ingredients });
