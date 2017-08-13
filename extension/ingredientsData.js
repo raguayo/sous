@@ -1,3 +1,5 @@
+// if this stays global we should take out peapod's info. All we need is the names
+
 const ingredientsFromDBArr = [
   {
     "id": 11,

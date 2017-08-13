@@ -1,5 +1,4 @@
 console.log('content script ran')
-console.log('Data? ', ingredientsFromDBArr[0])
 
 document.addEventListener('DOMContentLoaded', () => {
   const author = document.getElementsByClassName('submitter__name')[0].textContent;

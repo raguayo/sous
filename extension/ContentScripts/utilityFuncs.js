@@ -1,4 +1,5 @@
-// make unit regex
+
+
 const unitArr = ['tablespoon', 'teaspoon', 'cup', 'clove', 'package', 'can', 'pound', 'cube', 'bottle', 'pinch', 'square', 'fluid ounce', 'ounce'];
 
 const unitRegex = new RegExp("^(" + unitArr.join("|") + ")(s?)$");
@@ -8,9 +9,46 @@ function convertQuantityToNumber(quantity) {
     const index = quantity.indexOf('/');
     quantity = index === -1 ?
       Number.parseFloat(quantity) :
-      Number.parseFloat(quantity) + (+quantity[index-1] / +quantity[index+1])
+      Number.parseFloat(quantity) + (+quantity[index - 1] / +quantity[index + 1])
   }
   return quantity;
+}
+
+function findDatabaseMatch(ingDescription) {
+  console.log('Input: ', ingDescription)
+  const bestMatch = {
+    name: null,
+    rating: 0,
+  };
+  for (let i = 0; i < ingredientsFromDBArr.length; i++) {
+    const currDBCandidate = ingredientsFromDBArr[i]
+    const dbWordArr = currDBCandidate.name.split(' ');
+    const recipeWordArr = ingDescription.split(' ');
+    let rating = 0;
+    dbWordArr.forEach((dbWord) => {
+      let anyMatches = false;
+      recipeWordArr.forEach((recipeWord) => {
+        const wordSimilarityScore = distance(dbWord, recipeWord)
+        if (wordSimilarityScore > 0.87) {
+          rating += wordSimilarityScore;
+          anyMatches = true;
+        }
+      });
+      if (!anyMatches) rating -= 0.5;
+    });
+    if (rating > bestMatch.rating) {
+      bestMatch.rating = rating;
+      bestMatch.name = currDBCandidate.name;
+    }
+    // if (ingDescription.toLowerCase().includes(ingObj.name) && ingObj.name.length > bestMatch.length) {
+    //   if (ingDescription.length === ingObj.name.length) return ingObj.name;
+    //   bestMatch.name = ingObj.name;
+    //   bestMatch.length = ingObj.length;
+    // }
+  }
+  if (!bestMatch.name) console.log('No match!!!!!')
+  console.log('Output: ', bestMatch.name)
+  return bestMatch.name;
 }
 
 function parseIngredientElements(ingElementArr) {
@@ -35,7 +73,9 @@ function parseIngredientElements(ingElementArr) {
       unit = unitAndQuantityArr.pop();
       quantity = unitAndQuantityArr.join(' ');
     }
-    const name = wordArr.slice(splitIdx + 1).join(' ');
+    // convert recipe name to database name
+    const recipeName = wordArr.slice(splitIdx + 1).join(' ');
+    const name = findDatabaseMatch(recipeName)
 
     // check if it has other units in parens e.g. '1 (10 oz) package'
     const newUnit = quantity.match(/\(.+\)/i)
@@ -57,4 +97,3 @@ function parseIngredientElements(ingElementArr) {
 
   return ingObjArr;
 }
-

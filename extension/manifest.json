@@ -18,7 +18,7 @@
   "content_scripts": [
     {
       "matches": ["http://allrecipes.com/*", "https://allrecipes.com/*"],
-      "js": ["./ingredientsData.js", "./ContentScripts/utilityFuncs.js", "./ContentScripts/cs.js"],
+      "js": ["./ingredientsData.js", "./Dependencies/jaro-winkler.js", "./ContentScripts/utilityFuncs.js", "./ContentScripts/cs.js"],
       "run_at": "document_start",
       "all_frames": true
     }
