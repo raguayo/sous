@@ -1,6 +1,20 @@
-const unitArr = ['tablespoon', 'teaspoon', 'cup', 'clove', 'package', 'can', 'pound', 'cube', 'bottle', 'pinch', 'square', 'fluid ounce', 'ounce'];
+const unitArr = [
+  { recipeUnit: 'tablespoon', dbUnit: },
+  { recipeUnit: 'teaspoon', dbUnit: },
+  { recipeUnit: 'cup', dbUnit: },
+  { recipeUnit: 'clove', dbUnit: },
+  { recipeUnit: 'package', dbUnit: },
+  { recipeUnit: 'can', dbUnit: },
+  { recipeUnit: 'pound', dbUnit: },
+  { recipeUnit: 'cube', dbUnit: },
+  { recipeUnit: 'bottle', dbUnit: },
+  { recipeUnit: 'pinch', dbUnit: },
+  { recipeUnit: 'square', dbUnit: },
+  { recipeUnit: 'fluid ounce', dbUnit: },
+  { recipeUnit: 'ounce', dbUnit: },
+];
 
-const unitRegex = new RegExp("^(" + unitArr.join("|") + ")(s?)$");
+const unitRegex = new RegExp("^(" + unitArr.map(el => el.recipeUnit).join("|") + ")(s?)$");
 
 function convertQuantityToNumber(quantity) {
   if (typeof quantity === 'string') {
@@ -48,6 +62,10 @@ function findDatabaseMatch(ingDescription) {
   return bestMatch.name;
 }
 
+function mapUnitToDB() {
+
+}
+
 function parseIngredientElements(ingElementArr) {
   const ingSentenceArr = [...ingElementArr].map((ingNode) => {
     const ingText = ingNode.textContent;
@@ -82,6 +100,8 @@ function parseIngredientElements(ingElementArr) {
       quantity *= +newUnitArr[0];
       unit = newUnitArr.slice(1).join(' ');
     }
+
+    // map convert unit and quantity to dbd
 
     const ingObj = {
       quantity: convertQuantityToNumber(quantity),
