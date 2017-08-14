@@ -1,10 +1,10 @@
 const Sequelize = require('sequelize');
 const db = require('../db');
 
-const UserRecipe = db.define('users_recipes', {
+const SavedRecipe = db.define('savedRecipe', {
   isFavorite: {
     type: Sequelize.BOOLEAN,
   },
 });
 
-module.exports = UserRecipe;
+module.exports = SavedRecipe;

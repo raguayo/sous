@@ -2,14 +2,14 @@ const User = require('./user');
 const Recipe = require('./recipe');
 const Ingredient = require('./ingredient');
 const GroceryList = require('./groceryList');
-const IngredientQuantity = require('./ingredientQuantity')
-const UserRecipe = require('./user-recipe');
+const IngredientQuantity = require('./ingredientQuantity');
+const SavedRecipe = require('./savedRecipe');
 
-User.belongsToMany(Recipe, { through: 'groceryList' });
-Recipe.belongsToMany(User, { through: 'groceryList' });
+Recipe.belongsToMany(User, { through: 'grocerylist', as: 'groceryListRecipe' });
+User.belongsToMany(Recipe, { through: 'grocerylist', as: 'groceryListUser' });
 
-User.belongsToMany(Recipe, { through: 'savedRecipess' });
-Recipe.belongsToMany(Recipe, { through: 'savedRecipes' });
+User.belongsToMany(Recipe, { through: 'savedrecipes', as: 'savedRecipe' });
+Recipe.belongsToMany(User, { through: 'savedrecipes', as: 'savedRecipesUser' });
 
 Recipe.belongsToMany(Ingredient, { through: 'ingredientQuantity' });
 Ingredient.belongsToMany(Recipe, { through: 'ingredientQuantity' });
@@ -20,4 +20,4 @@ Ingredient.belongsToMany(Recipe, { through: 'ingredientQuantity' });
  * for example, we can say: const {User} = require('../db/models')
  * instead of: const User = require('../db/models/user')
  */
-module.exports = { User, Recipe, Ingredient, IngredientQuantity, GroceryList, UserRecipe };
+module.exports = { User, Recipe, Ingredient, IngredientQuantity, GroceryList, SavedRecipe };
