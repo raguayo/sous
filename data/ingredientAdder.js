@@ -118,10 +118,12 @@ function addIngredients(index) {
 
       const newUnitArr = ['OZ', 'CT', 'PINT', 'LB', 'LTR', 'ML']
       const newUnitRegEx = new RegExp("\\b(" + newUnitArr.join("|") + ")\\b")
-
+      // remove APX
       if (size.slice(0, 3) === 'APX') size = size.slice(4);
+      // make size just a number
       if (size.indexOf(unitMeasure) !== -1) size = size.slice(0, size.indexOf(unitMeasure));
       else {
+        // handle if unit and size don't match
         const newUnitMatchArr = size.match(newUnitRegEx);
         if (newUnitMatchArr) {
           unitMeasure = newUnitMatchArr[0];
@@ -135,7 +137,7 @@ function addIngredients(index) {
         size = size[0];
         unitMeasure = 'CT';
       }
-
+      // handle if there are pk and ct included in the ingredient name
       const hyphenIdx = peapodName.lastIndexOf('-');
       if (+hyphenIdx > (peapodName.length - 10)) {
         const potentialAdjustmentArr = peapodName.slice(hyphenIdx + 2).split(' ');
