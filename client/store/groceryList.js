@@ -38,6 +38,9 @@ export const removeIngredientFromList = ingredientId => (dispatch) =>
     })
     .catch(err => console.log(err));
 
+export const peapodGroceryList = () => dispatch =>
+  true;
+
 /**
  * REDUCER
  */

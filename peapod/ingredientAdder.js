@@ -1,4 +1,4 @@
-var Peapod = require('./moduleClone');
+var Peapod = require('./api');
 const Ingredient = require('../server/db/models/ingredient');
 
 var config = require('../secrets');
