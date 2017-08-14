@@ -130,7 +130,22 @@ function addIngredients(index) {
           unitMeasure = 'CT';
         }
       }
-      if (size.indexOf('-') !== -1) size = size[1];
+      // handle weird chicken breast APX 4-5
+      if (size.indexOf('-') !== -1) {
+        size = size[0];
+        unitMeasure = 'CT';
+      }
+
+      const hyphenIdx = peapodName.lastIndexOf('-');
+      if (+hyphenIdx > (peapodName.length - 10)) {
+        const potentialAdjustmentArr = peapodName.slice(hyphenIdx + 2).split(' ');
+        if (potentialAdjustmentArr[1] === 'ct') {
+          size = +potentialAdjustmentArr[0];
+          unitMeasure = 'CT';
+        } else if (potentialAdjustmentArr[1] === 'pk') {
+          size *= +potentialAdjustmentArr[0];
+        }
+      }
 
       Ingredient.findOrCreate({
         where: {

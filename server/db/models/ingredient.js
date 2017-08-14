@@ -20,8 +20,8 @@ const Ingredient = db.define('ingredient', {
     type: Sequelize.INTEGER,
   },
   size: {
-    type: Sequelize.STRING,
-  }
+    type: Sequelize.FLOAT,
+  },
 });
 
 module.exports = Ingredient;
