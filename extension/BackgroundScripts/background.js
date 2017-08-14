@@ -1,14 +1,12 @@
 const createGroceryList = (recipe, ingredients) => {
-  console.log('createGroceryList in background.js - recipe: ', recipe);
-  console.log('createGroceryList in background.js - ingredients: ', ingredients);
-  // alert('Success - in createGroceryList function on background.js!');
-  // ../../server/api/
+  // console.log('createGroceryList in background.js - recipe: ', recipe);
+  // console.log('createGroceryList in background.js - ingredients: ', ingredients);
   $.ajax({
     type: 'POST',
     url: 'http://localhost:8080/api/recipes/',
     data: {
       isFromChromeExt: true,
-      user: { name: 'tim', email: 'tim@tim.tim', password: 'tim' },
+      user: { name: 'tim', email: 'tim@tim.com', password: 'tim' },
       recipe,
       ingredients,
     },

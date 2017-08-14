@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { Recipe, Ingredient } = require('../db/models');
+const { Recipe, Ingredient, User } = require('../db/models');
 const { microformatScraper } = require('../scraper/microformat');
 
 module.exports = router;
@@ -28,50 +28,117 @@ router.get('/:id', (req, res, next) => {
 });
 
 router.post('/', (req, res, next) => {
-  console.log('req.body: ', req.body);
+  // console.log('req.body: ', req.body);
+  let recipePromise;
+  let groceryListPromise;
+  let ingredientArr;
 
-  const { url, inGroceryList } = req.body;
-  microformatScraper(url)
-  .then((data) => {
-    const title = data.properties.name[0];
-    const ingredientArr = data.properties.ingredient;
-    const imageUrl = data.properties.photo[0];
-    const recipePromise = Recipe.findOrCreate({
+  if (req.body.isFromChromeExt) {
+    const { name, email } = req.body.user;
+    // get user first
+    User.findOne({
       where: {
-        title,
-        // author: req.body.author,
+        name: name.trim(),
+        email: email.trim(),
       },
-      defaults: {
-        recipeUrl: url,
-        imageUrl,
-        // siteName: req.body.siteName,
-        // tags: req.body.tags,
-        // isFavorite: req.body.isFavorite,
-        // numServings: req.body.numServings,
-      },
-    });
-    // get grocery list
-    const groceryListPromise = req.user.getGrocerylist();
-    return Promise.all([recipePromise, groceryListPromise, ...ingredientArr])
-  })
-  .then(([recipeArr, grocerylist, ...ingredientArr]) => {
+    })
+    .then((user) => {
+      // console.log('recipes api router - chrome ext - post - user: ', user);
+      recipePromise = Recipe.findOrCreate({
+        where: {
+          title: req.body.recipe.title,
+        },
+        defaults: {
+          recipeUrl: req.body.recipe.recipeUrl,
+          imageUrl: req.body.recipe.imageUrl,
+        },
+      });
+      console.log('recipePromise: ', recipePromise);
+      groceryListPromise = user.getGrocerylist();
+      ingredientArr = req.body.ingredients;
+      return Promise.all([recipePromise, groceryListPromise, ...ingredientArr]);
+    })
+    .then(([recipeArr, groceryList, ...arrIngredients]) => {
+      console.log('recipeArr: ', recipeArr);
+      console.log('groceryList: ', groceryList);
+      console.log('arrIngredients: ', arrIngredients);
+      const newRecipe = recipeArr[0];
+      const isCreated = recipeArr[1];
+      req.user.addRecipes([newRecipe]);
+
+      groceryList.addRecipes([newRecipe]);
+
+      if (isCreated) {
+        // const arrIngredients = req.body.ingredients.split(',');
+        const arrIngredientPromises = arrIngredients.map((ingredient) => {
+          return Ingredient.findOrCreate({
+            where: {
+              name: ingredient,
+            },
+          })
+          .then(([foundIngredient, ingIsCreated]) => foundIngredient)
+          .catch(next);
+        });
+        return Promise.all([newRecipe, ...arrIngredientPromises])
+          .then(([recipe, ...ingredients]) => {
+            const ingArr = recipe.addIngredients(ingredients);
+            return Promise.all([newRecipe, ingArr])
+          })
+          .then(([recipe, ingredientsArr]) => Recipe.findById(recipe.id))
+          .then((recipe) => {
+            recipe.dataValues.inGroceryList = true;
+            res.status(201).json(recipe);
+          })
+          .catch(next);
+      } else {
+        newRecipe.dataValues.inGroceryList = true;
+        res.status(201).json(newRecipe);
+      }
+    })
+    .catch(next);
+  } else {
+    const { url, inGroceryList } = req.body;
+    microformatScraper(url)
+    .then((data) => {
+      const title = data.properties.name[0];
+      ingredientArr = data.properties.ingredient;
+      const imageUrl = data.properties.photo[0];
+      recipePromise = Recipe.findOrCreate({
+        where: {
+          title,
+          // author: req.body.author,
+        },
+        defaults: {
+          recipeUrl: url,
+          imageUrl,
+          // siteName: req.body.siteName,
+          // tags: req.body.tags,
+          // isFavorite: req.body.isFavorite,
+          // numServings: req.body.numServings,
+        },
+      });
+      // get grocery list
+      groceryListPromise = req.user.getGrocerylist();
+      return Promise.all([recipePromise, groceryListPromise, ...ingredientArr]);
+    })
+  .then(([recipeArr, groceryList, ...arrIngredients]) => {
     const newRecipe = recipeArr[0];
     const isCreated = recipeArr[1];
     req.user.addRecipes([newRecipe]);
 
     if (inGroceryList) {
-      grocerylist.addRecipes([newRecipe]);
+      groceryList.addRecipes([newRecipe]);
     }
 
     if (isCreated) {
       // const arrIngredients = req.body.ingredients.split(',');
-      const arrIngredientPromises = ingredientArr.map((ingredient) => {
+      const arrIngredientPromises = arrIngredients.map((ingredient) => {
         return Ingredient.findOrCreate({
           where: {
             name: ingredient,
           },
         })
-        .then(([foundIngredient, IngIsCreated]) => foundIngredient)
+        .then(([foundIngredient, ingIsCreated]) => foundIngredient)
         .catch(next);
       });
       return Promise.all([newRecipe, ...arrIngredientPromises])
@@ -83,7 +150,7 @@ router.post('/', (req, res, next) => {
         .then((recipe) => {
           if (inGroceryList) recipe.dataValues.inGroceryList = true;
           else recipe.dataValues.inGroceryList = false;
-          res.status(201).json(recipe)
+          res.status(201).json(recipe);
         })
         .catch(next);
     } else {
@@ -93,6 +160,7 @@ router.post('/', (req, res, next) => {
     }
   })
   .catch(next);
+  }
 });
 
 router.put('/:id', (req, res, next) => {

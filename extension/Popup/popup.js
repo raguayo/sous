@@ -1,10 +1,11 @@
-function sendMessage(recipe, ingredients) {
-  // console.log('in sendMessage of popup.js - recipes: ', recipes);
-  // console.log('in sendMessage of popup.js - ingredients: ', ingredients);
+function sendMessage(response) {
+  // console.log('in sendMessage of popup.js - response: ', response);
+  // console.log('in sendMessage of popup.js - response.recipe: ', response.recipe);
+  // console.log('in sendMessage of popup.js - response.ingredients: ', response.ingredients);
   chrome.extension.sendMessage({
-    msg: "createGroceryList",
-    recipe,
-    ingredients,
+    msg: 'createGroceryList',
+    recipe: response.recipe,
+    ingredients: response.ingredients,
   });
 }
 
@@ -59,10 +60,7 @@ chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
     $('body').append(htmlString);
 
     $('#btnSendRecipe').click(() => {
-      const link = document.getElementById('btnSendRecipe');
-      link.addEventListener('click', () => {
-        sendMessage(response.recipe, response.ingredients);
-      });
+      sendMessage(response);
     });
   });
 });
