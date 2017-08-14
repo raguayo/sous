@@ -119,7 +119,6 @@ const unitConversionHash = {
 };
 
 function mapUnitToDB(recipeUnit, recipeQuantity, dbObj) {
-  if (dbObj.name.includes('pork')) console.log(recipeUnit, recipeQuantity, dbObj)
   const recipeToDBObj = hashRecipeUnitToDBUnit[recipeUnit];
   if (!recipeToDBObj) {
     console.log('Error: Unit not found in DB ' + recipeUnit)
