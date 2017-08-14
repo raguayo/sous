@@ -4,6 +4,17 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { auth } from '../store';
+/* 
+I still don't know how I feel about the use of inline styling here
+I'm not sure I know enough on the topic to make much of an argument,
+but maybe consider setting up something that allows you to write scoped,
+modular css that can be imported! Check out what webpack css loaders can do for you
+
+at the very least, you should maintain a centralized 'styles' object that is used
+throughout the component so you can maintain styling in one place rather than scattered
+throughout the component
+ */
+
 
 // /**
 //  * COMPONENT

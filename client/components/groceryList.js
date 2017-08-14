@@ -9,6 +9,7 @@ class GroceryList extends Component {
     this.props.loadInitialData();
   }
   render() {
+    // this logic can be thrown into the mapping of props
     const ingredients = this.props.groceryList ? Object.keys(this.props.groceryList) : [];
     return (
       <Container style={{ padding: '5em 0em' }}>
@@ -34,6 +35,14 @@ class GroceryList extends Component {
     );
   }
 }
+
+/*
+for both the styles object and strikeThrough function - both of these are concerned
+primarily with style and UI. I would, once again, try looking into scoped css with
+webpack css-loaders. Also, the strikeThrough funciton seems reusable. It could be
+abstracted into its own file, perhaps with other similar UI-related functionalities
+that you can import across various components!
+*/
 
 const styles = {
   header: {

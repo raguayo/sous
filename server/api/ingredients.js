@@ -3,6 +3,9 @@ const { Ingredient } = require('../db/models');
 
 module.exports = router;
 
+// are you really ever looking for ingredient data without the context of a list
+// of sorts (be it grocery list or saved recipes)?
+
 router.get('/', (req, res, next) => {
   Ingredient.findAll()
     .then(ingredients => res.json(ingredients))
@@ -25,7 +28,7 @@ router.post('/', (req, res, next) => {
       unit: req.body.unit,
     }
   })
-    .spread((newIngredient, isCreated) => {
+    .spread((newIngredient, isCreated) => { // .spread is exclusive to bluebird promises
       if (isCreated) {
         res.status(201).json(newIngredient);
       } else {
@@ -38,7 +41,9 @@ router.put('/:id', (req, res, next) => {
   Ingredient.findById(req.params.id)
     .then((ingredient) => {
       if (!ingredient) {
-        return res.sendStatus(404);
+        return res.sendStatus(404); // be more descriptive - 404 may also imply that
+        // the resource path was not found and the client might think they made a
+        // request to the wrong URI.
       } else {
         return ingredient.update(req.body);
       }
