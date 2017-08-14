@@ -1,6 +1,6 @@
 const models = require('./server/db/models');
 
-const { User, Recipe, Ingredient, GroceryList, RecipeIngredient } = models;
+const { User, Recipe, Ingredient, GroceryList, RecipeIngredient, RecipeGroceryList } = models;
 
 const db = require('./server/db/db');
 
@@ -179,13 +179,19 @@ db.sync({ force: true })
     return Promise.all([buns, cobbler, steak, chicken, promise1, promise2]);
   })
   .then(() => {
-    return RecipeIngredient.findAll()
+    const foundRecipies = RecipeIngredient.findAll();
+    const groceryLists = RecipeGroceryList.findAll();
+    return Promise.all([foundRecipies, groceryLists]);
   })
-  .then((foundRecipies) => {
-    return Promise.all(foundRecipies.map((recipeIngredient) => {
+  .then(([foundRecipies, groceryLists]) => {
+    const recipeMap = foundRecipies.map((recipeIngredient) => {
       const quantity = Math.ceil(Math.random() * 5);
-      return recipeIngredient.update({ quantity });
-    }));
+      return recipeIngredient.update({ quantity })
+    });
+    const groceryListMap = groceryLists.map((recipe) => {
+      return recipe.update({ quantity: 1 });
+    });
+    return Promise.all([recipeMap, groceryListMap])
   })
   .then(() => {
     console.log('finished seeding');
