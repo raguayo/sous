@@ -15,6 +15,9 @@
     "default_title": "Sous",
     "default_popup": "./Popup/popup.html"
   },
+  "background": {
+    "scripts": ["./BackgroundScripts/background.js"]
+  },
   "content_scripts": [
     {
       "matches": ["http://allrecipes.com/*", "https://allrecipes.com/*"],
