@@ -6,12 +6,6 @@ const RecipeIngredient = require('./recipe-ingredient');
 const UserRecipe = require('./user-recipe');
 const RecipeGroceryList = require('./recipes-grocery-list');
 
-/**
- * If we had any associations to make, this would be a great place to put them!
- * ex. if we had another model called BlogPost, we might say:
- *
- *    BlogPost.belongsTo(User)
- */
 User.belongsTo(GroceryList);
 // User.belongsTo(GroceryList, { through: 'users_groceryLists' });
 

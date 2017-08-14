@@ -46,7 +46,11 @@ Recipe.prototype.isInUserGroceryList = function (userId) {
     .then(user => user.getGrocerylist())
     .then(groceryList =>
       db.models.recipes_grocery_lists.findOne({ where: { grocerylistId: groceryList.id, recipeId: this.id }}))
-    .then(included => !!included)
+    .then((foundRecipe) => {
+      console.log("HEEEEEERRRRREEE", foundRecipe)
+      return [!!foundRecipe, foundRecipe.quantity];
+    })
+
     .catch(console.error);
 };
 
