@@ -1,27 +1,18 @@
 const User = require('./user');
 const Recipe = require('./recipe');
 const Ingredient = require('./ingredient');
-const GroceryList = require('./grocery-list');
-const RecipeIngredient = require('./recipe-ingredient');
+const GroceryList = require('./groceryList');
+const IngredientQuantity = require('./ingredientQuantity')
 const UserRecipe = require('./user-recipe');
 
-/**
- * If we had any associations to make, this would be a great place to put them!
- * ex. if we had another model called BlogPost, we might say:
- *
- *    BlogPost.belongsTo(User)
- */
-User.belongsTo(GroceryList);
-// User.belongsTo(GroceryList, { through: 'users_groceryLists' });
+User.belongsToMany(Recipe, { through: 'groceryList' });
+Recipe.belongsToMany(User, { through: 'groceryList' });
 
-User.belongsToMany(Recipe, { through: 'users_recipes' });
-Recipe.belongsToMany(User, { through: 'users_recipes' });
+User.belongsToMany(Recipe, { through: 'savedRecipess' });
+Recipe.belongsToMany(Recipe, { through: 'savedRecipes' });
 
-Recipe.belongsToMany(Ingredient, { through: 'recipes_ingredients' });
-Ingredient.belongsToMany(Recipe, { through: 'recipes_ingredients' });
-
-Recipe.belongsToMany(GroceryList, { through: 'recipes_grocery_lists' });
-GroceryList.belongsToMany(Recipe, { through: 'recipes_grocery_lists' });
+Recipe.belongsToMany(Ingredient, { through: 'ingredientQuantity' });
+Ingredient.belongsToMany(Recipe, { through: 'ingredientQuantity' });
 
 /**
  * We'll export all of our models here, so that any time a module needs a model,
@@ -29,6 +20,4 @@ GroceryList.belongsToMany(Recipe, { through: 'recipes_grocery_lists' });
  * for example, we can say: const {User} = require('../db/models')
  * instead of: const User = require('../db/models/user')
  */
-module.exports = {
-  User, Recipe, Ingredient, GroceryList, RecipeIngredient, UserRecipe,
-};
+module.exports = { User, Recipe, Ingredient, IngredientQuantity, GroceryList, UserRecipe };
