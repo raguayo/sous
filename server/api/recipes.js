@@ -5,9 +5,10 @@ const { microformatScraper } = require('../scraper/microformat');
 module.exports = router;
 
 router.get('/test', (req, res, next) => {
-  req.user.getSavedRecipes()
+  //console.log(req.user);
+  req.user.addGroceryListRecipe()
     .then(got => {
-      console.log(got);
+      res.json(got);
     })
     .catch(next);
 });
