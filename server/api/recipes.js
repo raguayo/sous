@@ -32,6 +32,7 @@ router.post('/', (req, res, next) => {
   let recipePromise;
   let groceryListPromise;
   let ingredientArr;
+  let usr;
 
   if (req.body.isFromChromeExt) {
     const { name, email } = req.body.user;
@@ -43,46 +44,65 @@ router.post('/', (req, res, next) => {
       },
     })
     .then((user) => {
+      usr = user;
       // console.log('recipes api router - chrome ext - post - user: ', user);
+      const { title, recipeUrl, imageUrl, author, siteName, numServings } = req.body.recipe;
       recipePromise = Recipe.findOrCreate({
         where: {
-          title: req.body.recipe.title,
+          title,
         },
         defaults: {
-          recipeUrl: req.body.recipe.recipeUrl,
-          imageUrl: req.body.recipe.imageUrl,
+          recipeUrl,
+          imageUrl,
+          author,
+          siteName,
+          numServings,
         },
       });
-      console.log('recipePromise: ', recipePromise);
+      // console.log('recipePromise: ', recipePromise);
       groceryListPromise = user.getGrocerylist();
       ingredientArr = req.body.ingredients;
-      return Promise.all([recipePromise, groceryListPromise, ...ingredientArr]);
+      return (Promise.all([recipePromise, groceryListPromise, ...ingredientArr]));
     })
     .then(([recipeArr, groceryList, ...arrIngredients]) => {
       console.log('recipeArr: ', recipeArr);
-      console.log('groceryList: ', groceryList);
-      console.log('arrIngredients: ', arrIngredients);
+      // console.log('groceryList: ', groceryList);
+      // console.log('arrIngredients: ', arrIngredients);
       const newRecipe = recipeArr[0];
       const isCreated = recipeArr[1];
-      req.user.addRecipes([newRecipe]);
+      usr.addRecipes([newRecipe]);
 
       groceryList.addRecipes([newRecipe]);
 
       if (isCreated) {
         // const arrIngredients = req.body.ingredients.split(',');
         const arrIngredientPromises = arrIngredients.map((ingredient) => {
+          console.log('looping through each ingredient - ingredient: ', ingredient);
           return Ingredient.findOrCreate({
             where: {
-              name: ingredient,
+              name: ingredient.name,
+            },
+            defaults: {
+              unitMeasure: ingredient.unit,
             },
           })
-          .then(([foundIngredient, ingIsCreated]) => foundIngredient)
+          .then(([foundIngredient, ingIsCreated]) => {
+            console.log('foundIngredient: ', foundIngredient);
+            console.log('ingIsCreated: ', ingIsCreated);
+
+            // test code for associating ingredients to recipe with quantity using through
+            // newRecipe.addIngredient(foundIngredient, { through: ingredient.quantity });
+            foundIngredient.quantity = ingredient.quantity;
+            //
+
+            return foundIngredient;
+          })
           .catch(next);
         });
         return Promise.all([newRecipe, ...arrIngredientPromises])
           .then(([recipe, ...ingredients]) => {
-            const ingArr = recipe.addIngredients(ingredients);
-            return Promise.all([newRecipe, ingArr])
+            const ingArr = recipe.addIngredients(ingredients); // comment out this line if do recipe.addIngredient(ingredient, { through: {quantity: ingredient.quantity}})
+            return Promise.all([newRecipe, ingArr]); // ingArr]); // change ingArr to ingredients if addIngredient when looping in last .then
           })
           .then(([recipe, ingredientsArr]) => Recipe.findById(recipe.id))
           .then((recipe) => {

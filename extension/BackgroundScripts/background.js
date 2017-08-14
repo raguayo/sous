@@ -1,6 +1,6 @@
 const createGroceryList = (recipe, ingredients) => {
-  // console.log('createGroceryList in background.js - recipe: ', recipe);
-  // console.log('createGroceryList in background.js - ingredients: ', ingredients);
+  //  console.log('createGroceryList in background.js - recipe: ', recipe);
+  //  console.log('createGroceryList in background.js - ingredients: ', ingredients);
   $.ajax({
     type: 'POST',
     url: 'http://localhost:8080/api/recipes/',
