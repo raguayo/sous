@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 import { Container, Grid, Header, Segment, Icon, Checkbox, Button } from 'semantic-ui-react';
-import { fetchGroceryList, peapodGroceryList } from '../store';
+import { fetchGroceryList, deleteRecipesFromList } from '../store';
 import Peapod from '../../peapod/api';
 
 class GroceryList extends Component {
@@ -31,7 +31,7 @@ class GroceryList extends Component {
             }
           </Segment.Group>
         </Segment.Group>
-        <Button onClick={}>Add to Peapod Cart</Button>
+        <Button onClick={() => this.props.handleCartPurchase(this.props.groceryList)}>Add to Peapod Cart</Button>
       </Container>
     );
   }
@@ -55,41 +55,40 @@ function strikeThrough(e) {
 const mapState = (state) => {
   return {
     groceryList: state.groceryList,
-  }
-}
+  };
+};
 
 const mapDispatch = (dispatch) => {
   return {
     loadInitialData() {
       dispatch(fetchGroceryList());
     },
-    handleCartPurchase() {
-      function handleAddToCartResponse(err, didSucceed) {
+    handleCartPurchase(groceryList) {
+      const itemArr = [];
+      Object.keys(groceryList).forEach((key) => {
+        const gListItem = groceryList[key];
+        const productId = gListItem.prodId;
+        const quantToBuy = Math.ceiling(gListItem.quantity / gListItem.peapodQuantity);
+        itemArr.push({ quantity: quantToBuy, productId });
+      });
+
+      Peapod.addToCart(itemArr, (err, didSucceed) => {
         if (err) throw err; // handle this error better
         if (didSucceed) {
-          // open new tab a shift focus
-          window.open()
-          dispatch(peapodGroceryList());
+          const newTab = window.open('https://www.peapod.com', '_blank');
+          newTab.focus();
+          dispatch(deleteRecipesFromList());
         }
-      }
-      // create item Arr
-      let itemArr = [];
-      Object.keys(groceryList).forEach(key => {
-        const itemObj = {};
-        const gListItem = groceryList[key];
-        itemObj.productId = gListItem.prodId;
-        itemObj.quantity = gListItem.peapodQuantity;
-        itemArr.push(itemObj);
       });
-      // buy on peapod
-      Peapod.addToCart(itemArr, handleAddToCartResponse)
-    }
-  }
-}
+    },
+  };
+};
 
 export default connect(mapState, mapDispatch)(GroceryList);
 
 GroceryList.propTypes = {
   loadInitialData: PropTypes.func.isRequired,
+  handleCartPurchase: PropTypes.func.isRequired,
+  groceryList: PropTypes.object.isRequired,
 };
 
