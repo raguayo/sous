@@ -1,6 +1,16 @@
-chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+function sendMessage(recipe, ingredients) {
+  // console.log('in sendMessage of popup.js - recipes: ', recipes);
+  // console.log('in sendMessage of popup.js - ingredients: ', ingredients);
+  chrome.extension.sendMessage({
+    msg: "createGroceryList",
+    recipe,
+    ingredients,
+  });
+}
+
+chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
   const tabId = tabs[0].id;
-  chrome.tabs.sendMessage(tabId, { greeting: 'hello' }, (response) => {
+  chrome.tabs.sendMessage(tabId, { greeting: "hello" }, response => {
     let htmlString = `<h5>Recipe Details:</h5>
       <div class="ui grid">
         <div class="row">
@@ -13,11 +23,13 @@ chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
         </div>
         <div class="row">
           <div class="eight wide column"><p>Recipe Url:</p></div>
-          <div class="eight wide column"><p>${response.recipe.recipeUrl}</p></div>
+          <div class="eight wide column"><p>${response.recipe
+            .recipeUrl}</p></div>
         </div>
         <div class="row">
           <div class="eight wide column"><p>Number of Servings:</p></div>
-          <div class="eight wide column"><p>${response.recipe.numServings}</p></div>
+          <div class="eight wide column"><p>${response.recipe
+            .numServings}</p></div>
         </div>
       </div>
       <h5>Ingredients:</h5>
@@ -37,18 +49,20 @@ chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
         </div>`;
       htmlString += ingHTML;
     });
-$('#button').click(() => {
-  console.log('in button click of popup.js')
-  chrome.extension.sendMessage({ msg: 'createGroceryList', recipes: response.recipes, ingredients: response.ingredients });
-});
-    const buttonHtml = '<button type="button">Send Recipe to Sous</button>';
+
+    // const buttonHtml = '<button type"button">Send Recipe to Sous</button>';
+    const buttonHtml = '<button type="button" id="btnSendRecipe" name="btnSendRecipe">Send Recipe to Sous</button></div>';
     htmlString += buttonHtml;
 
     htmlString += '</div>';
 
     $('body').append(htmlString);
+
+    $('#btnSendRecipe').click(() => {
+      const link = document.getElementById('btnSendRecipe');
+      link.addEventListener('click', () => {
+        sendMessage(response.recipe, response.ingredients);
+      });
+    });
   });
 });
-
-
-

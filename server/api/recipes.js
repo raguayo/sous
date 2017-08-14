@@ -28,6 +28,8 @@ router.get('/:id', (req, res, next) => {
 });
 
 router.post('/', (req, res, next) => {
+  console.log('req.body: ', req.body);
+
   const { url, inGroceryList } = req.body;
   microformatScraper(url)
   .then((data) => {
