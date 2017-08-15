@@ -28,7 +28,7 @@ router.get('/:id', (req, res, next) => {
 });
 
 router.post('/', (req, res, next) => {
-  // console.log('req.body: ', req.body);
+  console.log('req.body: ', req.body);
   let recipePromise;
   let groceryListPromise;
   let ingredientArr;
@@ -45,7 +45,6 @@ router.post('/', (req, res, next) => {
     })
     .then((user) => {
       usr = user;
-      // console.log('recipes api router - chrome ext - post - user: ', user);
       const { title, recipeUrl, imageUrl, author, siteName, numServings } = req.body.recipe;
       recipePromise = Recipe.findOrCreate({
         where: {
@@ -59,25 +58,18 @@ router.post('/', (req, res, next) => {
           numServings,
         },
       });
-      // console.log('recipePromise: ', recipePromise);
-      groceryListPromise = user.getGrocerylist();
       ingredientArr = req.body.ingredients;
-      return (Promise.all([recipePromise, groceryListPromise, ...ingredientArr]));
+      return (Promise.all([recipePromise, ...ingredientArr]));
     })
-    .then(([recipeArr, groceryList, ...arrIngredients]) => {
-      console.log('recipeArr: ', recipeArr);
-      // console.log('groceryList: ', groceryList);
-      // console.log('arrIngredients: ', arrIngredients);
+    .then(([recipeArr, ...arrIngredients]) => {
       const newRecipe = recipeArr[0];
       const isCreated = recipeArr[1];
-      usr.addRecipes([newRecipe]);
+      usr.addSavedRecipes([newRecipe]);
 
-      groceryList.addRecipes([newRecipe]);
+      usr.addGroceryListRecipe([newRecipe]);
 
       if (isCreated) {
-        // const arrIngredients = req.body.ingredients.split(',');
         const arrIngredientPromises = arrIngredients.map((ingredient) => {
-          console.log('looping through each ingredient - ingredient: ', ingredient);
           return Ingredient.findOrCreate({
             where: {
               name: ingredient.name,
@@ -87,22 +79,15 @@ router.post('/', (req, res, next) => {
             },
           })
           .then(([foundIngredient, ingIsCreated]) => {
-            console.log('foundIngredient: ', foundIngredient);
-            console.log('ingIsCreated: ', ingIsCreated);
-
-            // test code for associating ingredients to recipe with quantity using through
-            // newRecipe.addIngredient(foundIngredient, { through: ingredient.quantity });
             foundIngredient.quantity = ingredient.quantity;
-            //
-
             return foundIngredient;
           })
           .catch(next);
         });
         return Promise.all([newRecipe, ...arrIngredientPromises])
           .then(([recipe, ...ingredients]) => {
-            const ingArr = recipe.addIngredients(ingredients); // comment out this line if do recipe.addIngredient(ingredient, { through: {quantity: ingredient.quantity}})
-            return Promise.all([newRecipe, ingArr]); // ingArr]); // change ingArr to ingredients if addIngredient when looping in last .then
+            const ingArr = recipe.addIngredients(ingredients);
+            return Promise.all([newRecipe, ingArr]); // ingArr]);
           })
           .then(([recipe, ingredientsArr]) => Recipe.findById(recipe.id))
           .then((recipe) => {
@@ -151,7 +136,6 @@ router.post('/', (req, res, next) => {
     }
 
     if (isCreated) {
-      // const arrIngredients = req.body.ingredients.split(',');
       const arrIngredientPromises = arrIngredients.map((ingredient) => {
         return Ingredient.findOrCreate({
           where: {

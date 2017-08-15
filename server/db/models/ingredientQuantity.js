@@ -3,7 +3,7 @@ const db = require('../db');
 
 const IngredientQuantity = db.define('ingredientQuantity', {
   quantity: {
-    type: Sequelize.INTEGER,
+    type: Sequelize.FLOAT,
   },
 });
 
