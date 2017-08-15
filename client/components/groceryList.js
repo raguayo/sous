@@ -2,8 +2,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 import { Container, Grid, Header, Segment, Icon, Checkbox, Button } from 'semantic-ui-react';
-import { fetchGroceryList, deleteRecipesFromList } from '../store';
-// import Peapod from '../../peapod/api';
+import { fetchGroceryList, deleteRecipesFromList, addItemsToPeapodCart } from '../store';
 
 class GroceryList extends Component {
   componentDidMount() {
@@ -71,15 +70,7 @@ const mapDispatch = (dispatch) => {
         const quantToBuy = Math.ceiling(gListItem.quantity / gListItem.peapodQuantity);
         itemArr.push({ quantity: quantToBuy, productId });
       });
-
-      Peapod.addToCart(itemArr, (err, didSucceed) => {
-        if (err) throw err; // handle this error better
-        if (didSucceed) {
-          const newTab = window.open('https://www.peapod.com', '_blank');
-          newTab.focus();
-          dispatch(deleteRecipesFromList());
-        }
-      });
+      dispatch(addItemsToPeapodCart(itemArr));
     },
   };
 };

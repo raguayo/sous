@@ -24,14 +24,21 @@ module.exports = {
         test: /\.svg$|\.ttf?|\.woff$|\.woff2|\.eof|\.eot/,
         loader: 'file-loader'
       }
+      // {
+      //   test: /\.json$/,
+      //   loader: 'json-loader',
+      // }
     ]
   },
-  node: {
-    console: 'true',
-    fs: 'true',
-    net: 'true',
-    tls: 'true'
-  }
+  // resolve: {
+  //   extensions: ['', '.webpack.js', '.web.js', '.js']
+  // },
+  // node: {
+  //   console: true,
+  //   fs: 'mock',
+  //   net: 'mock',
+  //   tls: 'mock',
+  // },
 }
 
 // https://github.com/request/request/issues/1691
