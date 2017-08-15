@@ -39,7 +39,7 @@ function CurrentRecipe({ handleAddRecipe, handleDeleteRecipe, handleDeleteRecipe
                 <Grid>
                   <Grid.Column floated="left" width={2}>
                     <Form>
-                      <Form.Input placeholder="1" onChange={(e) => handleUpdateQuantity(currRecipe.id, e)} />
+                      <Form.Input placeholder={currRecipe.grocerylist.quantity} onChange={(e) => handleUpdateQuantity(currRecipe.id, e)} />
                     </Form>
                   </Grid.Column>
                   <Grid.Column floated="left" width={10} verticalAlign="middle">
