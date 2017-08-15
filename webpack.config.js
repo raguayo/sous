@@ -25,5 +25,16 @@ module.exports = {
         loader: 'file-loader'
       }
     ]
+  },
+  node: {
+    console: 'true',
+    fs: 'true',
+    net: 'true',
+    tls: 'true'
   }
 }
+
+// https://github.com/request/request/issues/1691
+// http://webpack.github.io/docs/configuration.html#node
+// https://github.com/request/request/compare/master...pho3nixf1re:webpack-tests
+// https://github.com/request/request/issues/1529

@@ -1,8 +1,8 @@
 // code from https://github.com/MiniCodeMonkey/node-peapod
 
-var request = require('request'),
-    async = require('async'),
-    extend = require('util')._extend;
+var request = require('request')
+    var async = require('async')
+    var extend = require('util')._extend;
 
 /**
  * Peapod constructor

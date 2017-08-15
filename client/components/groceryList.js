@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import React, { Component } from 'react';
 import { Container, Grid, Header, Segment, Icon, Checkbox, Button } from 'semantic-ui-react';
 import { fetchGroceryList, deleteRecipesFromList } from '../store';
-import Peapod from '../../peapod/api';
+// import Peapod from '../../peapod/api';
 
 class GroceryList extends Component {
   componentDidMount() {
