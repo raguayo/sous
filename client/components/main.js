@@ -16,11 +16,15 @@ const Main = (props) => {
   const { children, isLoggedIn } = props;
 
   return (
-    <div>
-      {isLoggedIn ?
-        <Navbar /> : null }
-      {children}
-      <div >
+    <div style={styles.container}>
+      <div>
+        {isLoggedIn ?
+          <Navbar /> : null}
+      </div>
+      <div>
+        {children}
+      </div>
+      <div style={styles.footer}>
         <Footer />
       </div>
     </div>
@@ -47,3 +51,16 @@ Main.propTypes = {
   children: PropTypes.object,
   isLoggedIn: PropTypes.bool.isRequired,
 };
+
+const styles = {
+  container: {
+    display: 'flex',
+    flexDirection: 'column',
+    height: '100%',
+  },
+  footer: {
+    height: '3em',
+    marginTop: 'auto',
+  },
+};
+

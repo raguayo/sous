@@ -5,18 +5,18 @@ const { microformatScraper } = require('../scraper/microformat');
 module.exports = router;
 
 router.get('/', (req, res, next) => {
-  req.user.getRecipes()
-  .then((recipes) => {
-    const arrOfPromises = recipes.map((recipe) => {
-      return recipe.isInUserGroceryList(req.user.id)
-      .then((bool) => {
-        recipe.dataValues.inGroceryList = bool;
-        return recipe;
-      })
-      .catch(next);
-    });
-    return Promise.all(arrOfPromises);
-  })
+  req.user.getSavedRecipes()
+  // .then((recipes) => {
+  //   const arrOfPromises = recipes.map((recipe) => {
+  //     return recipe.isInUserGroceryList(req.user.id)
+  //     .then((bool) => {
+  //       recipe.dataValues.inGroceryList = bool;
+  //       return recipe;
+  //     })
+  //     .catch(next);
+  //   });
+  //   return Promise.all(arrOfPromises);
+  // })
   .then(recipesWithFlag => res.json(recipesWithFlag))
   .catch(next);
 });
@@ -196,13 +196,14 @@ router.put('/:id', (req, res, next) => {
 });
 
 router.delete('/:id', (req, res, next) => {
-  req.user.removeRecipe(req.params.id)
-    .then(() => {
-      return req.user.getGrocerylist();
-    })
-    .then((userGroceryList) => {
-      userGroceryList.removeRecipe(req.params.id);
-    })
+  req.user.removeSavedRecipe(req.params.id)
+    // .then(() => {
+    //   return req.user.getGrocerylist();
+    // })
+    // .then((userGroceryList) => {
+    //   userGroceryList.removeRecipe(req.params.id);
+    // })
+    .then(() => req.user.removeGroceryListRecipe(req.params.id))
     .then(() => res.sendStatus(204))
     .catch(next);
   // Recipe.destroy({

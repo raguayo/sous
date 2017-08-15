@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Container, Grid, Header, Image, Message, Segment, Button, Icon } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
-import { deleteRecipeFromHistory } from '../store/recipes';
+import { deleteSavedRecipe } from '../store/savedRecipes';
 
 function RecipeHistory({ favRecipes, prevRecipes, handleDelete }) {
   return (
@@ -57,14 +57,14 @@ function RecipeHistory({ favRecipes, prevRecipes, handleDelete }) {
 
 const mapState = (state) => {
   return {
-    favRecipes: state.recipes.filter(recipeObj => recipeObj.isFavorite),
-    prevRecipes: state.recipes.filter(recipeObj => !recipeObj.isFavorite),
+    favRecipes: state.savedRecipes.filter(recipeObj => recipeObj.isFavorite),
+    prevRecipes: state.savedRecipes.filter(recipeObj => !recipeObj.isFavorite),
   };
 };
 
 const mapDispatch = (dispatch) => {
   return {
-    handleDelete: id => dispatch(deleteRecipeFromHistory(id)),
+    handleDelete: id => dispatch(deleteSavedRecipe(id)),
   };
 };
 

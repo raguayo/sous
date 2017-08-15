@@ -1,10 +1,10 @@
 const Sequelize = require('sequelize');
 const db = require('../db');
 
-const RecipeIngredient = db.define('recipes_ingredients', {
+const IngredientQuantity = db.define('ingredientQuantity', {
   quantity: {
     type: Sequelize.INTEGER,
   },
 });
 
-module.exports = RecipeIngredient;
+module.exports = IngredientQuantity;
