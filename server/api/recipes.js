@@ -64,10 +64,13 @@ router.post('/', (req, res, next) => {
     .then(([recipeArr, ...arrIngredients]) => {
       const newRecipe = recipeArr[0];
       const isCreated = recipeArr[1];
+
+      // TODO: modularize to set following two associations - pass user argument to handle both post branches
       usr.addSavedRecipes([newRecipe]);
 
       usr.addGroceryListRecipe([newRecipe]);
 
+      // TODO: consider modularizing with adding passed argument if from microformat branch
       if (isCreated) {
         const arrIngredientPromises = arrIngredients.map((ingredient) => {
           return Ingredient.findOrCreate({
@@ -79,15 +82,18 @@ router.post('/', (req, res, next) => {
             },
           })
           .then(([foundIngredient, ingIsCreated]) => {
+            // TODO: only line different from microformat branch
             foundIngredient.quantity = ingredient.quantity;
             return foundIngredient;
           })
           .catch(next);
         });
+
+        // TODO: modularize - same as in microformat branch
         return Promise.all([newRecipe, ...arrIngredientPromises])
           .then(([recipe, ...ingredients]) => {
             const ingArr = recipe.addIngredients(ingredients);
-            return Promise.all([newRecipe, ingArr]); // ingArr]);
+            return Promise.all([newRecipe, ingArr]);
           })
           .then(([recipe, ingredientsArr]) => Recipe.findById(recipe.id))
           .then((recipe) => {
@@ -127,12 +133,15 @@ router.post('/', (req, res, next) => {
   .then(([recipeArr, ...arrIngredients]) => {
     const newRecipe = recipeArr[0];
     const isCreated = recipeArr[1];
+
+    // TODO: modularize to set following two associations - pass user and inGroceryList(null if from chrome ext) arguments to handle both post branches
     req.user.addSavedRecipes([newRecipe]);
 
     if (inGroceryList) {
       req.user.addGroceryListRecipe([newRecipe]);
     }
 
+    // TODO: consider modularizing with adding passed argument if from microformat branch
     if (isCreated) {
       const arrIngredientPromises = arrIngredients.map((ingredient) => {
         return Ingredient.findOrCreate({
@@ -148,10 +157,13 @@ router.post('/', (req, res, next) => {
         })
         .catch(next);
       });
+
+      // TODO: modularize - same as in microformat branch
+
       return Promise.all([newRecipe, ...arrIngredientPromises])
         .then(([recipe, ...ingredients]) => {
           const ingArr = recipe.addIngredients(ingredients);
-          return Promise.all([newRecipe, ingArr])
+          return Promise.all([newRecipe, ingArr]);
         })
         .then(([recipe, ingredientsArr]) => Recipe.findById(recipe.id))
         .then((recipe) => {
