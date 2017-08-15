@@ -1,14 +1,3 @@
-function sendMessage(response) {
-  // console.log('in sendMessage of popup.js - response: ', response);
-  // console.log('in sendMessage of popup.js - response.recipe: ', response.recipe);
-  // console.log('in sendMessage of popup.js - response.ingredients: ', response.ingredients);
-  chrome.extension.sendMessage({
-    msg: 'createGroceryList',
-    recipe: response.recipe,
-    ingredients: response.ingredients,
-  });
-}
-
 chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
   const tabId = tabs[0].id;
   chrome.tabs.sendMessage(tabId, { greeting: "hello" }, response => {
@@ -24,13 +13,11 @@ chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
         </div>
         <div class="row">
           <div class="eight wide column"><p>Recipe Url:</p></div>
-          <div class="eight wide column"><p>${response.recipe
-            .recipeUrl}</p></div>
+          <div class="eight wide column"><p>${response.recipe.recipeUrl}</p></div>
         </div>
         <div class="row">
           <div class="eight wide column"><p>Number of Servings:</p></div>
-          <div class="eight wide column"><p>${response.recipe
-            .numServings}</p></div>
+          <div class="eight wide column"><p>${response.recipe.numServings}</p></div>
         </div>
       </div>
       <h5>Ingredients:</h5>
@@ -60,7 +47,8 @@ chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
     $('body').append(htmlString);
 
     $('#btnSendRecipe').click(() => {
-      sendMessage(response);
+      response.msg = 'createGroceryList';
+      chrome.extension.sendMessage(response);
     });
   });
 });

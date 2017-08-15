@@ -68,7 +68,7 @@ const arrOfIng2 = [
  { name: 'black pepper', peapodName: 'McCormick Black Pepper Pure Ground', },
  { name: 'bread crumbs', peapodName: 'Peapod Bread Crumbs Italian Style', },
  { name: 'olive oil', peapodName: 'O-Live & Co Olive Oil Extra Virgin', },
-//  { name: 'chicken breast', peapodName: 'Peapod Chicken Breasts Boneless Skinless Value Pack Fresh', },
+ { name: 'chicken breast', peapodName: 'Peapod Chicken Breasts Boneless Skinless Value Pack Fresh', },
  { name: 'garlic', peapodName: 'Peapod Garlic Minced in Water', },
  { name: 'zucchini', peapodName: 'Squash Zucchini', },
  { name: 'tomatoes', peapodName: 'Tomatoes Beefsteak', },

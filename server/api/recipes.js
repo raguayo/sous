@@ -45,6 +45,7 @@ router.post('/', (req, res, next) => {
     })
     .then((user) => {
       usr = user;
+      console.log('usr:', usr)
       const { title, recipeUrl, imageUrl, author, siteName, numServings } = req.body.recipe;
       recipePromise = Recipe.findOrCreate({
         where: {
@@ -83,6 +84,7 @@ router.post('/', (req, res, next) => {
           })
           .then(([foundIngredient, ingIsCreated]) => {
             // TODO: only line different from microformat branch
+            console.log('ingredient.qty: ', ingredient.quantity);
             return IngredientQuantity.create({ recipeId: newRecipe.id, ingredientId: foundIngredient.id, quantity: ingredient.quantity });
           })
           .catch(next);
@@ -134,6 +136,7 @@ router.post('/', (req, res, next) => {
     const isCreated = recipeArr[1];
 
     // TODO: modularize to set following two associations - pass user and inGroceryList(null if from chrome ext) arguments to handle both post branches
+    console.log('here in orig block');
     req.user.addSavedRecipes([newRecipe]);
 
     if (inGroceryList) {
