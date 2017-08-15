@@ -5,9 +5,9 @@ import { Container, Grid, Header, Segment, Icon, Checkbox } from 'semantic-ui-re
 import { fetchGroceryList } from '../store';
 
 class GroceryList extends Component {
-  componentDidMount() {
-    this.props.loadInitialData();
-  }
+  // componentDidMount() {
+  //   this.props.loadInitialData();
+  // }
   render() {
     const ingredients = this.props.groceryList ? Object.keys(this.props.groceryList) : [];
     return (
