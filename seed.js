@@ -1,6 +1,6 @@
 const models = require('./server/db/models');
 
-const { User, Recipe, Ingredient, GroceryList, RecipeIngredient } = models;
+const { User, Recipe, Ingredient, GroceryList, IngredientQuantity } = models;
 
 const db = require('./server/db/db');
 
@@ -76,22 +76,18 @@ db.sync({ force: true })
     ]);
   })
   .then(([chicken, buns, cobbler, bread, steak, user1, user2, user3]) => {
-    user1.addRecipes([chicken, cobbler, steak]);
-    user2.addRecipes([buns, bread, steak])
-    user3.addRecipes([chicken])
+    user1.addGroceryListRecipes([chicken, cobbler, steak]);
+    user2.addGroceryListRecipes([buns]);
+    user3.addGroceryListRecipes([chicken]);
     return Promise.all([chicken, buns, cobbler, bread, steak, user1, user2, user3]);
   })
   .then(([chicken, buns, cobbler, bread, steak, user1, user2, user3]) => {
-    const list1 = GroceryList.create({ name: 'Placeholder1' });
-    const list2 = GroceryList.create({ name: 'Placeholder2' });
-    const list3 = GroceryList.create({ name: 'Placeholder3' });
-
-    return Promise.all([chicken, buns, cobbler, bread, steak, user1, user2, user3, list1, list2, list3]);
+    user1.addSavedRecipes([chicken, cobbler, steak]);
+    user2.addSavedRecipes([buns, bread, steak]);
+    user3.addSavedRecipes([chicken]);
+    return Promise.all([chicken, buns, cobbler, bread, steak]);
   })
-  .then(([chicken, buns, cobbler, bread, steak, user1, user2, user3, list1, list2, list3]) => {
-    user1.setGrocerylist(list1);
-    user2.setGrocerylist(list2);
-    user3.setGrocerylist(list3);
+  .then(([chicken, buns, cobbler, bread, steak]) => {
 
     return Promise.all([
       Ingredient.create({
@@ -159,33 +155,32 @@ db.sync({ force: true })
       cobbler,
       bread,
       steak,
-      list1,
-      list2,
-      list3,
     ]);
   })
-  .then(([milk, eggs, butter, sugar, peaches, blueberries, basil, garlic, worcestershire, chickenIng, chicken, buns, cobbler, bread, steak, list1, list2, list3]) => {
-    buns.addIngredients([milk, eggs, butter, sugar]);
-    cobbler.addIngredients([milk, eggs, butter, sugar, peaches]);
-    bread.addIngredients([milk, eggs, butter, blueberries]);
-    steak.addIngredients([worcestershire, garlic, basil]);
-    chicken.addIngredients([chickenIng, butter, garlic]);
+  .then(([milk, eggs, butter, sugar, peaches, blueberries, basil, garlic, worcestershire, chickenIng, chicken, buns, cobbler, bread, steak]) => {
+    const p1 = buns.addIngredients([milk, eggs, butter, sugar]);
+    const p2 = cobbler.addIngredients([milk, eggs, butter, sugar, peaches]);
+    const p3 = bread.addIngredients([milk, eggs, butter, blueberries]);
+    const p4 = steak.addIngredients([worcestershire, garlic, basil]);
+    const p5 = chicken.addIngredients([chickenIng, butter, garlic]);
 
-    return Promise.all([buns, cobbler, bread, steak, chicken, list1, list2, list3]);
-  })
-  .then(([buns, cobbler, steak, chicken, bread, list1, list2]) => {
-    const promise1 = list1.addRecipes([chicken, cobbler]);
-    const promise2 = list2.addRecipes([buns, steak]);
-    return Promise.all([buns, cobbler, steak, chicken, promise1, promise2]);
+    return Promise.all([p1, p2, p3, p4, p5]);
   })
   .then(() => {
-    return RecipeIngredient.findAll()
+    const foundRecipies = IngredientQuantity.findAll();
+    const groceryLists = GroceryList.findAll();
+    return Promise.all([foundRecipies, groceryLists]);
   })
-  .then((foundRecipies) => {
-    return Promise.all(foundRecipies.map((recipeIngredient) => {
+  .then(([foundRecipies, groceryLists]) => {
+    console.log(foundRecipies)
+    const recipeMap = foundRecipies.map((recipeIngredient) => {
       const quantity = Math.ceil(Math.random() * 5);
       return recipeIngredient.update({ quantity });
-    }));
+    });
+    const groceryListMap = groceryLists.map((recipe) => {
+      return recipe.update({ quantity: 1 });
+    });
+    return Promise.all([recipeMap, groceryListMap]);
   })
   .then(() => {
     console.log('finished seeding');

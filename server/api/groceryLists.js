@@ -3,19 +3,26 @@ const { GroceryList } = require('../db/models');
 
 module.exports = router;
 
-router.get('/', (req, res, next) => {
-  GroceryList.findAll()
-    .then(groceryLists => res.json(groceryLists))
-    .catch(next);
-});
+// Not sure if we need this.
 
-router.get('/recipes', (req, res, next) => {
-  req.user.getGrocerylist()
-    .then((groceryLists) => {
-      res.json(groceryLists.recipes);
-    })
-    .catch(next);
-});
+// router.get('/', (req, res, next) => {
+//   GroceryList.findAll()
+//     .then(groceryLists => res.json(groceryLists))
+//     .catch(next);
+// });
+
+// router.get('/recipes', (req, res, next) => {
+//   req.user.getGrocerylist()
+//     .then((groceryList) => {
+//       console.log('test')
+//       groceryList.recipes.map((recipe) => {
+//         console.log('test2')
+//         recipe.quantity = recipe.recipes_grocery_lists.quantity;
+//       });
+//       res.json(groceryList.recipes);
+//     })
+//     .catch(next);
+// });
 
 router.delete('/recipes/:id', (req, res, next) => {
   req.user.getGrocerylist()
@@ -81,6 +88,21 @@ router.post('/', (req, res, next) => {
       } else {
         console.log('Grocery list already existed.');
       }
+    });
+});
+
+router.put('/recipes/:id', (req, res, next) => {
+  const quantity = req.body.quantity;
+  const recipeId = req.params.id;
+  req.user.getGrocerylist()
+    .then((groceryList) => {
+      return groceryList.getRecipe(recipeId);
+    })
+    .then((selectedRecipe) => {
+      return selectedRecipe.update({ quantity });
+    })
+    .then((updatedRecipe) => {
+      res.json(updatedRecipe);
     });
 });
 
