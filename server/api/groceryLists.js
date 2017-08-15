@@ -39,30 +39,32 @@ router.delete('/recipes', (req, res, next) => {
 
 router.get('/ingredients', (req, res, next) => {
   const userId = req.user.id;
-  req.user.getGrocerylist()
-    .then((list) => {
-      return list.getRecipes();
-    })
-    .then((recipes) => {
-      const groceryList = {};
-      recipes.forEach((recipe) => {
-        recipe.ingredients.forEach((ingredient) => {
-          if (groceryList[ingredient.name]) {
-            groceryList[ingredient.name].quantity += +ingredient.recipes_ingredients.quantity;
-          } else {
-            const quantity = +ingredient.recipes_ingredients.quantity;
-            const id = ingredient.id;
-            const estimatedPrice = ingredient.estimatedPrice;
-            const unit = ingredient.unit;
-            const searchTerms = ingredient.searchTerms;
-            const name = ingredient.name;
-            groceryList[name] = { id, name, quantity, estimatedPrice, unit, searchTerms }
-          }
-        });
-      });
-      res.json(groceryList);
-    });
+  req.user.getGroceryListRecipes()
+    .then(groceryList => res.json(groceryList))
+    .catch(next);
 });
+    // .then((list) => {
+    //   return list.getRecipes();
+    // })
+    // .then((recipes) => {
+    //   const groceryList = {};
+    //   recipes.forEach((recipe) => {
+    //     recipe.ingredients.forEach((ingredient) => {
+    //       if (groceryList[ingredient.name]) {
+    //         groceryList[ingredient.name].quantity += +ingredient.recipes_ingredients.quantity;
+    //       } else {
+    //         const quantity = +ingredient.recipes_ingredients.quantity;
+    //         const id = ingredient.id;
+    //         const estimatedPrice = ingredient.estimatedPrice;
+    //         const unit = ingredient.unit;
+    //         const searchTerms = ingredient.searchTerms;
+    //         const name = ingredient.name;
+    //         groceryList[name] = { id, name, quantity, estimatedPrice, unit, searchTerms }
+    //       }
+    //     });
+    //   });
+    //   res.json(groceryList);
+    // });
 
 router.post('/', (req, res, next) => {
   GroceryList.findOrCreate({
