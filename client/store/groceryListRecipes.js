@@ -4,7 +4,7 @@ import history from '../history';
 /**
  * ACTION TYPES
  */
-const GET_RECIPES = 'GET_RECIPES';
+const GET_LIST_RECIPES = 'GET_LIST_RECIPES';
 const REMOVE_RECIPE_FROM_HISTORY = 'REMOVE_RECIPE_FROM_HISTORY';
 const ADD_NEW_RECIPE = 'ADD_NEW_RECIPE';
 const REMOVE_RECIPE_FROM_LIST = 'REMOVE_RECIPE_FROM_LIST';
@@ -18,9 +18,7 @@ const defaultRecipes = [];
 /**
  * ACTION CREATORS
  */
-const getRecipes = recipes => ({ type: GET_RECIPES, recipes });
-const removeRecipeFromHistory = recipeId => ({ type: REMOVE_RECIPE_FROM_HISTORY, recipeId });
-const addRecipe = newRecipe => ({ type: ADD_NEW_RECIPE, newRecipe });
+const getListRecipes = recipes => ({ type: GET_LIST_RECIPES, recipes });
 const removeRecipeFromList = recipeId => ({ type: REMOVE_RECIPE_FROM_LIST, recipeId });
 const clearList = () => ({ type: CLEAR_LIST });
 
@@ -28,32 +26,14 @@ const clearList = () => ({ type: CLEAR_LIST });
  * THUNK CREATORS
  */
 
-export const fetchRecipes = () =>
+export const fetchGroceryListRecipes = () =>
   dispatch =>
-    axios.get('/api/recipes')
+    axios.get('/api/grocery-list/recipes')
       .then(res => res.data)
       .then((recipes) => {
-        dispatch(getRecipes(recipes));
+        dispatch(getListRecipes(recipes));
       })
       .catch(err => console.log(err));
-
-export const deleteRecipeFromHistory = recipeId =>
-  dispatch =>
-    axios.delete(`/api/recipes/${recipeId}`)
-      .then(res => res.data)
-      .then(() => {
-        dispatch(removeRecipeFromHistory(recipeId));
-      })
-      .catch(err => console.log(err));
-
-export const postNewRecipe = (url, inGroceryList) =>
-  dispatch =>
-    axios.post('/api/recipes', { url, inGroceryList })
-      .then(res => res.data)
-      .then((newRecipe) => {
-        dispatch(addRecipe(newRecipe));
-      })
-      .catch(console.error);
 
 export const deleteRecipeFromList = recipeId =>
   dispatch =>
@@ -81,22 +61,12 @@ export const deleteRecipesFromList = () =>
  */
 export default function (state = defaultRecipes, action) {
   switch (action.type) {
-    case GET_RECIPES:
+    case GET_LIST_RECIPES:
       return action.recipes;
-    case REMOVE_RECIPE_FROM_HISTORY:
-      return state.filter(recipe => recipe.id !== action.recipeId);
-    case ADD_NEW_RECIPE:
-      return [action.newRecipe, ...state];
     case REMOVE_RECIPE_FROM_LIST:
-      return state.map((recipe) => {
-        if (recipe.id === action.recipeId) recipe.inGroceryList = false;
-        return recipe;
-      });
+      return state.filter(recipe => recipe.id !== action.recipeId);
     case CLEAR_LIST:
-      return state.map((recipe) => {
-        recipe.inGroceryList = false;
-        return recipe;
-      });
+      return [];
     default:
       return state;
   }

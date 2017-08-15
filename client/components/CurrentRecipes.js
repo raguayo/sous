@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Container, Grid, Header, Segment, Button, Icon, Input, Form } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
-import { postNewRecipe, deleteRecipeFromList, deleteRecipesFromList } from '../store/recipes';
+import { postNewRecipe, deleteRecipeFromList, deleteRecipesFromList } from '../store/groceryListRecipes';
 
 function CurrentRecipe({ handleAddRecipe, handleDeleteRecipe, handleDeleteRecipes, currRecipes, user }) {
   return (
@@ -57,7 +57,7 @@ function CurrentRecipe({ handleAddRecipe, handleDeleteRecipe, handleDeleteRecipe
 
 const mapState = (state) => {
   return {
-    currRecipes: state.recipes.filter(recipe => recipe.inGroceryList),
+    currRecipes: state.groceryListRecipes,
     user: state.user,
   };
 };
