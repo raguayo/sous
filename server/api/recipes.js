@@ -28,7 +28,7 @@ router.get('/:id', (req, res, next) => {
 });
 
 router.post('/', (req, res, next) => {
-  console.log('req.body: ', req.body);
+  // console.log('req.body: ', req.body);
   let recipePromise;
   let groceryListPromise;
   let ingredientArr;
@@ -122,17 +122,15 @@ router.post('/', (req, res, next) => {
           // numServings: req.body.numServings,
         },
       });
-      // get grocery list
-      groceryListPromise = req.user.getGrocerylist();
-      return Promise.all([recipePromise, groceryListPromise, ...ingredientArr]);
+      return Promise.all([recipePromise, ...ingredientArr]);
     })
-  .then(([recipeArr, groceryList, ...arrIngredients]) => {
+  .then(([recipeArr, ...arrIngredients]) => {
     const newRecipe = recipeArr[0];
     const isCreated = recipeArr[1];
-    req.user.addRecipes([newRecipe]);
+    req.user.addSavedRecipes([newRecipe]);
 
     if (inGroceryList) {
-      groceryList.addRecipes([newRecipe]);
+      req.user.addGroceryListRecipe([newRecipe]);
     }
 
     if (isCreated) {
@@ -141,8 +139,13 @@ router.post('/', (req, res, next) => {
           where: {
             name: ingredient,
           },
+          defaults: {
+            unitMeasure: ingredient.unit,
+          },
         })
-        .then(([foundIngredient, ingIsCreated]) => foundIngredient)
+        .then(([foundIngredient, ingIsCreated]) => {
+          return foundIngredient;
+        })
         .catch(next);
       });
       return Promise.all([newRecipe, ...arrIngredientPromises])
