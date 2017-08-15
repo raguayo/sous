@@ -4,14 +4,6 @@ const { microformatScraper } = require('../scraper/microformat');
 
 module.exports = router;
 
-router.get('/test', (req, res, next) => {
-  //console.log(req.user);
-  req.user.addGroceryListRecipe()
-    .then(got => {
-      res.json(got);
-    })
-    .catch(next);
-});
 
 router.get('/', (req, res, next) => {
   req.user.getRecipes()
