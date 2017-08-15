@@ -37,34 +37,32 @@ router.delete('/recipes', (req, res, next) => {
     .catch(next);
 });
 
-router.get('/ingredients', (req, res, next) => {
-  const userId = req.user.id;
-  req.user.getGroceryListRecipes()
-    .then(groceryList => res.json(groceryList))
-    .catch(next);
-});
-    // .then((list) => {
-    //   return list.getRecipes();
-    // })
-    // .then((recipes) => {
-    //   const groceryList = {};
-    //   recipes.forEach((recipe) => {
-    //     recipe.ingredients.forEach((ingredient) => {
-    //       if (groceryList[ingredient.name]) {
-    //         groceryList[ingredient.name].quantity += +ingredient.recipes_ingredients.quantity;
-    //       } else {
-    //         const quantity = +ingredient.recipes_ingredients.quantity;
-    //         const id = ingredient.id;
-    //         const estimatedPrice = ingredient.estimatedPrice;
-    //         const unit = ingredient.unit;
-    //         const searchTerms = ingredient.searchTerms;
-    //         const name = ingredient.name;
-    //         groceryList[name] = { id, name, quantity, estimatedPrice, unit, searchTerms }
-    //       }
-    //     });
-    //   });
-    //   res.json(groceryList);
-    // });
+// router.get('/ingredients', (req, res, next) => {
+//   const userId = req.user.id;
+//   req.user.getGroceryListRecipes()
+//     .then((list) => {
+//       return list.getRecipes();
+//     })
+//     .then((recipes) => {
+//       const groceryList = {};
+//       recipes.forEach((recipe) => {
+//         recipe.ingredients.forEach((ingredient) => {
+//           if (groceryList[ingredient.name]) {
+//             groceryList[ingredient.name].quantity += +ingredient.recipes_ingredients.quantity;
+//           } else {
+//             const quantity = +ingredient.recipes_ingredients.quantity;
+//             const id = ingredient.id;
+//             const estimatedPrice = ingredient.estimatedPrice;
+//             const unit = ingredient.unit;
+//             const searchTerms = ingredient.searchTerms;
+//             const name = ingredient.name;
+//             groceryList[name] = { id, name, quantity, estimatedPrice, unit, searchTerms }
+//           }
+//         });
+//       });
+//       res.json(groceryList);
+//     });
+// });
 
 router.post('/', (req, res, next) => {
   GroceryList.findOrCreate({
@@ -91,6 +89,19 @@ router.put('/:id', (req, res, next) => {
       }
     })
     .then(updatedGroceryList => res.send(updatedGroceryList))
+    .catch(next);
+});
+
+router.put('/recipes/:id', (req, res, next) => {
+  const quantity = +req.body.quantity;
+  const userId = req.user.id;
+  const recipeId = req.params.id;
+  GroceryList.findOne({ where: { recipeId, userId } })
+    .then(recipeInList => {
+      if (!recipeInList) next(new Error(`couldn't find recipe`));
+      return recipeInList.update({ quantity });
+    })
+    .then(updatedGroceryListRecipe => res.json(updatedGroceryListRecipe))
     .catch(next);
 });
 
