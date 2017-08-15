@@ -5,11 +5,11 @@ const GroceryList = require('./groceryList');
 const IngredientQuantity = require('./ingredientQuantity');
 const SavedRecipe = require('./savedRecipe');
 
-Recipe.belongsToMany(User, { through: 'grocerylist', as: 'groceryListUser' });
-User.belongsToMany(Recipe, { through: 'grocerylist', as: 'groceryListRecipe' });
+Recipe.belongsToMany(User, { through: 'grocerylist', as: 'groceryListUsers' });
+User.belongsToMany(Recipe, { through: 'grocerylist', as: 'groceryListRecipes' });
 
-Recipe.belongsToMany(User, { through: 'savedrecipe', as: 'savedRecipesUser' });
-User.belongsToMany(Recipe, { through: 'savedrecipe', as: 'savedRecipe' });
+Recipe.belongsToMany(User, { through: 'savedrecipe', as: 'savedRecipesUsers' });
+User.belongsToMany(Recipe, { through: 'savedrecipe', as: 'savedRecipes' });
 
 Recipe.belongsToMany(Ingredient, { through: 'ingredientQuantity' });
 Ingredient.belongsToMany(Recipe, { through: 'ingredientQuantity' });
