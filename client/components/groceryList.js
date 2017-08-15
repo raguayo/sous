@@ -2,38 +2,35 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 import { Container, Grid, Header, Segment, Icon, Checkbox } from 'semantic-ui-react';
-import { fetchGroceryList } from '../store';
+// import { fetchGroceryList } from '../store';
 import { strikeThrough } from '../stylingUtilities';
 
-class GroceryList extends Component {
-  // componentDidMount() {
-  //   this.props.loadInitialData();
-  // }
-  render() {
-    const { ingredients } = this.props;
-    return (
-      <Container style={styles.container}>
-        <Header as="h2" style={styles.header} >Grocery List</Header>
+function GroceryList({ groceryList, getIngredients }) {
+  const ingredients = groceryList ? getIngredients(groceryList) : [];
+  return (
+    <Container style={styles.container}>
+      <Header as="h2" style={styles.header} >Grocery List</Header>
+      <Segment.Group>
         <Segment.Group>
-          <Segment.Group>
-            {
-              ingredients.map((name) => {
-                const ingredient = this.props.groceryList[name];
-                return (
-                  <Segment key={ingredient.id}>
-                    <Grid>
-                      <Grid.Column as={Checkbox} floated="left" width={13} verticalAlign="middle" label={ingredient.name} onClick={strikeThrough}> </Grid.Column>
-                      <Grid.Column floated="right" width={3} textAlign="right"><Icon onClick={() => { console.log('hi') }} name="delete" /></Grid.Column>
-                    </Grid>
-                  </Segment>
-                );
-              })
-            }
-          </Segment.Group>
+          {
+            ingredients.map((ingredient) => {
+              return (
+                <Segment key={ingredient.id}>
+                  <Grid>
+                    <Grid.Column as={Checkbox} floated="left" width={13} verticalAlign="middle" onClick={strikeThrough}
+                      label={`${ingredient.name}          ${ingredient.quantity}          ${ingredient.unitMeasure}`}
+                    >
+                    </Grid.Column>
+                    <Grid.Column floated="right" width={3} textAlign="right"><Icon onClick={() => { console.log('hi') }} name="delete" /></Grid.Column>
+                  </Grid>
+                </Segment>
+              );
+            })
+          }
         </Segment.Group>
-      </Container>
-    );
-  }
+      </Segment.Group>
+    </Container>
+  );
 }
 
 const styles = {
@@ -47,23 +44,48 @@ const styles = {
 
 const mapState = (state) => {
   return {
-    groceryList: state.groceryList,
-    ingredients: state.groceryList ? Object.keys(state.groceryList) : [],
-  };
-};
-
-const mapDispatch = (dispatch) => {
-  return {
-    loadInitialData() {
-      dispatch(fetchGroceryList());
+    groceryList: state.groceryListRecipes,
+    getIngredients: (groceryListRecipes) => {
+      const ingredientList = [];
+      groceryListRecipes.forEach(recipe => {
+        const recipeQuantity = recipe.grocerylist.quantity;
+        recipe.ingredients.forEach(ingredient => {
+          const foundIng = ingredientList.find(obj => obj.id === ingredient.id)
+          if (foundIng) {
+            foundIng.quantity += ingredient.ingredientQuantity.quantity * recipeQuantity;
+          } else {
+            const { id, name, prodId, size, unitMeasure } = ingredient;
+            const quantity = ingredient.ingredientQuantity.quantity * recipeQuantity;
+            ingredientList.push({
+              name,
+              id,
+              prodId,
+              unitMeasure,
+              size,
+              quantity,
+            })
+          }
+        });
+      });
+      console.log(ingredientList);
+      return ingredientList;
     },
   };
 };
 
-export default connect(mapState, mapDispatch)(GroceryList);
+// const mapDispatch = (dispatch) => {
+//   return {
+//     loadInitialData() {
+//       dispatch(fetchGroceryList());
+//     }
+//   }
+// }
+
+export default connect(mapState, null)(GroceryList);
 
 GroceryList.propTypes = {
-  loadInitialData: PropTypes.func.isRequired,
-  ingredients: PropTypes.array.isRequired,
+  // loadInitialData: PropTypes.func.isRequired,
+  // ingredients: PropTypes.array.isRequired,
   groceryList: PropTypes.object.isRequired,
+  getIngredients: PropTypes.func.isRequired,
 };
