@@ -73,6 +73,7 @@ const startListening = () => {
 
 }
 
+// why would we ever want to force sync here?
 const isForceOn = false;
 const syncDb = () => db.sync({ force: isForceOn })
 

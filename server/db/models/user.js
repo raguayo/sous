@@ -30,6 +30,8 @@ const User = db.define('user', {
     type: Sequelize.STRING,
   },
   peapodPassword: {
+    // should you be storing this data?
+    // would your users be ok with that?
     type: Sequelize.STRING,
   },
 });

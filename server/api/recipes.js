@@ -23,14 +23,19 @@ router.get('/', (req, res, next) => {
 
 router.get('/:id', (req, res, next) => {
   Recipe.findById(req.params.id)
-    .then(userRecipes => res.json(userRecipes))
+    .then(userRecipes => res.json(userRecipes)) // not really a userRecipe though is it?
     .catch(next);
 });
 
 router.post('/', (req, res, next) => {
+  // just something to remember I guess, and maybe you guys already realize - if
+  // the recipe ever updates, our DB will not know of these changes. It's probably
+  // not something to really worry about and more just something to be aware of
   const { url, inGroceryList } = req.body;
+  console.log('url', url);
   microformatScraper(url)
   .then((data) => {
+    console.log(data)
     const title = data.properties.name[0];
     const ingredientArr = data.properties.ingredient;
     const imageUrl = data.properties.photo[0];
@@ -50,12 +55,13 @@ router.post('/', (req, res, next) => {
     });
     // get grocery list
     const groceryListPromise = req.user.getGrocerylist();
-    return Promise.all([recipePromise, groceryListPromise, ...ingredientArr])
+    return Promise.all([recipePromise, groceryListPromise, ingredientArr]) // spreading ingredientArr here...
   })
-  .then(([recipeArr, grocerylist, ...ingredientArr]) => {
+  .then(([recipeArr, grocerylist, ingredientArr]) => { // ... then using rest operator here is like setting yourself up for unnecessary work!
     const newRecipe = recipeArr[0];
     const isCreated = recipeArr[1];
-    req.user.addRecipes([newRecipe]);
+    req.user.addRecipes([newRecipe]); // do you have to use 'addRecipes' plural?
+    // can you do an addRecipe (singular and not have to deal with this array nonsense?)
 
     if (inGroceryList) {
       grocerylist.addRecipes([newRecipe]);
@@ -72,6 +78,12 @@ router.post('/', (req, res, next) => {
         .then(([foundIngredient, IngIsCreated]) => foundIngredient)
         .catch(next);
       });
+
+      // there's a lot of extraneous data being passed through this promise
+      // chain with all these `Promise.all`s. If the various then blocks share a
+      // lot of data, then it might be an ok case for the nested then chaining,
+      // otherwise, it might be sensible to un-nest this. Either way, a little
+      // bit of cleaning up might do this section some good
       return Promise.all([newRecipe, ...arrIngredientPromises])
         .then(([recipe, ...ingredients]) => {
           const ingArr = recipe.addIngredients(ingredients);
@@ -97,7 +109,7 @@ router.put('/:id', (req, res, next) => {
   Recipe.findById(req.params.id)
     .then((recipe) => {
       if (!recipe) {
-        return res.sendStatus(404);
+        return res.sendStatus(404); // ambiguous
       }
       return recipe.update(req.body);
     })

@@ -46,7 +46,7 @@ export default function (state = {}, action) {
   switch (action.type) {
     case GET_GROCERY_LIST:
       return action.groceryList;
-
+    //and case for remove?
     default:
       return state;
   }

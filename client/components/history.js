@@ -1,3 +1,5 @@
+// file naming may be confusing vs the file `../history` just one level up
+
 import React from 'react';
 import { connect } from 'react-redux';
 import { Container, Grid, Header, Image, Message, Segment, Button, Icon } from 'semantic-ui-react';
@@ -59,6 +61,9 @@ const mapState = (state) => {
   return {
     favRecipes: state.recipes.filter(recipeObj => recipeObj.isFavorite),
     prevRecipes: state.recipes.filter(recipeObj => !recipeObj.isFavorite),
+    // rather than iterate through recipes twice over, why not just maintain
+    // 2 arrays and categorize each recipe item as you iterate?
+    // then, pass those 2 arrays down when you're done
   };
 };
 

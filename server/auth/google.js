@@ -33,7 +33,8 @@ const strategy = new GoogleStrategy(googleConfig, (token, refreshToken, profile,
   User.find({ where: { googleId } })
     .then(user => user
       ? done(null, user)
-      : User.create({ name, email, googleId })
+      : User.create({ name, email, googleId }) // don't nest your thens!
+        // isn't that the whole reason you're returning the promise?
         .then((createdUser) => {
           const groceryPromise = GroceryList.create()
           return Promise.all([groceryPromise, createdUser])
