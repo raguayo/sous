@@ -39,7 +39,7 @@ router.delete('/recipes', (req, res, next) => {
 
 router.get('/ingredients', (req, res, next) => {
   const userId = req.user.id;
-  req.user.getGrocerylist()
+  req.user.getGroceryListRecipes()
     .then((list) => {
       return list.getRecipes();
     })
@@ -89,6 +89,19 @@ router.put('/:id', (req, res, next) => {
       }
     })
     .then(updatedGroceryList => res.send(updatedGroceryList))
+    .catch(next);
+});
+
+router.put('/recipes/:id', (req, res, next) => {
+  const quantity = +req.body.quantity;
+  const userId = req.user.id;
+  const recipeId = req.params.id;
+  GroceryList.findOne({ where: { recipeId, userId } })
+    .then(recipeInList => {
+      if (!recipeInList) next(new Error(`couldn't find recipe`));
+      return recipeInList.update({ quantity });
+    })
+    .then(updatedGroceryListRecipe => res.json(updatedGroceryListRecipe))
     .catch(next);
 });
 
