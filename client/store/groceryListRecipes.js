@@ -5,8 +5,6 @@ import history from '../history';
  * ACTION TYPES
  */
 const GET_LIST_RECIPES = 'GET_LIST_RECIPES';
-const REMOVE_RECIPE_FROM_HISTORY = 'REMOVE_RECIPE_FROM_HISTORY';
-const ADD_NEW_RECIPE = 'ADD_NEW_RECIPE';
 const REMOVE_RECIPE_FROM_LIST = 'REMOVE_RECIPE_FROM_LIST';
 const CLEAR_LIST = 'CLEAR_LIST';
 
@@ -19,7 +17,7 @@ const defaultRecipes = [];
  * ACTION CREATORS
  */
 const getListRecipes = recipes => ({ type: GET_LIST_RECIPES, recipes });
-const removeRecipeFromList = recipeId => ({ type: REMOVE_RECIPE_FROM_LIST, recipeId });
+export const removeRecipeFromList = recipeId => ({ type: REMOVE_RECIPE_FROM_LIST, recipeId });
 const clearList = () => ({ type: CLEAR_LIST });
 
 /**
