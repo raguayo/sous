@@ -12,7 +12,7 @@ class GroceryList extends Component {
   render() {
     const { ingredients } = this.props;
     return (
-      <Container style={{ padding: '5em 0em' }}>
+      <Container style={styles.container}>
         <Header as="h2" style={styles.header} >Grocery List</Header>
         <Segment.Group>
           <Segment.Group>
@@ -37,6 +37,9 @@ class GroceryList extends Component {
 }
 
 const styles = {
+  container: {
+    padding: '5em 0em',
+  },
   header: {
     fontFamily: 'Satisfy',
   },
