@@ -1,5 +1,7 @@
-import axios from 'axios'
-import history from '../history'
+import axios from 'axios';
+import history from '../history';
+import { fetchGroceryListRecipes } from './groceryListRecipes';
+import { fetchSavedRecipes } from './savedRecipes';
 
 /**
  * ACTION TYPES
@@ -32,8 +34,10 @@ export const auth = (email, password, method, username) =>
   dispatch =>
     axios.post(`/auth/${method}`, { email, password, username })
       .then(res => {
-        dispatch(getUser(res.data))
-        history.push('/recipes')
+        dispatch(getUser(res.data));
+        dispatch(fetchGroceryListRecipes());
+        dispatch(fetchSavedRecipes());
+        history.push('/recipes');
       })
       .catch(error =>
         dispatch(getUser({error})))
