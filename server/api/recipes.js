@@ -34,14 +34,13 @@ router.post('/', (req, res, next) => {
     })
     .then((user) => {
       usr = user;
-      console.log('usr:', usr)
       const { title, recipeUrl, imageUrl, author, siteName, numServings } = req.body.recipe;
       recipePromise = Recipe.findOrCreate({
         where: {
-          title,
+          recipeUrl,
         },
         defaults: {
-          recipeUrl,
+          title,
           imageUrl,
           author,
           siteName,
@@ -56,9 +55,9 @@ router.post('/', (req, res, next) => {
       const isCreated = recipeArr[1];
 
       // TODO: modularize to set following two associations - pass user argument to handle both post branches
-      usr.addSavedRecipes([newRecipe]);
+      usr.addSavedRecipe(newRecipe);
 
-      usr.addGroceryListRecipe([newRecipe]);
+      usr.addGroceryListRecipe(newRecipe);
 
       // TODO: consider modularizing with adding passed argument if from microformat branch
       if (isCreated) {
@@ -73,8 +72,9 @@ router.post('/', (req, res, next) => {
           })
           .then(([foundIngredient, ingIsCreated]) => {
             // TODO: only line different from microformat branch
-            console.log('ingredient.qty: ', ingredient.quantity);
-            return IngredientQuantity.create({ recipeId: newRecipe.id, ingredientId: foundIngredient.id, quantity: ingredient.quantity });
+            if (!ingredient.quantity) ingredient.quantity = 0;
+            IngredientQuantity.create({ recipeId: newRecipe.id, ingredientId: foundIngredient.id, quantity: ingredient.quantity });
+            return foundIngredient;
           })
           .catch(next);
         });
@@ -86,19 +86,15 @@ router.post('/', (req, res, next) => {
             return Promise.all([newRecipe, ingArr]);
           })
           .then(([recipe, ingredientsArr]) => Recipe.findById(recipe.id))
-          .then((recipe) => {
-            recipe.dataValues.inGroceryList = true;
-            res.status(201).json(recipe);
-          })
+          .then(() => res.sendStatus(201))
           .catch(next);
       } else {
-        newRecipe.dataValues.inGroceryList = true;
-        res.status(201).json(newRecipe);
+        res.sendStatus(201);
       }
     })
     .catch(next);
   } else {
-    const { url, inGroceryList } = req.body;
+    const { url } = req.body;
     microformatScraper(url)
     .then((data) => {
       const title = data.properties.name[0];
@@ -125,12 +121,9 @@ router.post('/', (req, res, next) => {
     const isCreated = recipeArr[1];
 
     // TODO: modularize to set following two associations - pass user and inGroceryList(null if from chrome ext) arguments to handle both post branches
-    console.log('here in orig block');
-    req.user.addSavedRecipes([newRecipe]);
+    req.user.addSavedRecipe(newRecipe);
 
-    if (inGroceryList) {
-      req.user.addGroceryListRecipe([newRecipe]);
-    }
+    req.user.addGroceryListRecipe(newRecipe);
 
     // TODO: consider modularizing with adding passed argument if from microformat branch
     if (isCreated) {
@@ -157,16 +150,10 @@ router.post('/', (req, res, next) => {
           return Promise.all([newRecipe, ingArr]);
         })
         .then(([recipe, ingredientsArr]) => Recipe.findById(recipe.id))
-        .then((recipe) => {
-          if (inGroceryList) recipe.dataValues.inGroceryList = true;
-          else recipe.dataValues.inGroceryList = false;
-          res.status(201).json(recipe);
-        })
+        .then(recipe => res.status(201).json(recipe))
         .catch(next);
     } else {
-      if (inGroceryList) newRecipe.dataValues.inGroceryList = true;
-      else newRecipe.dataValues.inGroceryList = false;
-      res.status(201).json(newRecipe);
+      res.sendStatus(201);
     }
   })
   .catch(next);

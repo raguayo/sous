@@ -1,6 +1,6 @@
-chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
+chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
   const tabId = tabs[0].id;
-  chrome.tabs.sendMessage(tabId, { greeting: "hello" }, response => {
+  chrome.tabs.sendMessage(tabId, { greeting: 'hello' }, (response) => {
     let htmlString = `<h5>Recipe Details:</h5>
       <div class="ui grid">
         <div class="row">
