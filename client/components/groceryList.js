@@ -6,9 +6,9 @@ import { fetchGroceryList } from '../store';
 import { strikeThrough } from '../stylingUtilities';
 
 class GroceryList extends Component {
-  componentDidMount() {
-    this.props.loadInitialData();
-  }
+  // componentDidMount() {
+  //   this.props.loadInitialData();
+  // }
   render() {
     const { ingredients } = this.props;
     return (

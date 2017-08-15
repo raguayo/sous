@@ -86,7 +86,7 @@ router.put('/:id', (req, res, next) => {
   Recipe.findById(req.params.id)
     .then((recipe) => {
       if (!recipe) {
-        return res.sendStatus(404);
+        return res.sendStatus(204);
       }
       return recipe.update(req.body);
     })

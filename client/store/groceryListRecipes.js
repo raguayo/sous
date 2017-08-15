@@ -1,5 +1,5 @@
-import axios from 'axios';
-import history from '../history';
+import axios from 'axios'
+import history from 'history'
 
 /**
  * ACTION TYPES
@@ -7,7 +7,7 @@ import history from '../history';
 const GET_LIST_RECIPES = 'GET_LIST_RECIPES';
 const REMOVE_RECIPE_FROM_LIST = 'REMOVE_RECIPE_FROM_LIST';
 const CLEAR_LIST = 'CLEAR_LIST';
-
+const UPDATE_RECIPES_TOTAL = 'UPDATE_RECIPES_TOTAL';
 /**
  * INITIAL STATE
  */
@@ -19,6 +19,8 @@ const defaultRecipes = [];
 const getListRecipes = recipes => ({ type: GET_LIST_RECIPES, recipes });
 export const removeRecipeFromList = recipeId => ({ type: REMOVE_RECIPE_FROM_LIST, recipeId });
 const clearList = () => ({ type: CLEAR_LIST });
+const updateRecipesTotal = (newQuantityObj, recipeId)  => ({ type: UPDATE_RECIPES_TOTAL, newQuantityObj, recipeId });
+
 
 /**
  * THUNK CREATORS
@@ -53,6 +55,15 @@ export const deleteRecipesFromList = () =>
       })
       .catch(err => console.error(err));
 
+export const updateRecipeQuantity = (recipeId, quantity) =>
+  dispatch =>
+    axios.put(`/api/grocery-list/recipes/${recipeId}`, { quantity })
+      .then(res => res.data)
+      .then((updatedQuantityObj) => {
+        dispatch(updateRecipesTotal(updatedQuantityObj, recipeId));
+      })
+      .catch(err => console.error(err));
+
 
 /**
  * REDUCER
@@ -63,6 +74,13 @@ export default function (state = defaultRecipes, action) {
       return action.recipes;
     case REMOVE_RECIPE_FROM_LIST:
       return state.filter(recipe => recipe.id !== action.recipeId);
+    case UPDATE_RECIPES_TOTAL:
+      return state.map((recipe) => {
+        if (recipe.id === action.recipeId) {
+          recipe.grocerylist = action.newQuantityObj;
+        }
+        return recipe;
+      });
     case CLEAR_LIST:
       return [];
     default:
