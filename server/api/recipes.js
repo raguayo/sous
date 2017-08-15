@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { Recipe, Ingredient, User } = require('../db/models');
+const { Recipe, Ingredient, User, IngredientQuantity } = require('../db/models');
 const { microformatScraper } = require('../scraper/microformat');
 
 module.exports = router;
@@ -83,8 +83,7 @@ router.post('/', (req, res, next) => {
           })
           .then(([foundIngredient, ingIsCreated]) => {
             // TODO: only line different from microformat branch
-            foundIngredient.quantity = ingredient.quantity;
-            return foundIngredient;
+            return IngredientQuantity.create({ recipeId: newRecipe.id, ingredientId: foundIngredient.id, quantity: ingredient.quantity });
           })
           .catch(next);
         });
