@@ -4,35 +4,32 @@ import React, { Component } from 'react';
 import { Container, Grid, Header, Segment, Icon, Checkbox } from 'semantic-ui-react';
 import { fetchGroceryList } from '../store';
 
-class GroceryList extends Component {
-  // componentDidMount() {
-  //   this.props.loadInitialData();
-  // }
-  render() {
-    const ingredients = this.props.groceryList ? Object.keys(this.props.groceryList) : [];
-    return (
-      <Container style={{ padding: '5em 0em' }}>
-        <Header as="h2" style={styles.header} >Grocery List</Header>
+function GroceryList({ groceryList, getIngredients }) {
+  const ingredients = groceryList ? getIngredients(groceryList) : [];
+  return (
+    <Container style={{ padding: '5em 0em' }}>
+      <Header as="h2" style={styles.header} >Grocery List</Header>
+      <Segment.Group>
         <Segment.Group>
-          <Segment.Group>
-            {
-              ingredients.map((name) => {
-                const ingredient = this.props.groceryList[name];
-                return (
-                  <Segment key={ingredient.id}>
-                    <Grid>
-                      <Grid.Column as={Checkbox} floated="left" width={13} verticalAlign="middle" label={ingredient.name} onClick={strikeThrough}> </Grid.Column>
-                      <Grid.Column floated="right" width={3} textAlign="right"><Icon onClick={() => { console.log('hi') }} name="delete" /></Grid.Column>
-                    </Grid>
-                  </Segment>
-                );
-              })
-            }
-          </Segment.Group>
+          {
+            ingredients.map((ingredient) => {
+              return (
+                <Segment key={ingredient.id}>
+                  <Grid>
+                    <Grid.Column as={Checkbox} floated="left" width={13} verticalAlign="middle" onClick={strikeThrough}
+                      label={`${ingredient.name}          ${ingredient.quantity}          ${ingredient.unitMeasure}`}
+                    >
+                    </Grid.Column>
+                    <Grid.Column floated="right" width={3} textAlign="right"><Icon onClick={() => { console.log('hi') }} name="delete" /></Grid.Column>
+                  </Grid>
+                </Segment>
+              );
+            })
+          }
         </Segment.Group>
-      </Container>
-    );
-  }
+      </Segment.Group>
+    </Container>
+  );
 }
 
 const styles = {
@@ -52,19 +49,44 @@ function strikeThrough(e) {
 
 const mapState = (state) => {
   return {
-    groceryList: state.groceryList,
-  }
-}
+    groceryList: state.groceryListRecipes,
+    getIngredients: (groceryListRecipes) => {
+      const ingredientList = [];
+      groceryListRecipes.forEach(recipe => {
+        const recipeQuantity = recipe.grocerylist.quantity;
+        recipe.ingredients.forEach(ingredient => {
+          const foundIng = ingredientList.find(obj => obj.id === ingredient.id)
+          if (foundIng) {
+            foundIng.quantity += ingredient.ingredientQuantity.quantity * recipeQuantity;
+          } else {
+            const { id, name, prodId, size, unitMeasure } = ingredient;
+            const quantity = ingredient.ingredientQuantity.quantity * recipeQuantity;
+            ingredientList.push({
+              name,
+              id,
+              prodId,
+              unitMeasure,
+              size,
+              quantity,
+            })
+          }
+        });
+      });
+      console.log(ingredientList);
+      return ingredientList;
+    },
+  };
+};
 
-const mapDispatch = (dispatch) => {
-  return {
-    loadInitialData() {
-      dispatch(fetchGroceryList());
-    }
-  }
-}
+// const mapDispatch = (dispatch) => {
+//   return {
+//     loadInitialData() {
+//       dispatch(fetchGroceryList());
+//     }
+//   }
+// }
 
-export default connect(mapState, mapDispatch)(GroceryList);
+export default connect(mapState, null)(GroceryList);
 
 GroceryList.propTypes = {
   loadInitialData: PropTypes.func.isRequired,
