@@ -10,18 +10,18 @@ router.get('/', (req, res, next) => {
 });
 
 router.get('/recipes', (req, res, next) => {
-  req.user.getGrocerylist()
-    .then((groceryLists) => {
-      res.json(groceryLists.recipes);
+  req.user.getGroceryListRecipes()
+    .then((recipes) => {
+      res.json(recipes);
     })
     .catch(next);
 });
 
 router.delete('/recipes/:id', (req, res, next) => {
-  req.user.getGrocerylist()
-    .then((groceryLists) => {
-      return groceryLists.removeRecipe(req.params.id);
-    })
+  req.user.removeGroceryListRecipe(req.params.id)
+    // .then((groceryLists) => {
+    //   return groceryLists.removeRecipe(req.params.id);
+    // })
     .then(() => {
       res.sendStatus(204);
     })
@@ -29,13 +29,8 @@ router.delete('/recipes/:id', (req, res, next) => {
 });
 
 router.delete('/recipes', (req, res, next) => {
-  req.user.getGrocerylist()
-    .then((groceryLists) => {
-      groceryLists.recipes.forEach((recipe) => {
-        groceryLists.removeRecipe(recipe.id);
-      });
-      return groceryLists;
-    })
+  req.user.getGroceryListRecipes()
+    .then(recipes => req.user.removeGroceryListRecipes(recipes))
     .then(() => {
       res.sendStatus(204);
     })
