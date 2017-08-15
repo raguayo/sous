@@ -44,12 +44,12 @@ export default class Splash extends Component {
           </Container>
         </Segment>
 
-        <Segment style={{ padding: '8em 0em' }} vertical>
+        <Segment style={styles.topSegment} vertical>
           <Grid container stackable verticalAlign='middle'>
             <Grid.Row>
               <Grid.Column width={8}>
-                <Header as="h3" style={{ fontSize: '2em' }}>YUM YUM</Header>
-                <p style={{ fontSize: '1.33em' }}>
+                <Header as="h3" style={styles.header}>YUM YUM</Header>
+                <p style={styles.paragraph}>
                   Get all your food in one place!
                 </p>
               </Grid.Column>
@@ -64,16 +64,16 @@ export default class Splash extends Component {
             </Grid.Row>
           </Grid>
         </Segment>
-        <Segment style={{ padding: '0em' }} vertical>
+        <Segment style={styles.bottomSegement} vertical>
           <Grid celled='internally' columns='equal' stackable>
             <Grid.Row textAlign='center'>
-              <Grid.Column style={{ paddingBottom: '5em', paddingTop: '5em' }}>
-                <Header as='h3' style={{ fontSize: '2em' }}>"What a Company"</Header>
-                <p style={{ fontSize: '1.33em' }}>That is what they all say about us</p>
+              <Grid.Column style={styles.column}>
+                <Header as='h3' style={styles.header}>"What a Company"</Header>
+                <p style={styles.paragraph}>That is what they all say about us</p>
               </Grid.Column>
-              <Grid.Column style={{ paddingBottom: '5em', paddingTop: '5em' }}>
-                <Header as='h3' style={{ fontSize: '2em' }}>"I like Eating!"</Header>
-                <p style={{ fontSize: '1.33em' }}>
+              <Grid.Column style={styles.column}>
+                <Header as='h3' style={styles.header}>"I like Eating!"</Header>
+                <p style={styles.paragraph}>
                   <Image avatar src='/assets/images/avatar/large/nan.jpg' />
                   <b>Nan</b> - some dude
                 </p>
@@ -87,6 +87,22 @@ export default class Splash extends Component {
 }
 
 let styles = {
+  column: {
+    paddingBottom: '5em',
+    paddingTop: '5em',
+  },
+  bottomSegement: {
+    padding: '0em',
+  },
+  header: {
+    fontSize: '2em',
+  },
+  paragraph: {
+    fontSize: '1.33em',
+  },
+  topSegment: {
+    padding: '8em 0em',
+  },
   backgroundImage: {
     minHeight: 700,
     padding: '1em 0em',

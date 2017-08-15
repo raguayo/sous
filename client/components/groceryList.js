@@ -2,12 +2,13 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 import { Container, Grid, Header, Segment, Icon, Checkbox } from 'semantic-ui-react';
-import { fetchGroceryList } from '../store';
+// import { fetchGroceryList } from '../store';
+import { strikeThrough } from '../stylingUtilities';
 
 function GroceryList({ groceryList, getIngredients }) {
   const ingredients = groceryList ? getIngredients(groceryList) : [];
   return (
-    <Container style={{ padding: '5em 0em' }}>
+    <Container style={styles.container}>
       <Header as="h2" style={styles.header} >Grocery List</Header>
       <Segment.Group>
         <Segment.Group>
@@ -33,19 +34,13 @@ function GroceryList({ groceryList, getIngredients }) {
 }
 
 const styles = {
+  container: {
+    padding: '5em 0em',
+  },
   header: {
     fontFamily: 'Satisfy',
   },
 };
-
-function strikeThrough(e) {
-  const currSetting = e.target.getAttribute('style');
-  if (!currSetting || currSetting === 'text-decoration: none') {
-    e.target.setAttribute('style', 'text-decoration: line-through');
-  } else {
-    e.target.setAttribute('style', 'text-decoration: none');
-  }
-}
 
 const mapState = (state) => {
   return {
@@ -89,5 +84,8 @@ const mapState = (state) => {
 export default connect(mapState, null)(GroceryList);
 
 GroceryList.propTypes = {
-  loadInitialData: PropTypes.func.isRequired,
+  // loadInitialData: PropTypes.func.isRequired,
+  // ingredients: PropTypes.array.isRequired,
+  groceryList: PropTypes.object.isRequired,
+  getIngredients: PropTypes.func.isRequired,
 };

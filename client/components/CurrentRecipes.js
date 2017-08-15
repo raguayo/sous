@@ -7,19 +7,19 @@ import { postNewRecipe, deleteRecipeFromList, deleteRecipesFromList, updateRecip
 
 function CurrentRecipe({ handleAddRecipe, handleDeleteRecipe, handleDeleteRecipes, groceryListRecipes, user, handleUpdateQuantity }) {
   return (
-    <Container style={{ padding: '5em 0em' }}>
+    <Container style={styles.container}>
       <Grid textAlign="center">
         <Grid.Row>
           <Header as="h2">Welcome {user.name}</Header>
         </Grid.Row>
         <Grid.Row >
           <Grid.Column width={12}>
-            <Grid.Row className="add-recipe-url-wrapper">
+            <Grid.Row >
               <Form onSubmit={handleAddRecipe}>
                 <Input
                   name="recipeUrl"
-                  className="add-recipe-url-bar"
-                  action={{ color: 'teal', labelPosition: 'left', icon: 'add', content: 'Add Recipe' }}
+                  style={styles.recipeInput}
+                  action={{ color: 'teal', labelPosition: 'left', icon: 'add', content: 'Add' }}
                   actionPosition="right"
                   placeholder="Recipe url..."
                 />
@@ -59,6 +59,15 @@ function CurrentRecipe({ handleAddRecipe, handleDeleteRecipe, handleDeleteRecipe
     </Container>
   );
 }
+
+const styles = {
+  container: {
+    padding: '5em 0em',
+  },
+  recipeInput: {
+    width: '80%',
+  },
+};
 
 const mapState = (state) => {
   return {
