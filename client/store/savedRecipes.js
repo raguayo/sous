@@ -1,5 +1,6 @@
 import axios from 'axios';
 import history from '../history';
+import { removeRecipeFromList } from './groceryListRecipes';
 
 /**
  * ACTION TYPES
@@ -7,8 +8,6 @@ import history from '../history';
 const GET_SAVED_RECIPES = 'GET_SAVED_RECIPES';
 const REMOVE_SAVED_RECIPE = 'REMOVE_SAVED_RECIPE';
 const ADD_NEW_RECIPE = 'ADD_NEW_RECIPE';
-const REMOVE_RECIPE_FROM_LIST = 'REMOVE_RECIPE_FROM_LIST';
-const CLEAR_LIST = 'CLEAR_LIST';
 
 /**
  * INITIAL STATE
@@ -41,6 +40,7 @@ export const deleteSavedRecipe = recipeId =>
       .then(res => res.data)
       .then(() => {
         dispatch(removeSavedRecipe(recipeId));
+        dispatch(removeRecipeFromList(recipeId));
       })
       .catch(err => console.log(err));
 

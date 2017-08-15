@@ -6,26 +6,15 @@ module.exports = router;
 
 router.get('/', (req, res, next) => {
   req.user.getSavedRecipes()
-  // .then((recipes) => {
-  //   const arrOfPromises = recipes.map((recipe) => {
-  //     return recipe.isInUserGroceryList(req.user.id)
-  //     .then((bool) => {
-  //       recipe.dataValues.inGroceryList = bool;
-  //       return recipe;
-  //     })
-  //     .catch(next);
-  //   });
-  //   return Promise.all(arrOfPromises);
-  // })
   .then(recipesWithFlag => res.json(recipesWithFlag))
   .catch(next);
 });
 
-router.get('/:id', (req, res, next) => {
-  Recipe.findById(req.params.id)
-    .then(userRecipes => res.json(userRecipes))
-    .catch(next);
-});
+// router.get('/:id', (req, res, next) => {
+//   Recipe.findById(req.params.id)
+//     .then(userRecipes => res.json(userRecipes))
+//     .catch(next);
+// });
 
 router.post('/', (req, res, next) => {
   // console.log('req.body: ', req.body);
@@ -188,7 +177,7 @@ router.put('/:id', (req, res, next) => {
   Recipe.findById(req.params.id)
     .then((recipe) => {
       if (!recipe) {
-        return res.sendStatus(404);
+        next(new Error('Recipe not found'));
       }
       return recipe.update(req.body);
     })
@@ -198,21 +187,7 @@ router.put('/:id', (req, res, next) => {
 
 router.delete('/:id', (req, res, next) => {
   req.user.removeSavedRecipe(req.params.id)
-    // .then(() => {
-    //   return req.user.getGrocerylist();
-    // })
-    // .then((userGroceryList) => {
-    //   userGroceryList.removeRecipe(req.params.id);
-    // })
     .then(() => req.user.removeGroceryListRecipe(req.params.id))
     .then(() => res.sendStatus(204))
     .catch(next);
-  // Recipe.destroy({
-  //   where: { id: req.params.id }
-  // })
-  //   .then((rowsDeleted) => {
-  //     console.log('rows deleted: ', rowsDeleted);
-  //     res.sendStatus(204);
-  //   })
-  //   .catch(next);
 });

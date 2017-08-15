@@ -13,14 +13,14 @@ const Ingredient = db.define('ingredient', {
   price: {
     type: Sequelize.INTEGER,
   },
+  size: {
+    type: Sequelize.FLOAT,
+  },
   unitMeasure: {
     type: Sequelize.STRING,
   },
   prodId: {
     type: Sequelize.INTEGER,
-  },
-  size: {
-    type: Sequelize.FLOAT,
   },
 });
 
