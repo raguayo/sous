@@ -41,17 +41,13 @@ const Recipe = db.define('recipe', {
   },
 });
 
-Recipe.prototype.isInUserGroceryList = function (userId) {
-  return db.models.user.findById(userId)
-    .then(user => user.getGrocerylist())
-    .then(groceryList =>
-      db.models.recipes_grocery_lists.findOne({ where: { grocerylistId: groceryList.id, recipeId: this.id }}))
-    .then((foundRecipe) => {
-      console.log("HEEEEEERRRRREEE", foundRecipe)
-      return [!!foundRecipe, foundRecipe.quantity];
-    })
-
-    .catch(console.error);
-};
+// Recipe.prototype.isInUserGroceryList = function (userId) {
+//   return db.models.user.findById(userId)
+//     .then(user => user.getGrocerylist())
+//     .then(groceryList =>
+//       db.models.recipes_grocery_lists.findOne({ where: { grocerylistId: groceryList.id, recipeId: this.id }}))
+//     .then(included => !!included)
+//     .catch(console.error);
+// };
 
 module.exports = Recipe;
