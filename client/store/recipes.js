@@ -9,7 +9,6 @@ const REMOVE_RECIPE_FROM_HISTORY = 'REMOVE_RECIPE_FROM_HISTORY';
 const ADD_NEW_RECIPE = 'ADD_NEW_RECIPE';
 const REMOVE_RECIPE_FROM_LIST = 'REMOVE_RECIPE_FROM_LIST';
 const CLEAR_LIST = 'CLEAR_LIST';
-const UPDATE_RECIPES_TOTAL = 'UPDATE_RECIPES_TOTAL';
 
 /**
  * INITIAL STATE
@@ -24,7 +23,6 @@ const removeRecipeFromHistory = recipeId => ({ type: REMOVE_RECIPE_FROM_HISTORY,
 const addRecipe = newRecipe => ({ type: ADD_NEW_RECIPE, newRecipe });
 const removeRecipeFromList = recipeId => ({ type: REMOVE_RECIPE_FROM_LIST, recipeId });
 const clearList = () => ({ type: CLEAR_LIST });
-const updateRecipesTotal = updatedRecipe => ({ type: UPDATE_RECIPES_TOTAL, updatedRecipe });
 
 /**
  * THUNK CREATORS
@@ -77,15 +75,6 @@ export const deleteRecipesFromList = () =>
       })
       .catch(err => console.error(err));
 
-export const updateRecipeQuantity = (recipeId, quantity) =>
-  dispatch =>
-    axios.put(`/api/grocery-list/recipes/${recipeId}`, quantity)
-      .then(res => res.data)
-      .then((updatedRecipe) => {
-        dispatch(updateRecipesTotal(updatedRecipe));
-      })
-      .then(err => console.error(err));
-
 
 /**
  * REDUCER
@@ -101,13 +90,6 @@ export default function (state = defaultRecipes, action) {
     case REMOVE_RECIPE_FROM_LIST:
       return state.map((recipe) => {
         if (recipe.id === action.recipeId) recipe.inGroceryList = false;
-        return recipe;
-      });
-    case UPDATE_RECIPES_TOTAL:
-      return state.map((recipe) => {
-        if (recipe.id === action.updatedRecipe.id) {
-          recipe.quantity = action.updatedRecipe.quantity;
-        }
         return recipe;
       });
     case CLEAR_LIST:
