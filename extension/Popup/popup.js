@@ -1,60 +1,45 @@
-// import { Container, Grid, Header, Segment, Button, Icon, Input, Form } from 'semantic-ui-react';
+const styles = {
+  headerStyle: {
+    marginTop: '0.857143em',
+    marginLeft: '0.857143em',
+  },
+};
 
 chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
   const tabId = tabs[0].id;
-  chrome.tabs.sendMessage(tabId, { greeting: 'hello' }, (response) => {
-    let htmlString =
-     `
-     <h5>Recipe Details:</h5>
-      <div class="ui grid">
-        <div class="row">
-          <div class="eight wide column"><p>Title:</p></div>
-          <div class="eight wide column"><p>${response.recipe.title}</p></div>
-        </div>
-        <div class="row">
-          <div class="eight wide column"><p>Author:</p></div>
-          <div class="eight wide column"><p>${response.recipe.author}</p></div>
-        </div>
-        <div class="row">
-          <div class="eight wide column"><p>Recipe Url:</p></div>
-          <div class="eight wide column"><p>${response.recipe.recipeUrl}</p></div>
-        </div>
-        <div class="row">
-          <div class="eight wide column"><p>Number of Servings:</p></div>
-          <div class="eight wide column"><p>${response.recipe.numServings}</p></div>
-        </div>
-      </div>
-
-      <h5>Recipe Details:</h5>
-
-      <h5>Ingredients:</h5>
-
-      <table class="ui table">
-        <thead>
-          <tr>
-            <th>Ingredient Name</th>
-            <th>Quantity</th>
-            <th>Unit</th>
-          </tr>
-        </thead>
-
+  chrome.tabs.sendMessage(tabId, { greeting: 'Yo!' }, (response) => {
+    let htmlString = `
+      <h3 style="margin: 0.857143em 0.857143em">Recipe Details:</h3>
+      <table class="ui table" style="table-layout: fixed">
+        <tr>
+          <td>Title: &emsp;${response.recipe.title}</td>
+        </tr>
+        <tr>
+          <td>Author: &emsp;${response.recipe.author}</td>
+        </tr>
+         <tr>
+          <td>Number of Servings: &emsp;${response.recipe.numServings}</td>
+        </tr>
+      </table>
+      <h3 style="margin: 0.857143em 0.857143em">Ingredients:</h3>
+      <div class="ui grid" style="margin: 0.857143em 0.857143em">
+        <div class="row" style="margin: 0.857143em 0.857143em">
+          <div class="six wide column"><p>Ingredient Name</p></div>
+          <div class="four wide column"><p>Quantity</p></div>
+          <div class="four wide column"><p>Unit</p></div>
+        </div>`;
 
     response.ingredients.forEach((ingObj) => {
-      const ingHTML = `
-          <div>
-            <tbody>
-              <td>${ingObj.name}</td>
-              <td>${ingObj.quantity}</td>
-              <td>${ingObj.unit}</td>
-              <td><i class="remove icon"></i></td>
-            </tbody>
-          </div>`;
-
-      htmlString += ingHTML + '</table>';
+      const ingHTML = `<div class="row" style="margin: 0.857143em 0.857143em">
+          <div class="six wide column"><p>${ingObj.name}</p></div>
+          <div class="four wide column"><p>${ingObj.quantity}</p></div>
+          <div class="four wide column"><p>${ingObj.unit}</p></div>
+        </div>`;
+      htmlString += ingHTML;
     });
 
     // const buttonHtml = '<button type"button">Send Recipe to Sous</button>';
-    const buttonHtml = '<button type="button" id="btnSendRecipe" name="btnSendRecipe">Send Recipe to Sous</button></div>';
+    const buttonHtml = '<button style="margin: 0.857143em 0.857143em" type="button" id="btnSendRecipe" name="btnSendRecipe">Send Recipe to Sous</button></div>';
     htmlString += buttonHtml;
 
     htmlString += '</div>';
