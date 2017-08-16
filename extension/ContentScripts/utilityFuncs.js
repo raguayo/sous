@@ -122,7 +122,7 @@ function mapUnitToDB(recipeUnit, recipeQuantity, dbObj) {
   const recipeToDBObj = hashRecipeUnitToDBUnit[recipeUnit];
   if (!recipeToDBObj) {
     console.log('Error: Unit not found in DB ' + recipeUnit)
-    return [null, null];
+    return [null, null]; // hanlde this error better
   }
   let newUnit = recipeToDBObj.dbUnit;
   let newQuantity = recipeQuantity * recipeToDBObj.conversion;
@@ -130,7 +130,7 @@ function mapUnitToDB(recipeUnit, recipeQuantity, dbObj) {
     const unitConversionObj = unitConversionHash[newUnit];
     if (!unitConversionObj) {
       console.log('Error: Unit not found in DB ' + recipeUnit);
-      return [null, null];
+      return [null, null]; // handle this error better
     }
     newUnit = dbObj.unitMeasure;
     newQuantity *= unitConversionObj[dbObj.unitMeasure];

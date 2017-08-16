@@ -55,6 +55,16 @@ export const deleteRecipesFromList = () =>
       })
       .catch(err => console.error(err));
 
+export const addItemsToPeapodCart = itemsArr =>
+  dispatch =>
+    axios.post('/api/peapod/', { items: itemsArr })
+      .then(() => {
+        const newTab = window.open('https://www.peapod.com', '_blank');
+        newTab.focus();
+        dispatch(deleteRecipesFromList());
+      })
+      .catch(err => console.error(err));
+
 export const updateRecipeQuantity = (recipeId, quantity) =>
   dispatch =>
     axios.put(`/api/grocery-list/recipes/${recipeId}`, { quantity })
