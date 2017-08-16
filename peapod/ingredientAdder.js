@@ -330,7 +330,6 @@ function addIngredients(index) {
         if (potentialAdjustmentArr.includes('ct')) {
           size = potentialAdjustmentArr.slice(0, potentialAdjustmentArr.indexOf('ct')).join();
           unitMeasure = 'CT';
-          console.log('Size after ct in description', size);
         } else if (potentialAdjustmentArr[1] === 'pk') {
           size *= +potentialAdjustmentArr[0];
         }

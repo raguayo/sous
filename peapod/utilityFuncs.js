@@ -2,6 +2,7 @@ function convertSizeToNumber(quantity) {
   if (typeof quantity === 'string') {
     // remove any superfluous text
     let firstNumIdx = quantity.search(/[0-9]/);
+    // but don't get rid of decimal places
     if (quantity.indexOf('.') !== -1 && quantity.indexOf('.') === firstNumIdx - 1) firstNumIdx = quantity.indexOf('.');
     const lastNumIdx = quantity.length - quantity.split('').reverse().join().search(/[0-9]/);
     quantity = quantity.slice(firstNumIdx, lastNumIdx + 1);
