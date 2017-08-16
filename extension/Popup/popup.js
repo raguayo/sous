@@ -1,7 +1,11 @@
+// import { Container, Grid, Header, Segment, Button, Icon, Input, Form } from 'semantic-ui-react';
+
 chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
   const tabId = tabs[0].id;
   chrome.tabs.sendMessage(tabId, { greeting: 'hello' }, (response) => {
-    let htmlString = `<h5>Recipe Details:</h5>
+    let htmlString =
+     `
+     <h5>Recipe Details:</h5>
       <div class="ui grid">
         <div class="row">
           <div class="eight wide column"><p>Title:</p></div>
@@ -20,22 +24,33 @@ chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
           <div class="eight wide column"><p>${response.recipe.numServings}</p></div>
         </div>
       </div>
+
+      <h5>Recipe Details:</h5>
+
       <h5>Ingredients:</h5>
-      <div class="ui grid">
-        <div class="row">
-          <div class="six wide column"><p>Ingredient Name</p></div>
-          <div class="four wide column"><p>Quantity</p></div>
-          <div class="four wide column"><p>Unit</p></div>
-        </div>`;
+
+      <table class="ui table">
+        <thead>
+          <tr>
+            <th>Ingredient Name</th>
+            <th>Quantity</th>
+            <th>Unit</th>
+          </tr>
+        </thead>
+
 
     response.ingredients.forEach((ingObj) => {
-      const ingHTML = `<div class="row">
-          <div class="six wide column"><p>${ingObj.name}</p></div>
-          <div class="four wide column"><p>${ingObj.quantity}</p></div>
-          <div class="four wide column"><p>${ingObj.unit}</p></div>
-          <div class="two wide column"><i class="remove icon"></i></div>
-        </div>`;
-      htmlString += ingHTML;
+      const ingHTML = `
+          <div>
+            <tbody>
+              <td>${ingObj.name}</td>
+              <td>${ingObj.quantity}</td>
+              <td>${ingObj.unit}</td>
+              <td><i class="remove icon"></i></td>
+            </tbody>
+          </div>`;
+
+      htmlString += ingHTML + '</table>';
     });
 
     // const buttonHtml = '<button type"button">Send Recipe to Sous</button>';
