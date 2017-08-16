@@ -5,9 +5,9 @@ import user from './user';
 import groceryListRecipes from './groceryListRecipes';
 import savedRecipes from './savedRecipes';
 import groceryList from './groceryList';
+import excludedIngredients from './excludedIngredients';
 
-
-const reducer = combineReducers({ user, groceryListRecipes, savedRecipes, groceryList });
+const reducer = combineReducers({ user, groceryListRecipes, savedRecipes, groceryList, excludedIngredients });
 
 const middleware = applyMiddleware(thunkMiddleware, createLogger({ collapsed: true }));
 
@@ -18,4 +18,4 @@ export * from './user';
 export * from './savedRecipes';
 export * from './groceryListRecipes';
 export * from './groceryList';
-
+export * from './excludedIngredients';
