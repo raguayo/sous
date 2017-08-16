@@ -24,24 +24,6 @@ module.exports = {
         test: /\.svg$|\.ttf?|\.woff$|\.woff2|\.eof|\.eot/,
         loader: 'file-loader'
       }
-      // {
-      //   test: /\.json$/,
-      //   loader: 'json-loader',
-      // }
     ]
   },
-  // resolve: {
-  //   extensions: ['', '.webpack.js', '.web.js', '.js']
-  // },
-  // node: {
-  //   console: true,
-  //   fs: 'mock',
-  //   net: 'mock',
-  //   tls: 'mock',
-  // },
 }
-
-// https://github.com/request/request/issues/1691
-// http://webpack.github.io/docs/configuration.html#node
-// https://github.com/request/request/compare/master...pho3nixf1re:webpack-tests
-// https://github.com/request/request/issues/1529
