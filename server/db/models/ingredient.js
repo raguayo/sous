@@ -11,7 +11,7 @@ const Ingredient = db.define('ingredient', {
     type: Sequelize.STRING,
   },
   price: {
-    type: Sequelize.INTEGER,
+    type: Sequelize.FLOAT,
   },
   size: {
     type: Sequelize.FLOAT,
