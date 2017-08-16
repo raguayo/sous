@@ -6,7 +6,7 @@ import { deleteSavedRecipe } from '../store/savedRecipes';
 
 function RecipeHistory({ favRecipes, prevRecipes, handleDelete }) {
   return (
-    <Container style={{ padding: '5em 0em' }}>
+    <Container style={styles.container}>
       <Header as="h2">Your favorite recipes:</Header>
       <Segment.Group>
         <Segment>
@@ -54,6 +54,12 @@ function RecipeHistory({ favRecipes, prevRecipes, handleDelete }) {
     </Container>
   );
 }
+
+const styles = {
+  container: {
+    padding: '5em 0em',
+  },
+};
 
 const mapState = (state) => {
   return {

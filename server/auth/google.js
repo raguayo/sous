@@ -31,19 +31,11 @@ const strategy = new GoogleStrategy(googleConfig, (token, refreshToken, profile,
   const email = profile.emails[0].value;
 
   User.find({ where: { googleId } })
-    .then(user => user
-      ? done(null, user)
-      : User.create({ name, email, googleId })
-        .then((createdUser) => {
-          const groceryPromise = GroceryList.create()
-          return Promise.all([groceryPromise, createdUser])
-        })
-        .then(([groceryList, createdUser]) => createdUser.setGrocerylist(groceryList))
-        .then((assocUser) => {
-          done(null, assocUser);
-        })
-        .catch(done)
-    )
+    .then((user) => {
+      if (user) return user;
+      return User.create({ name, email, googleId });
+    })
+    .then(createdUser => done(null, createdUser))
     .catch(done);
 });
 

@@ -3,23 +3,24 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Container, Grid, Header, Segment, Button, Icon, Input, Form } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
-import { postNewRecipe, deleteRecipeFromList, deleteRecipesFromList } from '../store/groceryListRecipes';
+import { deleteRecipeFromList, deleteRecipesFromList, updateRecipeQuantity } from '../store/groceryListRecipes';
+import { postNewRecipe } from '../store/savedRecipes';
 
-function CurrentRecipe({ handleAddRecipe, handleDeleteRecipe, handleDeleteRecipes, currRecipes, user }) {
+function CurrentRecipe({ handleAddRecipe, handleDeleteRecipe, handleDeleteRecipes, groceryListRecipes, user, handleUpdateQuantity }) {
   return (
-    <Container style={{ padding: '5em 0em' }}>
+    <Container style={styles.container}>
       <Grid textAlign="center">
         <Grid.Row>
           <Header as="h2">Welcome {user.name}</Header>
         </Grid.Row>
         <Grid.Row >
           <Grid.Column width={12}>
-            <Grid.Row className="add-recipe-url-wrapper">
+            <Grid.Row >
               <Form onSubmit={handleAddRecipe}>
                 <Input
                   name="recipeUrl"
-                  className="add-recipe-url-bar"
-                  action={{ color: 'teal', labelPosition: 'left', icon: 'add', content: 'Add Recipe' }}
+                  style={styles.recipeInput}
+                  action={{ color: 'teal', labelPosition: 'left', icon: 'add', content: 'Add' }}
                   actionPosition="right"
                   placeholder="Recipe url..."
                 />
@@ -33,11 +34,16 @@ function CurrentRecipe({ handleAddRecipe, handleDeleteRecipe, handleDeleteRecipe
           <p>Your currently selected recipes:</p>
         </Segment>
         <Segment.Group>
-          {currRecipes && currRecipes.map((currRecipe) => {
+          {groceryListRecipes && groceryListRecipes.map((currRecipe) => {
             return (
               <Segment key={currRecipe.id}>
                 <Grid>
-                   <Grid.Column floated="left" width={10} verticalAlign="middle">
+                  <Grid.Column floated="left" width={2}>
+                    <Form>
+                      <Form.Input placeholder={currRecipe.grocerylist.quantity} onChange={(e) => handleUpdateQuantity(currRecipe.id, e)} />
+                    </Form>
+                  </Grid.Column>
+                  <Grid.Column floated="left" width={10} verticalAlign="middle">
                     <a href={currRecipe.recipeUrl} target="_blank" rel="noopener noreferrer">{currRecipe.title}</a>
                   </Grid.Column>
                   <Grid.Column floated="right" width={3} textAlign="right"><Icon onClick={() => handleDeleteRecipe(currRecipe.id)} name="delete" /></Grid.Column>
@@ -55,9 +61,18 @@ function CurrentRecipe({ handleAddRecipe, handleDeleteRecipe, handleDeleteRecipe
   );
 }
 
+const styles = {
+  container: {
+    padding: '5em 0em',
+  },
+  recipeInput: {
+    width: '80%',
+  },
+};
+
 const mapState = (state) => {
   return {
-    currRecipes: state.groceryListRecipes,
+    groceryListRecipes: state.groceryListRecipes,
     user: state.user,
   };
 };
@@ -72,6 +87,9 @@ const mapDispatch = (dispatch) => {
     handleDeleteRecipes: () => {
       dispatch(deleteRecipesFromList());
     },
+    handleUpdateQuantity: (recipeId, e) => {
+      dispatch(updateRecipeQuantity(recipeId, e.target.value));
+    },
   };
 };
 
@@ -79,8 +97,9 @@ CurrentRecipe.propTypes = {
   handleAddRecipe: PropTypes.func.isRequired,
   handleDeleteRecipe: PropTypes.func.isRequired,
   handleDeleteRecipes: PropTypes.func.isRequired,
-  currRecipes: PropTypes.array.isRequired,
+  groceryListRecipes: PropTypes.array.isRequired,
   user: PropTypes.object.isRequired,
+  handleUpdateQuantity: PropTypes.array.isRequired,
 };
 
 export default connect(mapState, mapDispatch)(CurrentRecipe);

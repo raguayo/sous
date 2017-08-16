@@ -172,7 +172,6 @@ db.sync({ force: true })
     return Promise.all([foundRecipies, groceryLists]);
   })
   .then(([foundRecipies, groceryLists]) => {
-    console.log(foundRecipies)
     const recipeMap = foundRecipies.map((recipeIngredient) => {
       const quantity = Math.ceil(Math.random() * 5);
       return recipeIngredient.update({ quantity });
