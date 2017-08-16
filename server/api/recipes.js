@@ -72,7 +72,7 @@ router.post('/', (req, res, next) => {
           })
           .then(([foundIngredient, ingIsCreated]) => {
             // TODO: only line different from microformat branch
-            if (!ingredient.quantity) ingredient.quantity = 0;
+            if (!ingredient.quantity) ingredient.quantity = 1;
             IngredientQuantity.create({ recipeId: newRecipe.id, ingredientId: foundIngredient.id, quantity: ingredient.quantity });
             return foundIngredient;
           })

@@ -5,7 +5,7 @@ import { Container, Grid, Header, Segment, Icon, Checkbox, Button } from 'semant
 import { fetchGroceryList, deleteRecipesFromList, addItemsToPeapodCart } from '../store';
 import { strikeThrough } from '../stylingUtilities';
 
-function GroceryList({ groceryList, getIngredients }) {
+function GroceryList({ groceryList, getIngredients, handleCartPurchase }) {
   const ingredients = groceryList ? getIngredients(groceryList) : [];
   return (
     <Container style={styles.container}>
@@ -21,18 +21,20 @@ function GroceryList({ groceryList, getIngredients }) {
                       label={`${ingredient.name}          ${ingredient.quantity}          ${ingredient.unitMeasure}`}
                     >
                     </Grid.Column>
-                    <Grid.Column floated="right" width={3} textAlign="right"><Icon onClick={() => { console.log('hi') }} name="delete" /></Grid.Column>
+                    <Grid.Column floated="right" width={3} textAlign="right">
+                      <Icon onClick={() => { console.log('hi'); }} name="delete" />
+                    </Grid.Column>
                   </Grid>
                 </Segment>
               );
             })
           }
         </Segment.Group>
-        <Button onClick={() => this.props.handleCartPurchase(this.props.groceryList)}>Add to Peapod Cart</Button>
-        </Segment.Group>
-      </Container>
-    );
-  }
+        <Button onClick={() => handleCartPurchase(ingredients)}>Add to Peapod Cart</Button>
+      </Segment.Group>
+    </Container>
+  );
+}
 
 const styles = {
   container: {
@@ -68,28 +70,27 @@ const mapState = (state) => {
           }
         });
       });
-      console.log(ingredientList);
       return ingredientList;
     },
   };
 };
 
 const mapDispatch = (dispatch) => {
- return {
-    handleCartPurchase(groceryList) {
-      const itemArr = [];
-      Object.keys(groceryList).forEach((key) => {
-        const gListItem = groceryList[key];
-        const productId = gListItem.prodId;
-        const quantToBuy = Math.ceiling(gListItem.quantity / gListItem.peapodQuantity);
-        itemArr.push({ quantity: quantToBuy, productId });
+  return {
+    handleCartPurchase(ingredients) {
+      const itemArr = ingredients.map((ingredientObj) => {
+        return {
+          productId: ingredientObj.prodId,
+          coupon: null,
+          quantity: Math.ceil(ingredientObj.quantity / ingredientObj.size),
+        };
       });
       dispatch(addItemsToPeapodCart(itemArr));
     },
   };
-}
+};
 
-export default connect(mapState, null)(GroceryList);
+export default connect(mapState, mapDispatch)(GroceryList);
 
 GroceryList.propTypes = {
   handleCartPurchase: PropTypes.func.isRequired,
