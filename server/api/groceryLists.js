@@ -102,6 +102,17 @@ router.put('/recipes/:id', (req, res, next) => {
     .catch(next);
 });
 
+router.delete('/ingredients/:id', (req, res, next) => {
+  const recipeId = req.body.recipeId;
+  const ingredientId = req.params.id;
+  req.user.getGroceryListRecipes({ where: { recipeId } })
+    .then((recipe) => {
+      recipe.removeIngredient({ where: { ingredientId } })
+    })
+    .then(() => {
+      res.sendStatus(204)
+    });
+});
 // router.delete('/:id', (req, res, next) => {
 //   GroceryList.destroy({
 //     where: { id: req.params.id }
