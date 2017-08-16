@@ -5,7 +5,7 @@ const Ingredient = require('./ingredient');
 const Recipe = db.define('recipe', {
   title: {
     type: Sequelize.STRING,
-    unique: true,
+    // unique: true,
     allowNull: false,
   },
   author: {

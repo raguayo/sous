@@ -20,61 +20,60 @@ module.exports = app;
  * keys as environment variables, so that they can still be read by the
  * Node process on process.env
  */
-if (process.env.NODE_ENV !== 'production') require('../secrets')
+if (process.env.NODE_ENV !== 'production') require('../secrets');
 
 // passport registration
 passport.serializeUser((user, done) => done(null, user.id))
 passport.deserializeUser((id, done) =>
   db.models.user.findById(id)
     .then(user => done(null, user))
-    .catch(done))
+    .catch(done));
 
 const createApp = () => {
   // logging middleware
-  app.use(morgan('dev'))
+  app.use(morgan('dev'));
 
   // body parsing middleware
-  app.use(bodyParser.json())
-  app.use(bodyParser.urlencoded({ extended: true }))
+  app.use(bodyParser.json());
+  app.use(bodyParser.urlencoded({ extended: true }));
 
   // session middleware with passport
   app.use(session({
     secret: process.env.SESSION_SECRET || 'my best friend is Cody',
     store: sessionStore,
     resave: false,
-    saveUninitialized: false
+    saveUninitialized: false,
   }))
-  app.use(passport.initialize())
-  app.use(passport.session())
+  app.use(passport.initialize());
+  app.use(passport.session());
 
   // auth and api routes
-  app.use('/auth', require('./auth'))
-  app.use('/api', require('./api'))
+  app.use('/auth', require('./auth'));
+  app.use('/api', require('./api'));
 
   // static file-serving middleware
-  app.use(express.static(path.join(__dirname, '..', 'public')))
+  app.use(express.static(path.join(__dirname, '..', 'public')));
 
   // sends index.html
   app.use('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '..', 'public/index.html'))
+    res.sendFile(path.join(__dirname, '..', 'public/index.html'));
   })
 
   // error handling endware
   app.use((err, req, res, next) => {
-    console.error(err)
-    console.error(err.stack)
+    console.error(err);
+    console.error(err.stack);
     res.status(err.status || 500).send(err.message || 'Internal server error.')
   })
 }
 
 const startListening = () => {
   // start listening (and create a 'server' object representing our server)
-  const server = app.listen(PORT, () => console.log(`Mixing it up on port ${PORT}`))
-
-}
+  const server = app.listen(PORT, () => console.log(`Mixing it up on port ${PORT}`));
+};
 
 const isForceOn = false;
-const syncDb = () => db.sync({ force: isForceOn })
+const syncDb = () => db.sync({ force: isForceOn });
 
 // This evaluates as true when this file is run directly from the command line,
 // i.e. when we say 'node server/index.js' (or 'nodemon server/index.js', or 'nodemon server', etc)
@@ -84,7 +83,7 @@ if (require.main === module) {
   sessionStore.sync()
     .then(syncDb)
     .then(createApp)
-    .then(startListening)
+    .then(startListening);
 } else {
-  createApp()
+  createApp();
 }
