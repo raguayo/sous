@@ -53,7 +53,7 @@ const arrOfIng = [
   { name: 'sugar', peapodName: 'Domino Premium Pure Cane Granulated Sugar', },
   { name: 'salt', peapodName: 'Morton Salt Iodized', },
   { name: 'flour', peapodName: 'Peapod All-Purpose Flour', },
-  { name: 'corn starch', peapodName: 'Argo 100% Pure Corn Starch', },
+  { name: 'cornstarch', peapodName: 'Argo 100% Pure Corn Starch', },
   { name: 'lemon juice', peapodName: 'Peapod 100% Lemon Juice from Concentrate', },
   { name: 'cayenne pepper', peapodName: 'Nature\'s Promise Organic Cayenne Pepper', },
   { name: 'cinnamon ground', peapodName: 'Peapod Cinnamon Ground', },
@@ -336,6 +336,8 @@ function addIngredients(index) {
       }
       // should handle hyphens, fractions, ignore other text
       size = convertSizeToNumber(size);
+      // switch 'EA' with 'CT' to standardize
+      if (unitMeasure === 'EA') unitMeasure = 'CT';
 
       Ingredient.findOrCreate({
         where: {

@@ -9,7 +9,7 @@ http://allrecipes.com/recipe/239145/chef-johns-peach-pie/
 http://allrecipes.com/recipe/214947/perfect-summer-fruit-salad/
 http://allrecipes.com/recipe/17289/chocolate-zucchini-bread-i/
 http://allrecipes.com/recipe/223154/chef-johns-salmon-in-parchment/
-http://allrecipes.com/recipe/25300/manicotti-alla-romana/
+http://allrecipes.com/recipe/235357/chef-johns-penne-with-vodka-sauce/
 http://allrecipes.com/recipe/235531/grilled-turkey-and-swiss-sandwich/
 http://allrecipes.com/recipe/90500/beet-salad-with-goat-cheese/
 http://allrecipes.com/recipe/71600/easy-arugula-salad/
@@ -18,3 +18,8 @@ http://allrecipes.com/recipe/229780/baked-denver-omelet/
 http://allrecipes.com/recipe/241705/chef-johns-falafel/?
 http://allrecipes.com/recipe/13218/absolutely-ultimate-potato-soup/
 http://allrecipes.com/recipe/15679/asian-beef-with-snow-peas/
+
+
+// edge cases still to fix
+// has no amount (eg oil for frying)
+// has two ingredients in one line (salt and pepper to taste)
