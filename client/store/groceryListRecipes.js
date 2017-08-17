@@ -8,7 +8,6 @@ const GET_LIST_RECIPES = 'GET_LIST_RECIPES';
 const REMOVE_RECIPE_FROM_LIST = 'REMOVE_RECIPE_FROM_LIST';
 const CLEAR_LIST = 'CLEAR_LIST';
 const UPDATE_RECIPES_TOTAL = 'UPDATE_RECIPES_TOTAL';
-const REMOVE_INGREDIENT_FROM_LIST = 'REMOVE_INGREDIENT_FROM_LIST';
 /**
  * INITIAL STATE
  */
@@ -21,9 +20,6 @@ const getListRecipes = recipes => ({ type: GET_LIST_RECIPES, recipes });
 export const removeRecipeFromList = recipeId => ({ type: REMOVE_RECIPE_FROM_LIST, recipeId });
 const clearList = () => ({ type: CLEAR_LIST });
 const updateRecipesTotal = (newQuantityObj, recipeId) => ({ type: UPDATE_RECIPES_TOTAL, newQuantityObj, recipeId });
-const removeIngredientFromList = (ingredintId, recipeId) => ({
-  type: REMOVE_INGREDIENT_FROM_LIST, ingredintId, recipeId,
-});
 
 
 /**
@@ -78,16 +74,6 @@ export const updateRecipeQuantity = (recipeId, quantity) =>
       })
       .catch(err => console.error(err));
 
-export const deleteIngredientFromList = (ingredientId, recipeId) =>
-  dispatch =>
-    axios.delete(`/api/grocery-list/ingredients/${ingredientId}`, { recipeId })
-      .then(res => res.data)
-      .then(() => {
-        dispatch(deleteIngredientFromList(ingredientId, recipeId))
-      })
-      .catch(err => console.log(err))
-
-
 /**
  * REDUCER
  */
@@ -101,14 +87,6 @@ export default function (state = defaultRecipes, action) {
       return state.map((recipe) => {
         if (recipe.id === action.recipeId) {
           recipe.grocerylist = action.newQuantityObj;
-        }
-        return recipe;
-      });
-    case REMOVE_INGREDIENT_FROM_LIST:
-      return state.map((recipe) => {
-        if (recipe.id === action.recipeId) {
-          return recipe.filter(ingredient =>
-            ingredient.id !== action.ingredientId);
         }
         return recipe;
       });

@@ -87,14 +87,12 @@ const mapState = (state) => {
 
 const mapDispatch = (dispatch) => {
   return {
-<<<<<<< HEAD
     handleExcludedIngredient(e, excludedId) {
       if (strikeThrough(e)) {
         dispatch(postNewExcluded(excludedId));
       } else {
         dispatch(deleteExcludedIngredient(excludedId));
       }
-=======
     handleCartPurchase(ingredients) {
       const itemArr = ingredients.map((ingredientObj) => {
         return {
@@ -104,7 +102,6 @@ const mapDispatch = (dispatch) => {
         };
       });
       dispatch(addItemsToPeapodCart(itemArr));
->>>>>>> master
     },
   };
 };
@@ -112,10 +109,7 @@ const mapDispatch = (dispatch) => {
 export default connect(mapState, mapDispatch)(GroceryList);
 
 GroceryList.propTypes = {
-<<<<<<< HEAD
-=======
   handleCartPurchase: PropTypes.func.isRequired,
->>>>>>> master
   groceryList: PropTypes.object.isRequired,
   getIngredients: PropTypes.func.isRequired,
   handleExcludedIngredient: PropTypes.func.isRequired,

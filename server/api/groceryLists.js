@@ -33,24 +33,11 @@ router.put('/recipes/:id', (req, res, next) => {
   const userId = req.user.id;
   const recipeId = req.params.id;
   GroceryList.findOne({ where: { recipeId, userId } })
-    .then(recipeInList => {
+    .then((recipeInList) => {
       if (!recipeInList) next(new Error(`couldn't find recipe`));
       return recipeInList.update({ quantity });
     })
     .then(updatedGroceryListRecipe => res.json(updatedGroceryListRecipe))
-    .catch(next);
-});
-
-router.delete('/ingredients/:id', (req, res, next) => {
-  const recipeId = req.body.recipeId;
-  const ingredientId = req.params.id;
-  req.user.getGroceryListRecipes({ where: { recipeId } })
-    .then((recipe) => {
-      recipe.removeIngredient({ where: { ingredientId } })
-    })
-    .then(() => {
-      res.sendStatus(204);
-    })
     .catch(next);
 });
 
