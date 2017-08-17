@@ -35,7 +35,6 @@ chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     const errorArr = [];
 
     response.ingredients.forEach((ingObj) => {
-<<<<<<< HEAD
       const ingHTML = `<tr style="margin: 0.857143em 0.857143em">
           <td style="padding:1em; width='100%'; align='center';"><p>${ingObj.name}</p></td>
           <td style="padding:1em; width='100%'; align='center';"><p>${ingObj.quantity}</p></td>
@@ -59,9 +58,5 @@ chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       response.msg = 'createGroceryList';
       chrome.extension.sendMessage(response);
     });
-
-    // $(document).ready(() => {
-    //   $('tr:odd').css('background-color', '#E5E7E9');
-    // });
   });
 });
