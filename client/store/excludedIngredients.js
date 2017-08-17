@@ -7,26 +7,26 @@ const ADD_EXCLUDED_INGREDIENT = 'ADD_EXCLUDED_INGREDIENT';
 
 const defaultExcluded = [];
 
-const getExcludedIngredients = ingredients => ({ type: GET_EXCLUDED_INGREDIENTS, ingredients });
+const getExcludedIngredients = excludedIds => ({ type: GET_EXCLUDED_INGREDIENTS, excludedIds });
 const removeExcludedIngredient = ingredientId => ({ type: REMOVE_EXCLUDED_INGREDIENT, ingredientId });
 const clearList = () => ({ type: CLEAR_LIST });
-const addExcludedIngredient = ingredient => ({ type: ADD_EXCLUDED_INGREDIENT, ingredient });
+const addExcludedIngredient = ingredientId => ({ type: ADD_EXCLUDED_INGREDIENT, ingredientId });
 
 export const fetchExcludedIngredients = () => dispatch =>
   axios.get('/api/grocery-list/excluded')
     .then(res => res.data)
     .then((ingredients) => {
-      const excluded = [];
+      const excludedIds = [];
       ingredients.forEach((ingredient) => {
-        const { id, name } = ingredient;
-        excluded.push({ id, name });
+        const { id } = ingredient;
+        excludedIds.push(id);
       })
-      dispatch(getExcludedIngredients(excluded));
+      dispatch(getExcludedIngredients(excludedIds));
     })
     .catch(err => console.log(err));
 
 export const deleteExcludedIngredient = excludedId => dispatch =>
-  axios.delete(`/api/grocery-list/excluded${excludedId}`)
+  axios.delete(`/api/grocery-list/excluded/${excludedId}`)
     .then(res => res.data)
     .then(() => {
       dispatch(removeExcludedIngredient(excludedId));
@@ -41,24 +41,24 @@ export const deleteExcludedIngredients = () => dispatch =>
     })
     .catch(err => console.err(err));
 
-export const postNewExcluded = ingredient => dispatch =>
-  axios.post('/api/grocery-list/excluded', ingredient)
+export const postNewExcluded = ingredientId => dispatch =>
+  axios.post('/api/grocery-list/excluded', { ingredientId })
     .then(res => res.data)
-    .then((excluded) => {
-      dispatch(addExcludedIngredient(excluded));
+    .then((excludedId) => {
+      dispatch(addExcludedIngredient(excludedId));
     })
     .catch(err => console.log(err));
 
 export default function (state = defaultExcluded, action) {
   switch (action.type) {
     case GET_EXCLUDED_INGREDIENTS:
-      return action.ingredientIds;
+      return action.excludedIds;
     case REMOVE_EXCLUDED_INGREDIENT:
       return state.filter(ingredientId => ingredientId !== action.ingredientId);
     case CLEAR_LIST:
       return defaultExcluded;
     case ADD_EXCLUDED_INGREDIENT:
-      return [action.excluded, ...state];
+      return [action.ingredientId, ...state];
     default:
       return state;
   }

@@ -63,9 +63,19 @@ router.get('/excluded', (req, res, next) => {
 });
 
 router.post('/excluded', (req, res, next) => {
-  const ingredientId = req.body.excluded.id;
-  const userId = req.user.id;
-  req.user.addExcludedIngredient({ userId, ingredientId })
-    .then(excluded => res.json(excluded))
+  const ingredientId = req.body.ingredientId;
+  req.user.addExcludedIngredient(ingredientId)
+    .then(() => {
+      res.json(ingredientId);
+    })
+    .catch(next);
+});
+
+router.delete('/excluded/:id', (req, res, next) => {
+  const ingredientId = req.params.id;
+  req.user.removeExcludedIngredient(ingredientId)
+    .then(() => {
+      res.sendStatus(204);
+    })
     .catch(next);
 });

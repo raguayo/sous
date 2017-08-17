@@ -2,15 +2,12 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import React from 'react';
 import { Container, Grid, Header, Segment, Checkbox } from 'semantic-ui-react';
-import { excludeIngredient } from '../store';
+import { postNewExcluded, deleteExcludedIngredient } from '../store';
 import { strikeThrough } from '../stylingUtilities';
 
-function GroceryList({ groceryList, getIngredients, handleExcludeIngredient }) {
+function GroceryList({ groceryList, getIngredients, handleExcludedIngredient, excludedIngredients }) {
   const ingredients = groceryList ? getIngredients(groceryList) : [];
-  function onClick(e) {
-    strikeThrough(e);
-    handleExcludeIngredient(e);
-  }
+
   return (
     <Container style={styles.container}>
       <Header as="h2" style={styles.header} >Grocery List</Header>
@@ -21,13 +18,21 @@ function GroceryList({ groceryList, getIngredients, handleExcludeIngredient }) {
               return (
                 <Segment key={ingredient.id}>
                   <Grid>
-                    <Grid.Column as={Checkbox} floated="left" width={13} verticalAlign="middle" onClick={onClick}>
-                      <Grid>
-                        <Grid.Column label={ingredient.name} />
-                        <Grid.Column label={ingredient.quantity} />
-                        <Grid.Column label={ingredient.unitMeasure} />
-                      </Grid>
-                    </Grid.Column>
+                    {
+                      excludedIngredients.indexOf(ingredient.id) !== -1 ? (
+                        <Grid.Column
+                          as={Checkbox} checked floated="left" width={13} verticalAlign="middle" style={{ textDecoration: 'line-through' }} onClick={(e) => handleExcludedIngredient(e, ingredient.id)}
+                          label={`${ingredient.name} ${ingredient.unitSize} ${ingredient.quantity}`}
+                        >
+                        </Grid.Column>
+                      ) : (
+                        <Grid.Column
+                          as={Checkbox} floated="left" width={13} verticalAlign="middle" onClick={(e) => handleExcludedIngredient(e, ingredient.id)}
+                          label={`${ingredient.name} ${ingredient.unitSize} ${ingredient.quantity}`}
+                        >
+                        </Grid.Column>
+                        )
+                    }
                   </Grid>
                 </Segment>
               );
@@ -69,21 +74,24 @@ const mapState = (state) => {
               unitMeasure,
               size,
               quantity,
-            })
+            });
           }
         });
       });
-      console.log(ingredientList);
       return ingredientList;
     },
-
+    excludedIngredients: state.excludedIngredients,
   };
 };
 
 const mapDispatch = (dispatch) => {
   return {
-    handleExcludeIngredient(e) {
-      dispatch(excludeIngredient(e));
+    handleExcludedIngredient(e, excludedId) {
+      if (strikeThrough(e)) {
+        dispatch(postNewExcluded(excludedId));
+      } else {
+        dispatch(deleteExcludedIngredient(excludedId));
+      }
     },
   };
 };
@@ -93,5 +101,5 @@ export default connect(mapState, mapDispatch)(GroceryList);
 GroceryList.propTypes = {
   groceryList: PropTypes.object.isRequired,
   getIngredients: PropTypes.func.isRequired,
-  handleExcludeIngredient: PropTypes.func.isRequired,
+  handleExcludedIngredient: PropTypes.func.isRequired,
 };
