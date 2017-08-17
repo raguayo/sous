@@ -1,11 +1,11 @@
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import React from 'react';
-import { Container, Grid, Header, Segment, Checkbox } from 'semantic-ui-react';
-import { postNewExcluded, deleteExcludedIngredient } from '../store';
+import { Container, Grid, Header, Segment, Checkbox, Button } from 'semantic-ui-react';
+import { postNewExcluded, deleteExcludedIngredient, addItemsToPeapodCart } from '../store';
 import { strikeThrough } from '../stylingUtilities';
 
-function GroceryList({ groceryList, getIngredients, handleExcludedIngredient, excludedIngredients }) {
+function GroceryList({ groceryList, getIngredients, handleExcludedIngredient, excludedIngredients, handleCartPurchase }) {
   const ingredients = groceryList ? getIngredients(groceryList) : [];
 
   return (
@@ -93,6 +93,7 @@ const mapDispatch = (dispatch) => {
       } else {
         dispatch(deleteExcludedIngredient(excludedId));
       }
+    },
     handleCartPurchase(ingredients) {
       const itemArr = ingredients.map((ingredientObj) => {
         return {
@@ -111,6 +112,7 @@ export default connect(mapState, mapDispatch)(GroceryList);
 GroceryList.propTypes = {
   handleCartPurchase: PropTypes.func.isRequired,
   groceryList: PropTypes.object.isRequired,
+  excludedIngredients: PropTypes.array.isRequired,
   getIngredients: PropTypes.func.isRequired,
   handleExcludedIngredient: PropTypes.func.isRequired,
 };

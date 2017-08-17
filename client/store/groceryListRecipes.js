@@ -1,5 +1,6 @@
-import axios from 'axios'
-import history from 'history'
+import axios from 'axios';
+import history from 'history';
+import { deleteExcludedIngredients } from './excludedIngredients';
 
 /**
  * ACTION TYPES
@@ -62,6 +63,7 @@ export const addItemsToPeapodCart = itemsArr =>
         const newTab = window.open('https://www.peapod.com', '_blank');
         newTab.focus();
         dispatch(deleteRecipesFromList());
+        dispatch(deleteExcludedIngredients());
       })
       .catch(err => console.error(err));
 
