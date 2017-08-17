@@ -247,7 +247,12 @@ const conversionTableBtwnCountOz = {
   'white pepper': {
     'CT': 0.1,
     'OZ': 10,
-  }
+  },
+  'fresh rosemary': {
+    'CT': 0.5,
+    'OZ': 2,
+    // not sure about this one
+  },
 }
 
 const conversionTableBtwnBunchOz = {
@@ -300,7 +305,6 @@ function convertToOz(unit, quantity, ingName) {
   if (unit === 'OZ') return [unit, quantity];
   if (unit === 'CT') {
     // convert 'CT' to 'OZ' depending on ing
-    console.log('ing. name: ', ingName)
     quantity *= conversionTableBtwnCountOz[ingName][unit];
   } else if (unit === 'BUNCH') {
     // convert 'BUNCH' to 'OZ' depending on ing
@@ -319,10 +323,8 @@ function convertToOz(unit, quantity, ingName) {
 function convertOzToDBUnit(unit, quantity, dbUnit, ingName) {
   if (dbUnit === 'OZ') return [unit, quantity];
   if (dbUnit === 'CT') {
-    console.log(unit, ingName)
     quantity /= conversionTableBtwnCountOz[ingName][dbUnit];
   } else if (dbUnit === 'BUNCH') {
-    console.log(ingName)
     quantity /= conversionTableBtwnBunchOz[ingName][dbUnit];
   } else if (dbUnit === 'DOZ') {
     quantity /= conversionTableBtwnDozOz[ingName][dbUnit];
@@ -346,13 +348,6 @@ function mapUnitToDB(recipeUnit, recipeQuantity, dbObj) {
     [newUnit, newQuantity] = convertToOz(newUnit, newQuantity, dbObj.name);
     // convert to db units
     [newUnit, newQuantity] = convertOzToDBUnit(newUnit, newQuantity, dbObj.unitMeasure, dbObj.name);
-    // const unitConversionObj = unitConversionHash[newUnit];
-    // if (!unitConversionObj) {
-    //   console.log('Error: Unit not found in DB ' + recipeUnit);
-    //   return [null, null]; // handle this error better
-    // }
-    // newUnit = dbObj.unitMeasure;
-    // newQuantity *= unitConversionObj[dbObj.unitMeasure];
   }
   return [newUnit, newQuantity];
 }
@@ -403,21 +398,28 @@ function parseIngredientElements(ingElementArr) {
     const splitIdx = wordArr.findIndex(word => word.search(unitRegex) !== -1);
     // split on that unit word to separate the name and the quantity
     const unitAndQuantityArr = wordArr.slice(0, splitIdx + 1);
-    if (!unitAndQuantityArr.length) {
-      // edge case for 'oil for frying'
+    if (!unitAndQuantityArr.length && !Number.isNaN(wordArr[0])) {
       quantity = wordArr.shift();
     } else {
       unit = unitAndQuantityArr.pop();
       quantity = unitAndQuantityArr.join(' ');
     }
     // convert recipe name to database name
-    const recipeName = wordArr.slice(splitIdx + 1).join(' ');
+    let recipeName = wordArr.slice(splitIdx + 1).join(' ').toLowerCase();
+    // handle if the recipe says 'to taste' rather than provide a unit
+    if (recipeName.indexOf('to taste') !== -1) {
+      unit = 'pinch';
+      quantity = '1';
+      recipeName = recipeName.slice(0, recipeName.indexOf('to taste'));
+    }
+    // find the db match
     const dbMatch = findDatabaseMatch(recipeName, ingredientsFromDBArr);
-    if (!dbMatch) return {}; // handle this error better;
+    // if no db match, send the original ingredient description to popup
+    if (!dbMatch) return { sentence };
 
     // check if it has other units in parens e.g. '1 (10 oz) package'
-    let newUnit = quantity.match(/\(.+\)/i)
-    if (newUnit) {
+    let newUnit = quantity.match(/\(.+\)/i);
+    if (newUnit && !newUnit[0].includes('inch')) { // handle the 'inch' edge case less brittle-y
       quantity = +quantity.slice(0, quantity.indexOf('(') - 1);
       const newUnitArr = newUnit[0].slice(1, -1).split(' ');
       quantity *= +newUnitArr[0];
@@ -425,7 +427,7 @@ function parseIngredientElements(ingElementArr) {
     }
     // check if it has other units in parens in the ingredient name
     if (!newUnit) newUnit = recipeName.match(/\(.+\)/i);
-    if (newUnit && newUnit.index === 0) {
+    if (newUnit && newUnit.index === 0 && !newUnit[0].includes('inch')) { // handle the 'inch' edge case less brittle-y
       const newUnitArr = newUnit[0].slice(1, -1).split(' ');
       quantity *= +newUnitArr[0];
       unit = newUnitArr.slice(1).join(' ');

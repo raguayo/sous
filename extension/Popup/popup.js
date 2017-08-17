@@ -28,17 +28,24 @@ chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
           <div class="four wide column"><p>Unit</p></div>
         </div>`;
 
+    const errorArr = [];
+
     response.ingredients.forEach((ingObj) => {
-      const ingHTML = `<div class="row">
-          <div class="six wide column"><p>${ingObj.name}</p></div>
-          <div class="four wide column"><p>${ingObj.quantity}</p></div>
-          <div class="four wide column"><p>${ingObj.unit}</p></div>
-          <div class="two wide column"><i class="remove icon"></i></div>
-        </div>`;
-      htmlString += ingHTML;
+      if (ingObj.name) {
+        const ingHTML = `<div class="row">
+            <div class="six wide column"><p>${ingObj.name}</p></div>
+            <div class="four wide column"><p>${ingObj.quantity}</p></div>
+            <div class="four wide column"><p>${ingObj.unit}</p></div>
+            <div class="two wide column"><i class="remove icon"></i></div>
+          </div>`;
+        htmlString += ingHTML;
+      } else {
+        errorArr.push(ingObj.sentence);
+      }
     });
 
-    // const buttonHtml = '<button type"button">Send Recipe to Sous</button>';
+    errorArr.forEach((sentence) => htmlString += `<p>We couldn't find this in our database:</p><p>${sentence}</p>`)
+
     const buttonHtml = '<button type="button" id="btnSendRecipe" name="btnSendRecipe">Send Recipe to Sous</button></div>';
     htmlString += buttonHtml;
 

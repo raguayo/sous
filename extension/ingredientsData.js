@@ -1255,7 +1255,7 @@ const ingredientsFromDBArr = [
   },
   {
     "id": 155,
-    "name": "corn starch",
+    "name": "cornstarch",
     "peapodName": "Argo 100% Pure Corn Starch",
     "price": 1.99,
     "size": 16,
