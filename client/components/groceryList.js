@@ -39,6 +39,7 @@ function GroceryList({ groceryList, getIngredients, handleExcludedIngredient, ex
             })
           }
         </Segment.Group>
+        <Button onClick={() => handleCartPurchase(ingredients)}>Add to Peapod Cart</Button>
       </Segment.Group>
     </Container>
   );
@@ -86,12 +87,24 @@ const mapState = (state) => {
 
 const mapDispatch = (dispatch) => {
   return {
+<<<<<<< HEAD
     handleExcludedIngredient(e, excludedId) {
       if (strikeThrough(e)) {
         dispatch(postNewExcluded(excludedId));
       } else {
         dispatch(deleteExcludedIngredient(excludedId));
       }
+=======
+    handleCartPurchase(ingredients) {
+      const itemArr = ingredients.map((ingredientObj) => {
+        return {
+          productId: ingredientObj.prodId,
+          coupon: null,
+          quantity: Math.ceil(ingredientObj.quantity / ingredientObj.size),
+        };
+      });
+      dispatch(addItemsToPeapodCart(itemArr));
+>>>>>>> master
     },
   };
 };
@@ -99,7 +112,12 @@ const mapDispatch = (dispatch) => {
 export default connect(mapState, mapDispatch)(GroceryList);
 
 GroceryList.propTypes = {
+<<<<<<< HEAD
+=======
+  handleCartPurchase: PropTypes.func.isRequired,
+>>>>>>> master
   groceryList: PropTypes.object.isRequired,
   getIngredients: PropTypes.func.isRequired,
   handleExcludedIngredient: PropTypes.func.isRequired,
 };
+
