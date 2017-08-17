@@ -32,7 +32,10 @@ chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
         </thead>
         <tbody>`;
 
+    const errorArr = [];
+
     response.ingredients.forEach((ingObj) => {
+<<<<<<< HEAD
       const ingHTML = `<tr style="margin: 0.857143em 0.857143em">
           <td style="padding:1em; width='100%'; align='center';"><p>${ingObj.name}</p></td>
           <td style="padding:1em; width='100%'; align='center';"><p>${ingObj.quantity}</p></td>
@@ -45,6 +48,7 @@ chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
 
     // const buttonHtml = '<button type"button">Send Recipe to Sous</button>';
     const buttonHtml = '<button style="margin: 0.857143em 0.857143em" type="button" id="btnSendRecipe" name="btnSendRecipe">Send Recipe to Sous</button></table>';
+
     htmlString += buttonHtml;
 
     htmlString += '</div>';
