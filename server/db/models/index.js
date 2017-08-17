@@ -14,6 +14,9 @@ User.belongsToMany(Recipe, { through: 'savedrecipe', as: 'savedRecipes' });
 Recipe.belongsToMany(Ingredient, { through: 'ingredientQuantity' });
 Ingredient.belongsToMany(Recipe, { through: 'ingredientQuantity' });
 
+Ingredient.belongsToMany(User, { through: 'excludedingredient', as: 'excludedIngredientUsers' });
+User.belongsToMany(Ingredient, { through: 'excludedingredient', as: 'excludedIngredients' });
+
 /**
  * We'll export all of our models here, so that any time a module needs a model,
  * we can just require it from 'db/models'

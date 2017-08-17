@@ -9,14 +9,13 @@ import {
   Main,
   Login,
   Signup,
-  UserHome,
   CurrentRecipes,
   Splash,
   RecipeHistory,
   GroceryList,
 } from './components';
 
-import { me, fetchGroceryListRecipes, fetchSavedRecipes } from './store';
+import { me, fetchGroceryListRecipes, fetchSavedRecipes, fetchExcludedIngredients } from './store';
 /**
  * COMPONENT
  */
@@ -70,6 +69,7 @@ const mapDispatch = (dispatch) => {
       dispatch(me());
       dispatch(fetchGroceryListRecipes());
       dispatch(fetchSavedRecipes());
+      dispatch(fetchExcludedIngredients());
     }
   }
 }

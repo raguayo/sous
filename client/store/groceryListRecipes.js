@@ -19,7 +19,7 @@ const defaultRecipes = [];
 const getListRecipes = recipes => ({ type: GET_LIST_RECIPES, recipes });
 export const removeRecipeFromList = recipeId => ({ type: REMOVE_RECIPE_FROM_LIST, recipeId });
 const clearList = () => ({ type: CLEAR_LIST });
-const updateRecipesTotal = (newQuantityObj, recipeId)  => ({ type: UPDATE_RECIPES_TOTAL, newQuantityObj, recipeId });
+const updateRecipesTotal = (newQuantityObj, recipeId) => ({ type: UPDATE_RECIPES_TOTAL, newQuantityObj, recipeId });
 
 
 /**
@@ -74,7 +74,6 @@ export const updateRecipeQuantity = (recipeId, quantity) =>
       })
       .catch(err => console.error(err));
 
-
 /**
  * REDUCER
  */
@@ -91,6 +90,7 @@ export default function (state = defaultRecipes, action) {
         }
         return recipe;
       });
+
     case CLEAR_LIST:
       return [];
     default:
