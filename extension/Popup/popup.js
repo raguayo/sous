@@ -30,7 +30,7 @@ chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
 
     const errorArr = [];
 
-    response.ingredients.forEach((ingObj) => {
+    response.userIngredients.forEach((ingObj) => {
       if (ingObj.name) {
         const ingHTML = `<div class="row">
             <div class="six wide column"><p>${ingObj.name}</p></div>

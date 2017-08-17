@@ -389,7 +389,8 @@ function parseIngredientElements(ingElementArr) {
     return null;
   }).filter(text => !!text);
 
-  const ingObjArr = ingSentenceArr.map((sentence) => {
+  const userIngredients = [];
+  const dbIngredients = ingSentenceArr.map((sentence) => {
     const wordArr = sentence.split(' ');
     let quantity;
     let unit;
@@ -404,7 +405,7 @@ function parseIngredientElements(ingElementArr) {
       unit = unitAndQuantityArr.pop();
       quantity = unitAndQuantityArr.join(' ');
     }
-    // convert recipe name to database name
+    // get the ingredient description slice of the sentence
     let recipeName = wordArr.slice(splitIdx + 1).join(' ').toLowerCase();
     // handle if the recipe says 'to taste' rather than provide a unit
     if (recipeName.indexOf('to taste') !== -1) {
@@ -415,7 +416,10 @@ function parseIngredientElements(ingElementArr) {
     // find the db match
     const dbMatch = findDatabaseMatch(recipeName, ingredientsFromDBArr);
     // if no db match, send the original ingredient description to popup
-    if (!dbMatch) return { sentence };
+    if (!dbMatch) {
+      userIngredients.push({ sentence });
+      return { sentence };
+    }
 
     // check if it has other units in parens e.g. '1 (10 oz) package'
     let newUnit = quantity.match(/\(.+\)/i);
@@ -436,18 +440,25 @@ function parseIngredientElements(ingElementArr) {
     if (!unit) unit = 'count';
     quantity = convertQuantityToNumber(quantity);
 
-    // convert unit and quantity to match db
-    [unit, quantity] = mapUnitToDB(unit, quantity, dbMatch);
-    // **********
-
-    const ingObj = {
+    const userIngredient = {
       quantity,
       unit,
       name: dbMatch.name,
     };
 
-    return ingObj;
+    // convert unit and quantity to match db
+    [unit, quantity] = mapUnitToDB(unit, quantity, dbMatch);
+    // **********
+
+    const dbIngredient = {
+      quantity,
+      unit,
+      name: dbMatch.name,
+    };
+
+    userIngredients.push(userIngredient)
+    return dbIngredient;
   });
 
-  return ingObjArr;
+  return [dbIngredients, userIngredients];
 }
