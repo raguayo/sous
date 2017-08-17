@@ -9,7 +9,7 @@ const defaultExcluded = [];
 
 const getExcludedIngredients = excludedIds => ({ type: GET_EXCLUDED_INGREDIENTS, excludedIds });
 const removeExcludedIngredient = ingredientId => ({ type: REMOVE_EXCLUDED_INGREDIENT, ingredientId });
-const clearList = () => ({ type: CLEAR_LIST });
+const clearExcludedIngredients = () => ({ type: CLEAR_LIST });
 const addExcludedIngredient = ingredientId => ({ type: ADD_EXCLUDED_INGREDIENT, ingredientId });
 
 export const fetchExcludedIngredients = () => dispatch =>
@@ -37,7 +37,7 @@ export const deleteExcludedIngredients = () => dispatch =>
   axios.delete('/api/grocery-list/excluded')
     .then(res => res.data)
     .then(() => {
-      dispatch(clearList());
+      dispatch(clearExcludedIngredients());
     })
     .catch(err => console.err(err));
 
