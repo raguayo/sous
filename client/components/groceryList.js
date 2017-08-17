@@ -22,13 +22,13 @@ function GroceryList({ groceryList, getIngredients, handleExcludedIngredient, ex
                       excludedIngredients.indexOf(ingredient.id) !== -1 ? (
                         <Grid.Column
                           as={Checkbox} checked floated="left" width={13} verticalAlign="middle" style={{ textDecoration: 'line-through' }} onClick={(e) => handleExcludedIngredient(e, ingredient.id)}
-                          label={`${ingredient.name} ${ingredient.unitSize} ${ingredient.quantity}`}
+                          label={`${ingredient.name} ${ingredient.unitMeasure} ${ingredient.quantity}`}
                         >
                         </Grid.Column>
                       ) : (
                         <Grid.Column
                           as={Checkbox} floated="left" width={13} verticalAlign="middle" onClick={(e) => handleExcludedIngredient(e, ingredient.id)}
-                          label={`${ingredient.name} ${ingredient.unitSize} ${ingredient.quantity}`}
+                          label={`${ingredient.name} ${ingredient.unitMeasure} ${ingredient.quantity}`}
                         >
                         </Grid.Column>
                         )

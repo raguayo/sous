@@ -12,6 +12,6 @@ const createGroceryList = (recipe, ingredients) => {
 
 chrome.extension.onMessage.addListener((request, sender, sendResponse) => {
   if (request.msg === 'createGroceryList') {
-    createGroceryList(request.recipe, request.ingredients);
+    createGroceryList(request.recipe, request.dbIngredients);
   }
 });

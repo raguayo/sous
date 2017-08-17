@@ -34,7 +34,7 @@ chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
 
     const errorArr = [];
 
-    response.ingredients.forEach((ingObj) => {
+    response.userIngredients.forEach((ingObj) => {
       if (ingObj.name) {
         const ingHTML = `<tr style="margin: 0.857143em 0.857143em">
             <td style="padding:1em; width='100%'; align='center';"><p>${ingObj.name}</p></td>
