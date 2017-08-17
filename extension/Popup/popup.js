@@ -1,52 +1,58 @@
+const styles = {
+  headerStyle: {
+    marginTop: '0.857143em',
+    marginLeft: '0.857143em',
+  },
+};
+
 chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
   const tabId = tabs[0].id;
-  chrome.tabs.sendMessage(tabId, { greeting: 'hello' }, (response) => {
-    let htmlString = `<h5>Recipe Details:</h5>
-      <div class="ui grid">
-        <div class="row">
-          <div class="eight wide column"><p>Title:</p></div>
-          <div class="eight wide column"><p>${response.recipe.title}</p></div>
-        </div>
-        <div class="row">
-          <div class="eight wide column"><p>Author:</p></div>
-          <div class="eight wide column"><p>${response.recipe.author}</p></div>
-        </div>
-        <div class="row">
-          <div class="eight wide column"><p>Recipe Url:</p></div>
-          <div class="eight wide column"><p>${response.recipe.recipeUrl}</p></div>
-        </div>
-        <div class="row">
-          <div class="eight wide column"><p>Number of Servings:</p></div>
-          <div class="eight wide column"><p>${response.recipe.numServings}</p></div>
-        </div>
-      </div>
-      <h5>Ingredients:</h5>
-      <div class="ui grid">
-        <div class="row">
-          <div class="six wide column"><p>Ingredient Name</p></div>
-          <div class="four wide column"><p>Quantity</p></div>
-          <div class="four wide column"><p>Unit</p></div>
-        </div>`;
+  chrome.tabs.sendMessage(tabId, { greeting: 'Yo!' }, (response) => {
+    let htmlString = `<div style="background-color:rgb(228, 200, 132)">
+      <h3 style="margin: 0.857143em 0.857143em">Recipe Details:</h3>
+      <table class="ui table" style="table-layout: fixed">
+        <tr style="background-color:rgb(228, 200, 132)">
+          <td>Title: &emsp;${response.recipe.title}</td>
+        </tr>
+        <tr style="background-color:rgb(228, 200, 132)">
+          <td>Author: &emsp;${response.recipe.author}</td>
+        </tr>
+         <tr style="background-color:rgb(228, 200, 132)">
+          <td>Number of Servings: &emsp;${response.recipe.numServings}</td>
+        </tr>
+      </table>
+      <h3 style="margin: 0.857143em 0.857143em">Ingredients:</h3>
+      <table class="ui grid altrowstable" id="alternatecolor" style="margin: 0.857143em 0.857143em; box-shadow: 1px 1px 1px #999;">
+        <thead style="display:table-header-group">
+          <tr>
+            <th style="padding:1em; width='100%';align:'center';"><p>Ingredient Name</p></th>
+            <th style="padding:1em; width='100%'; align:'center';"><p>Quantity</p></th>
+            <th style="padding:1em; width='100%'; align:'center';"><p>Unit</p></th>
+          </tr>
+        </thead>
+        <tbody>`;
 
     const errorArr = [];
 
     response.ingredients.forEach((ingObj) => {
       if (ingObj.name) {
-        const ingHTML = `<div class="row">
-            <div class="six wide column"><p>${ingObj.name}</p></div>
-            <div class="four wide column"><p>${ingObj.quantity}</p></div>
-            <div class="four wide column"><p>${ingObj.unit}</p></div>
-            <div class="two wide column"><i class="remove icon"></i></div>
-          </div>`;
+        const ingHTML = `<tr style="margin: 0.857143em 0.857143em">
+            <td style="padding:1em; width='100%'; align='center';"><p>${ingObj.name}</p></td>
+            <td style="padding:1em; width='100%'; align='center';"><p>${ingObj.quantity}</p></td>
+            <td style="padding:1em; width='100%'; align='center';"><p>${ingObj.unit}</p></td>
+          </tr>`;
         htmlString += ingHTML;
       } else {
         errorArr.push(ingObj.sentence);
       }
     });
 
-    errorArr.forEach((sentence) => htmlString += `<p>We couldn't find this in our database:</p><p>${sentence}</p>`)
+    htmlString += '</tbody></table>';
+    errorArr.forEach((sentence) => htmlString += `<div><br><p style="margin: 0.857143em 0.857143em">We couldn't find this in our database:</p><p style="align: 'center';margin: '0.857143em 0.857143em'">${sentence}</p></div><br>`)
 
-    const buttonHtml = '<button type="button" id="btnSendRecipe" name="btnSendRecipe">Send Recipe to Sous</button></div>';
+    const buttonHtml = '<button style="margin: 0.857143em 0.857143em" type="button" id="btnSendRecipe" name="btnSendRecipe">Send Recipe to Sous</button></table>';
+
+
     htmlString += buttonHtml;
 
     htmlString += '</div>';
