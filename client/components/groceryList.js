@@ -1,12 +1,13 @@
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import React, { Component } from 'react';
-import { Container, Grid, Header, Segment, Icon, Checkbox, Button } from 'semantic-ui-react';
-import { fetchGroceryList, deleteRecipesFromList, addItemsToPeapodCart } from '../store';
+import React from 'react';
+import { Container, Grid, Header, Segment, Checkbox } from 'semantic-ui-react';
+import { postNewExcluded, deleteExcludedIngredient } from '../store';
 import { strikeThrough } from '../stylingUtilities';
 
-function GroceryList({ groceryList, getIngredients, handleCartPurchase }) {
+function GroceryList({ groceryList, getIngredients, handleExcludedIngredient, excludedIngredients }) {
   const ingredients = groceryList ? getIngredients(groceryList) : [];
+
   return (
     <Container style={styles.container}>
       <Header as="h2" style={styles.header} >Grocery List</Header>
@@ -17,13 +18,21 @@ function GroceryList({ groceryList, getIngredients, handleCartPurchase }) {
               return (
                 <Segment key={ingredient.id}>
                   <Grid>
-                    <Grid.Column as={Checkbox} floated="left" width={13} verticalAlign="middle" onClick={strikeThrough}
-                      label={`${ingredient.name}          ${ingredient.quantity}          ${ingredient.unitMeasure}`}
-                    >
-                    </Grid.Column>
-                    <Grid.Column floated="right" width={3} textAlign="right">
-                      <Icon onClick={() => { console.log('hi'); }} name="delete" />
-                    </Grid.Column>
+                    {
+                      excludedIngredients.indexOf(ingredient.id) !== -1 ? (
+                        <Grid.Column
+                          as={Checkbox} checked floated="left" width={13} verticalAlign="middle" style={{ textDecoration: 'line-through' }} onClick={(e) => handleExcludedIngredient(e, ingredient.id)}
+                          label={`${ingredient.name} ${ingredient.unitSize} ${ingredient.quantity}`}
+                        >
+                        </Grid.Column>
+                      ) : (
+                        <Grid.Column
+                          as={Checkbox} floated="left" width={13} verticalAlign="middle" onClick={(e) => handleExcludedIngredient(e, ingredient.id)}
+                          label={`${ingredient.name} ${ingredient.unitSize} ${ingredient.quantity}`}
+                        >
+                        </Grid.Column>
+                        )
+                    }
                   </Grid>
                 </Segment>
               );
@@ -50,9 +59,9 @@ const mapState = (state) => {
     groceryList: state.groceryListRecipes,
     getIngredients: (groceryListRecipes) => {
       const ingredientList = [];
-      groceryListRecipes.forEach(recipe => {
+      groceryListRecipes.forEach((recipe) => {
         const recipeQuantity = recipe.grocerylist.quantity;
-        recipe.ingredients.forEach(ingredient => {
+        recipe.ingredients.forEach((ingredient) => {
           const foundIng = ingredientList.find(obj => obj.id === ingredient.id)
           if (foundIng) {
             foundIng.quantity += ingredient.ingredientQuantity.quantity * recipeQuantity;
@@ -66,17 +75,24 @@ const mapState = (state) => {
               unitMeasure,
               size,
               quantity,
-            })
+            });
           }
         });
       });
       return ingredientList;
     },
+    excludedIngredients: state.excludedIngredients,
   };
 };
 
 const mapDispatch = (dispatch) => {
   return {
+    handleExcludedIngredient(e, excludedId) {
+      if (strikeThrough(e)) {
+        dispatch(postNewExcluded(excludedId));
+      } else {
+        dispatch(deleteExcludedIngredient(excludedId));
+      }
     handleCartPurchase(ingredients) {
       const itemArr = ingredients.map((ingredientObj) => {
         return {
@@ -96,5 +112,6 @@ GroceryList.propTypes = {
   handleCartPurchase: PropTypes.func.isRequired,
   groceryList: PropTypes.object.isRequired,
   getIngredients: PropTypes.func.isRequired,
+  handleExcludedIngredient: PropTypes.func.isRequired,
 };
 

@@ -17,81 +17,68 @@ router.get('/', (req, res, next) => {
 // });
 
 router.post('/', (req, res, next) => {
-  // console.log('req.body: ', req.body);
   let recipePromise;
-  let groceryListPromise;
   let ingredientArr;
-  let usr;
 
   if (req.body.isFromChromeExt) {
-    const { name, email } = req.body.user;
-    // get user first
-    User.findOne({
+    const { title, recipeUrl, imageUrl, author, siteName, numServings } = req.body.recipe;
+    recipePromise = Recipe.findOrCreate({
       where: {
-        name: name.trim(),
-        email: email.trim(),
+        recipeUrl,
       },
-    })
-    .then((user) => {
-      usr = user;
-      const { title, recipeUrl, imageUrl, author, siteName, numServings } = req.body.recipe;
-      recipePromise = Recipe.findOrCreate({
-        where: {
-          recipeUrl,
-        },
-        defaults: {
-          title,
-          imageUrl,
-          author,
-          siteName,
-          numServings,
-        },
-      });
-      ingredientArr = req.body.ingredients;
-      return (Promise.all([recipePromise, ...ingredientArr]));
-    })
-    .then(([recipeArr, ...arrIngredients]) => {
-      const newRecipe = recipeArr[0];
-      const isCreated = recipeArr[1];
+      defaults: {
+        title,
+        imageUrl,
+        author,
+        siteName,
+        numServings,
+      },
+    });
+    ingredientArr = req.body.ingredients;
+    Promise.all([recipePromise, ...ingredientArr])
+      .then(([recipeArr, ...arrIngredients]) => {
+        const newRecipe = recipeArr[0];
+        const isCreated = recipeArr[1];
 
-      // TODO: modularize to set following two associations - pass user argument to handle both post branches
-      usr.addSavedRecipe(newRecipe);
+        // TODO: modularize to set following two associations - pass user argument to handle both post branches
+        req.user.addSavedRecipe(newRecipe);
 
-      usr.addGroceryListRecipe(newRecipe);
+        req.user.addGroceryListRecipe(newRecipe);
 
-      // TODO: consider modularizing with adding passed argument if from microformat branch
-      if (isCreated) {
-        const arrIngredientPromises = arrIngredients.map((ingredient) => {
-          return Ingredient.findOrCreate({
-            where: {
-              name: ingredient.name,
-            },
-            defaults: {
-              unitMeasure: ingredient.unit,
-            },
-          })
-          .then(([foundIngredient, ingIsCreated]) => {
-            // TODO: only line different from microformat branch
-            if (!ingredient.quantity) ingredient.quantity = 1;
-            IngredientQuantity.create({ recipeId: newRecipe.id, ingredientId: foundIngredient.id, quantity: ingredient.quantity });
-            return foundIngredient;
-          })
-          .catch(next);
-        });
+        // TODO: consider modularizing with adding passed argument if from microformat branch
+        if (isCreated) {
+          const arrIngredientPromises = arrIngredients.map((ingredient) => {
+            return Ingredient.findOrCreate({
+              where: {
+                name: ingredient.name,
+              },
+              defaults: {
+                unitMeasure: ingredient.unit,
+              },
+            })
+              .then(([foundIngredient, ingIsCreated]) => {
+                // TODO: only line different from microformat branch
+                if (!ingredient.quantity) ingredient.quantity = 1;
+                return IngredientQuantity.create({ recipeId: newRecipe.id, ingredientId: foundIngredient.id, quantity: ingredient.quantity })
+                .then(() => foundIngredient)
+                .catch(next);
+              })
+              .catch(next);
+          });
 
-        // TODO: modularize - same as in microformat branch
-        return Promise.all([newRecipe, ...arrIngredientPromises])
-          .then(([recipe, ...ingredients]) => {
-            const ingArr = recipe.addIngredients(ingredients);
-            return Promise.all([newRecipe, ingArr]);
-          })
-          .then(([recipe, ingredientsArr]) => Recipe.findById(recipe.id))
-          .then(() => res.sendStatus(201))
-          .catch(next);
-      } else {
-        res.sendStatus(201);
-      }
-    })
+          // TODO: modularize - same as in microformat branch
+          return Promise.all([newRecipe, ...arrIngredientPromises])
+            .then(([recipe, ...ingredients]) => {
+              const ingArr = recipe.addIngredients(ingredients);
+              return Promise.all([newRecipe, ingArr]);
+            })
+            .then(([recipe, ingredientsArr]) => Recipe.findById(recipe.id))
+            .then(() => res.sendStatus(201))
+            .catch(next);
+        } else {
+          res.sendStatus(201);
+        }
+      })
     .catch(next);
   } else {
     const { url } = req.body;

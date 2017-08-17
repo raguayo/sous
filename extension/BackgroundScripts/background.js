@@ -4,7 +4,6 @@ const createGroceryList = (recipe, ingredients) => {
     url: 'http://localhost:8080/api/recipes/',
     data: {
       isFromChromeExt: true,
-      user: { name: 'tim', email: 'tim@tim.com', password: 'tim' },
       recipe,
       ingredients,
     },
