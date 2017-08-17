@@ -8,16 +8,16 @@ const styles = {
 chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
   const tabId = tabs[0].id;
   chrome.tabs.sendMessage(tabId, { greeting: 'Yo!' }, (response) => {
-    let htmlString = `<div>
+    let htmlString = `<div style="background-color:rgb(228, 200, 132)">
       <h3 style="margin: 0.857143em 0.857143em">Recipe Details:</h3>
       <table class="ui table" style="table-layout: fixed">
-        <tr>
-          <td >Title: &emsp;${response.recipe.title}</td>
+        <tr style="background-color:rgb(228, 200, 132)">
+          <td>Title: &emsp;${response.recipe.title}</td>
         </tr>
-        <tr>
+        <tr style="background-color:rgb(228, 200, 132)">
           <td>Author: &emsp;${response.recipe.author}</td>
         </tr>
-         <tr>
+         <tr style="background-color:rgb(228, 200, 132)">
           <td>Number of Servings: &emsp;${response.recipe.numServings}</td>
         </tr>
       </table>
@@ -48,11 +48,10 @@ chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     });
 
     htmlString += '</tbody></table>';
+    errorArr.forEach((sentence) => htmlString += `<div><br><p style="margin: 0.857143em 0.857143em">We couldn't find this in our database:</p><p style="align: 'center';margin: '0.857143em 0.857143em'">${sentence}</p></div><br>`)
 
-    errorArr.forEach((sentence) => htmlString += `<p>We couldn't find this in our database:</p><p>${sentence}</p>`)
-
-    // const buttonHtml = '<button type"button">Send Recipe to Sous</button>';
     const buttonHtml = '<button style="margin: 0.857143em 0.857143em" type="button" id="btnSendRecipe" name="btnSendRecipe">Send Recipe to Sous</button></table>';
+
 
     htmlString += buttonHtml;
 
