@@ -441,7 +441,7 @@ function parseIngredientElements(ingElementArr) {
     quantity = convertQuantityToNumber(quantity);
 
     const userIngredient = {
-      quantity,
+      quantity: Math.round(quantity * 100) / 100,
       unit,
       name: dbMatch.name,
     };
