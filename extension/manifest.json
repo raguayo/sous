@@ -6,7 +6,9 @@
     "tabs",
     "storage",
     "http://*/*",
-    "https://*/*"
+    "https://*/*",
+    "localhost:*",
+    "cookies"
   ],
   "browser_action": {
     "default_icon": {
