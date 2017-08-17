@@ -346,7 +346,7 @@ const ingredientsFromDBArr = [
     "peapodName": "Peppers Bell Green",
     "price": 1.19,
     "size": 1,
-    "unitMeasure": "EA",
+    "unitMeasure": "CT",
     "prodId": 118615,
     "createdAt": "2017-08-16T20:19:46.725Z",
     "updatedAt": "2017-08-16T20:19:46.725Z"
@@ -357,7 +357,7 @@ const ingredientsFromDBArr = [
     "peapodName": "Peppers Bell Red",
     "price": 1.99,
     "size": 1,
-    "unitMeasure": "EA",
+    "unitMeasure": "CT",
     "prodId": 118616,
     "createdAt": "2017-08-16T20:19:46.863Z",
     "updatedAt": "2017-08-16T20:19:46.863Z"
@@ -786,7 +786,7 @@ const ingredientsFromDBArr = [
     "peapodName": "Cucumbers English Hot House",
     "price": 1.99,
     "size": 1,
-    "unitMeasure": "EA",
+    "unitMeasure": "CT",
     "prodId": 118598,
     "createdAt": "2017-08-16T20:19:59.620Z",
     "updatedAt": "2017-08-16T20:19:59.620Z"
@@ -918,7 +918,7 @@ const ingredientsFromDBArr = [
     "peapodName": "Banana Yellow",
     "price": 0.45,
     "size": 1,
-    "unitMeasure": "EA",
+    "unitMeasure": "CT",
     "prodId": 118564,
     "createdAt": "2017-08-16T20:20:03.583Z",
     "updatedAt": "2017-08-16T20:20:03.583Z"
@@ -1006,7 +1006,7 @@ const ingredientsFromDBArr = [
     "peapodName": "Onions Vidalia",
     "price": 1.09,
     "size": 1,
-    "unitMeasure": "EA",
+    "unitMeasure": "CT",
     "prodId": 118628,
     "createdAt": "2017-08-16T20:19:27.936Z",
     "updatedAt": "2017-08-16T20:19:27.936Z"
@@ -1215,7 +1215,7 @@ const ingredientsFromDBArr = [
     "peapodName": "Peaches Saturn (Donut)",
     "price": 0.8,
     "size": 1,
-    "unitMeasure": "EA",
+    "unitMeasure": "CT",
     "prodId": 118654,
     "createdAt": "2017-08-16T20:19:32.569Z",
     "updatedAt": "2017-08-16T20:19:32.569Z"
@@ -1380,7 +1380,7 @@ const ingredientsFromDBArr = [
     "peapodName": "Squash Zucchini",
     "price": 0.99,
     "size": 1,
-    "unitMeasure": "EA",
+    "unitMeasure": "CT",
     "prodId": 118633,
     "createdAt": "2017-08-16T20:19:37.298Z",
     "updatedAt": "2017-08-16T20:19:37.298Z"
@@ -1391,7 +1391,7 @@ const ingredientsFromDBArr = [
     "peapodName": "Tomatoes Beefsteak",
     "price": 1.99,
     "size": 1,
-    "unitMeasure": "EA",
+    "unitMeasure": "CT",
     "prodId": 121518,
     "createdAt": "2017-08-16T20:19:37.431Z",
     "updatedAt": "2017-08-16T20:19:37.431Z"
