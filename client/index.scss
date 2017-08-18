@@ -29,3 +29,115 @@ body {
   min-height: 100%;
   margin: 0;
 }
+
+@import url('https://fonts.googleapis.com/css?family=Roboto+Slab');
+@import url('https://fonts.googleapis.com/css?family=Oleo+Script+Swash+Caps');
+/* @import url('https://fonts.googleapis.com/css?family=Amatic+SC'); */
+
+* {
+  box-sizing: border-box;
+  font-family: 'Roboto Slab';
+  margin: 0;
+}
+
+.logo {
+  font-family: 'Oleo Script Swash Caps';
+  color: #77a95f;
+  font-size: 3rem;
+  margin: 0 3rem;
+  font-weight: 300;
+  padding-bottom: 0.5rem;
+}
+
+.topnav {
+  overflow: hidden;
+  height: 10vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.topnav a {
+  color: #946e4f;
+  text-align: center;
+  padding: .6rem 1.3rem;
+  text-decoration: none;
+  font-size: 17px;
+  font-family: 'Roboto Slab';
+}
+
+.topnav a:hover {
+  background-color: #F86055;
+  border-radius: 3px;
+  color: white;
+}
+
+.topnav a.active {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.header-container {
+  position: relative;
+  background-image: url(http://the.installationmag.com/wp-content/uploads/2013/06/poivron03.jpg);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+  width: 100%;
+  height: 87vh;
+  // margin: 0 3vh;
+}
+
+.header-content {
+  position: absolute;
+  left: 8vw;
+  top: 50vh;
+  color: #77a95f;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.header-content h1 {
+  font-family: 'Oleo Script Swash Caps';
+  font-size: 5rem;
+}
+
+.header-content .buttons {
+  display: flex;
+  justify-content: space-between;
+  width: 70%;
+  margin: 1rem;
+}
+
+button {
+  background-color: #b28b68;
+  border: none;
+  border-radius: 5px;
+  padding: 0.5rem 1.5rem;
+  font-size: 1.2rem;
+  color: white;
+}
+
+button:hover {
+  background-color: #F86055;
+}
+
+.slide-up-fade-in {
+  animation: slide-up-fade-in ease 1.3s;
+  animation-iteration-count: 1;
+  transform-origin: 50% 50%;
+  animation-fill-mode: forwards;
+  opacity: 0;
+}
+
+@keyframes slide-up-fade-in {
+  0% {
+    opacity: 0;
+    transform: translate(0px, 30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(0px, 0px);
+  }
+}
