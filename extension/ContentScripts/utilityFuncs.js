@@ -398,6 +398,7 @@ function parseIngredientElements(ingElementArr) {
     const wordArr = sentence.split(' ');
     let quantity;
     let unit;
+    let name;
 
     // find the unit word in the sentence
     const splitIdx = wordArr.findIndex(word => word.search(unitRegex) !== -1);
@@ -419,11 +420,6 @@ function parseIngredientElements(ingElementArr) {
     }
     // find the db match
     const dbMatch = findDatabaseMatch(recipeName, ingredientsFromDBArr);
-    // if no db match, send the original ingredient description to popup
-    if (!dbMatch) {
-      userIngredients.push({ sentence });
-      return { sentence };
-    }
 
     // check if it has other units in parens e.g. '1 (10 oz) package'
     let newUnit = quantity.match(/\(.+\)/i);
@@ -444,20 +440,28 @@ function parseIngredientElements(ingElementArr) {
     if (!unit) unit = 'count';
     quantity = convertQuantityToNumber(quantity);
 
+    let dbUnit;
+    let dbQuant;
+    // if no db match, send the original ingredient description to popup
+    if (dbMatch) {
+      [dbUnit, dbQuant] = mapUnitToDB(unit, quantity, dbMatch);
+      name = dbMatch.name;
+    } else {
+      dbUnit = unit;
+      dbQuant = quantity;
+      name = recipeName;
+    }
+
     const userIngredient = {
       quantity: Math.round(quantity * 100) / 100,
       unit,
-      name: dbMatch.name,
+      name,
     };
 
-    // convert unit and quantity to match db
-    [unit, quantity] = mapUnitToDB(unit, quantity, dbMatch);
-    // **********
-
     const dbIngredient = {
-      quantity,
-      unit,
-      name: dbMatch.name,
+      quantity: dbQuant,
+      unit: dbUnit,
+      name,
     };
 
     userIngredients.push(userIngredient)
