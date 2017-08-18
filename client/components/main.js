@@ -17,10 +17,11 @@ const Main = (props) => {
 
   return (
     <div style={styles.container}>
-      <div>
+      {/* <div>
         {isLoggedIn ?
           <Navbar /> : null}
-      </div>
+      </div> */}
+      <Navbar />
       <div>
         {children}
       </div>
