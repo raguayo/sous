@@ -111,7 +111,7 @@ export default connect(mapState, mapDispatch)(GroceryList);
 
 GroceryList.propTypes = {
   handleCartPurchase: PropTypes.func.isRequired,
-  groceryList: PropTypes.object.isRequired,
+  groceryList: PropTypes.array.isRequired,
   excludedIngredients: PropTypes.array.isRequired,
   getIngredients: PropTypes.func.isRequired,
   handleExcludedIngredient: PropTypes.func.isRequired,
