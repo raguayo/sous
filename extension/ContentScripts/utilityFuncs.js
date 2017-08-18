@@ -380,7 +380,9 @@ function findDatabaseMatch(searchTerm, dictionaryArr) {
       bestMatch.obj = currDBCandidate;
     }
   }
-  if (!bestMatch.obj) console.log('No match!!!!!')
+  if (bestMatch.rating < 0.51) {
+    return null;
+  }
   return bestMatch.obj;
 }
 
