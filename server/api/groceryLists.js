@@ -42,24 +42,6 @@ router.put('/recipes/:id/transfer', (req, res, next) => {
     .catch(next);
 });
 
-router.put('/recipes/:id/favorite', (req, res, next) => {
-  const recipeId = req.params.id;
-  const userId = req.user.id;
-
-  SavedRecipe.findOne({ where: { userId, recipeId } })
-    .then((recipe) => {
-      if (recipe.isFavorite) {
-        return recipe.update({ isFavorite: false });
-      }
-      return recipe.update({ isFavorite: true });
-    })
-    .then(() => req.user.getSavedRecipes({ where: { id: recipeId } }))
-    .then((recipe) => {
-      res.json(recipe[0]);
-    })
-    .catch(next);
-})
-
 router.put('/recipes/:id', (req, res, next) => {
   const quantity = +req.body.quantity;
   const userId = req.user.id;

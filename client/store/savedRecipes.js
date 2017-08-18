@@ -9,6 +9,7 @@ const GET_SAVED_RECIPES = 'GET_SAVED_RECIPES';
 const REMOVE_SAVED_RECIPE = 'REMOVE_SAVED_RECIPE';
 const ADD_NEW_RECIPE = 'ADD_NEW_RECIPE';
 const FAVORITE_RECIPE = 'FAVORITE_RECIPE';
+const TOGGLE_FAVORITE_RECIPE = 'TOGGLE_FAVORITE_RECIPE';
 
 /**
  * INITIAL STATE
@@ -21,7 +22,7 @@ const defaultRecipes = [];
 const getSavedRecipes = recipes => ({ type: GET_SAVED_RECIPES, recipes });
 const removeSavedRecipe = recipeId => ({ type: REMOVE_SAVED_RECIPE, recipeId });
 const addRecipe = newRecipe => ({ type: ADD_NEW_RECIPE, newRecipe });
-const favoriteRecipe = recipe => ({ type: FAVORITE_RECIPE, recipe });
+const toggleFavoriteRecipe = recipe => ({ type: FAVORITE_RECIPE, recipe });
 /**
  * THUNK CREATORS
  */
@@ -54,11 +55,11 @@ export const postNewRecipe = (url, inGroceryList) =>
       })
       .catch(console.error);
 
-export const favorite = recipeId => dispatch =>
-  axios.put(`/api/grocery-list/recipes/${recipeId}/favorite`)
+export const favoriteToggle = recipeId => dispatch =>
+  axios.put(`/api/recipes/${recipeId}/favorite`)
     .then(res => res.data)
-    .then((favorited) => {
-      dispatch(favoriteRecipe(favorited));
+    .then((toggled) => {
+      dispatch(toggleFavoriteRecipe(toggled));
     })
     .catch(console.error);
 /**
@@ -72,7 +73,7 @@ export default function (state = defaultRecipes, action) {
       return state.filter(recipe => recipe.id !== action.recipeId);
     case ADD_NEW_RECIPE:
       return [action.newRecipe, ...state];
-    case FAVORITE_RECIPE:
+    case TOGGLE_FAVORITE_RECIPE:
       return state.map((recipe) => {
         if (recipe.id === action.recipe.id) {
           return action.recipe;
