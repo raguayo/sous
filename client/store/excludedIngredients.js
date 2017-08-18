@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { addError } from './error';
 
 const GET_EXCLUDED_INGREDIENTS = 'GET_EXCLUDED_INGREDIENTS';
 const REMOVE_EXCLUDED_INGREDIENT = 'REMOVE_EXCLUDED_INGREDIENT';
@@ -20,10 +21,10 @@ export const fetchExcludedIngredients = () => dispatch =>
       ingredients.forEach((ingredient) => {
         const { id } = ingredient;
         excludedIds.push(id);
-      })
+      });
       dispatch(getExcludedIngredients(excludedIds));
     })
-    .catch(err => console.log(err));
+    .catch(addError);
 
 export const deleteExcludedIngredient = excludedId => dispatch =>
   axios.delete(`/api/grocery-list/excluded/${excludedId}`)
@@ -31,7 +32,7 @@ export const deleteExcludedIngredient = excludedId => dispatch =>
     .then(() => {
       dispatch(removeExcludedIngredient(excludedId));
     })
-    .catch(err => console.log(err));
+    .catch(addError);
 
 export const deleteExcludedIngredients = () => dispatch =>
   axios.delete('/api/grocery-list/excluded')
@@ -39,7 +40,7 @@ export const deleteExcludedIngredients = () => dispatch =>
     .then(() => {
       dispatch(clearExcludedIngredients());
     })
-    .catch(err => console.log(err));
+    .catch(addError);
 
 export const postNewExcluded = ingredientId => dispatch =>
   axios.post('/api/grocery-list/excluded', { ingredientId })
@@ -47,7 +48,7 @@ export const postNewExcluded = ingredientId => dispatch =>
     .then((excludedId) => {
       dispatch(addExcludedIngredient(excludedId));
     })
-    .catch(err => console.log(err));
+    .catch(addError);
 
 export default function (state = defaultExcluded, action) {
   switch (action.type) {
