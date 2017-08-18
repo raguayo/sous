@@ -56,7 +56,7 @@ export default class Splash extends Component {
               <Grid.Column floated="right" width={6}>
                 <Image
                   bordered
-                  rounded
+                  shape='rounded'
                   size="large"
                   src="/assets/images/wireframe/white-image.png"
                 />

@@ -21,7 +21,6 @@ function CurrentRecipe({ handleAddRecipe, handleDeleteRecipe, handleDeleteRecipe
                   name="recipeUrl"
                   style={styles.recipeInput}
                   action={{ color: 'teal', labelPosition: 'left', icon: 'add', content: 'Add' }}
-                  actionPosition="right"
                   placeholder="Recipe url..."
                 />
               </Form>
@@ -97,9 +96,9 @@ CurrentRecipe.propTypes = {
   handleAddRecipe: PropTypes.func.isRequired,
   handleDeleteRecipe: PropTypes.func.isRequired,
   handleDeleteRecipes: PropTypes.func.isRequired,
+  handleUpdateQuantity: PropTypes.func.isRequired,
   groceryListRecipes: PropTypes.array.isRequired,
   user: PropTypes.object.isRequired,
-  handleUpdateQuantity: PropTypes.array.isRequired,
 };
 
 export default connect(mapState, mapDispatch)(CurrentRecipe);
