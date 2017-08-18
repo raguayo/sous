@@ -20,7 +20,7 @@ export const fetchExcludedIngredients = () => dispatch =>
       ingredients.forEach((ingredient) => {
         const { id } = ingredient;
         excludedIds.push(id);
-      })
+      });
       dispatch(getExcludedIngredients(excludedIds));
     })
     .catch(err => console.log(err));

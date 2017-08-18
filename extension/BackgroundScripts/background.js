@@ -8,6 +8,7 @@ const createGroceryList = (recipe, ingredients) => {
       ingredients,
     },
   });
+  // error handling
 };
 
 chrome.extension.onMessage.addListener((request, sender, sendResponse) => {
