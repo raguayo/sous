@@ -1,6 +1,7 @@
 import axios from 'axios';
 import history from 'history';
 import { deleteExcludedIngredients, postNewExcluded } from './excludedIngredients';
+import { addError } from './error';
 
 /**
  * ACTION TYPES
@@ -36,7 +37,7 @@ export const fetchGroceryListRecipes = () =>
       .then((recipes) => {
         dispatch(getListRecipes(recipes));
       })
-      .catch(err => console.log(err));
+      .catch(addError);
 
 export const deleteRecipeFromList = recipeId =>
   dispatch =>
@@ -45,7 +46,7 @@ export const deleteRecipeFromList = recipeId =>
       .then(() => {
         dispatch(removeRecipeFromList(recipeId));
       })
-      .catch(err => console.log(err));
+      .catch(addError);
 
 export const deleteRecipesFromList = () =>
   dispatch =>
@@ -57,7 +58,7 @@ export const deleteRecipesFromList = () =>
         dispatch(clearList());
         dispatch(deleteExcludedIngredients());
       })
-      .catch(err => console.error(err));
+      .catch(err => dispatch(addError(err)));
 
 export const addItemsToPeapodCart = itemsArr =>
   dispatch =>
@@ -68,7 +69,7 @@ export const addItemsToPeapodCart = itemsArr =>
         // loop through every item in itemsArr and make excluded if not already
         return Promise.all(itemsArr.map(item => dispatch(postNewExcluded(item.id))));
       })
-      .catch(err => console.error(err));
+      .catch(addError);
 
 export const updateRecipeQuantity = (recipeId, quantity) =>
   dispatch =>
@@ -77,7 +78,7 @@ export const updateRecipeQuantity = (recipeId, quantity) =>
       .then((updatedQuantityObj) => {
         dispatch(updateRecipesTotal(updatedQuantityObj, recipeId));
       })
-      .catch(err => console.error(err));
+      .catch(addError);
 
 export const transferSavedRecipe = recipeId =>
   dispatch =>
@@ -86,7 +87,7 @@ export const transferSavedRecipe = recipeId =>
       .then((transferred) => {
         dispatch(addSavedRecipe(transferred));
       })
-      .catch(console.error);
+      .catch(addError);
 /**
  * REDUCER
  */
