@@ -440,9 +440,7 @@ function parseIngredientElements(ingElementArr) {
     }
     // if the ing description lacks a unit word, then assume it means count
     if (!unit) unit = 'count';
-    console.log('before?: ', dbMatch.name, quantity)
     quantity = convertQuantityToNumber(quantity);
-    console.log('after?: ', dbMatch.name, quantity)
 
     const userIngredient = {
       quantity: Math.round(quantity * 100) / 100,
