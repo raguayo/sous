@@ -4,9 +4,10 @@ import React from 'react';
 import { Container, Grid, Header, Segment, Checkbox, Button } from 'semantic-ui-react';
 import { postNewExcluded, deleteExcludedIngredient, addItemsToPeapodCart } from '../store';
 import { strikeThrough } from '../stylingUtilities';
+import { setDisplayUnitAndQuantity, roundOffNumber } from './utilityFuncs';
 
-function GroceryList({ groceryList, getIngredients, handleExcludedIngredient, excludedIngredients, handleCartPurchase }) {
-  const ingredients = groceryList ? getIngredients(groceryList) : [];
+function GroceryList({ groceryList, getIngredients, handleExcludedIngredient, excludedIngredients, handleCartPurchase, addDisplayUnits }) {
+  const ingredients = groceryList ? addDisplayUnits(getIngredients(groceryList)) : [];
 
   return (
     <Container style={styles.container}>
@@ -22,13 +23,13 @@ function GroceryList({ groceryList, getIngredients, handleExcludedIngredient, ex
                       excludedIngredients.indexOf(ingredient.id) !== -1 ? (
                         <Grid.Column
                           as={Checkbox} checked floated="left" width={13} verticalAlign="middle" style={{ textDecoration: 'line-through' }} onClick={(e) => handleExcludedIngredient(e, ingredient.id)}
-                          label={`${ingredient.name} ${ingredient.unitMeasure} ${ingredient.quantity}`}
+                          label={`${ingredient.name} ${ingredient.displayUnit} ${ingredient.displayQuantity}`}
                         >
                         </Grid.Column>
                       ) : (
                         <Grid.Column
                           as={Checkbox} floated="left" width={13} verticalAlign="middle" onClick={(e) => handleExcludedIngredient(e, ingredient.id)}
-                          label={`${ingredient.name} ${ingredient.unitMeasure} ${ingredient.quantity}`}
+                          label={`${ingredient.name} ${ingredient.displayUnit} ${ingredient.displayQuantity}`}
                         >
                         </Grid.Column>
                         )
@@ -82,6 +83,8 @@ const mapState = (state) => {
       return ingredientList;
     },
     excludedIngredients: state.excludedIngredients,
+    addDisplayUnits: ingArr =>
+      ingArr.map(ingObj => roundOffNumber(setDisplayUnitAndQuantity(ingObj))),
   };
 };
 
@@ -112,6 +115,7 @@ export default connect(mapState, mapDispatch)(GroceryList);
 GroceryList.propTypes = {
   handleCartPurchase: PropTypes.func.isRequired,
   groceryList: PropTypes.array.isRequired,
+  addDisplayUnits: PropTypes.func.isRequired,
   excludedIngredients: PropTypes.array.isRequired,
   getIngredients: PropTypes.func.isRequired,
   handleExcludedIngredient: PropTypes.func.isRequired,

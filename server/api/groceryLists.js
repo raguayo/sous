@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { GroceryList } = require('../db/models');
+const { GroceryList, SavedRecipe } = require('../db/models');
 
 module.exports = router;
 
@@ -24,6 +24,20 @@ router.delete('/recipes', (req, res, next) => {
     .then(recipes => req.user.removeGroceryListRecipes(recipes))
     .then(() => {
       res.sendStatus(204);
+    })
+    .catch(next);
+});
+
+router.put('/recipes/:id/transfer', (req, res, next) => {
+  const id = req.params.id;
+  req.user.getSavedRecipes({ where: { id } })
+    .then((recipe) => {
+      return req.user.addGroceryListRecipe(recipe)
+        .then(() => req.user.getGroceryListRecipes({ where: { id } }))
+        .catch(next);
+    })
+    .then((addedRecipe) => {
+      res.json(addedRecipe);
     })
     .catch(next);
 });

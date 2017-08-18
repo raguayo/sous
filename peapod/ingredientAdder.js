@@ -48,12 +48,12 @@ const arrOfIng = [
   { name: 'pork tenderloin', peapodName: 'Pork Tenderloin Roast Boneless Vacuum Sealed Fresh', },
   { name: 'root beer', peapodName: 'A & W Root Beer - 24 pk', },
   { name: 'barbecue sauce', peapodName: 'Sweet Baby Ray\'s Barbecue Sauce', },
-  { name: 'hamburger buns', peapodName: 'Centrella Hamburger Buns Enriched - 8 ct', },
+  { name: 'hamburger buns', peapodName: 'Pepperidge Farm Classic Hamburger Buns Soft White - 8 ct', },
   { name: 'peaches', peapodName: 'Peaches', },
   { name: 'sugar', peapodName: 'Domino Premium Pure Cane Granulated Sugar', },
   { name: 'salt', peapodName: 'Morton Salt Iodized', },
   { name: 'flour', peapodName: 'Peapod All-Purpose Flour', },
-  { name: 'cornstarch', peapodName: 'Argo 100% Pure Corn Starch', },
+  { name: 'corn starch', peapodName: 'Argo 100% Pure Corn Starch', },
   { name: 'lemon juice', peapodName: 'Peapod 100% Lemon Juice from Concentrate', },
   { name: 'cayenne pepper', peapodName: 'Nature\'s Promise Organic Cayenne Pepper', },
   { name: 'cinnamon ground', peapodName: 'Peapod Cinnamon Ground', },
@@ -68,7 +68,7 @@ const arrOfIng2 = [
  { name: 'salt', peapodName: 'Morton Salt Iodized', },
  { name: 'black pepper', peapodName: 'McCormick Black Pepper Pure Ground', },
  { name: 'bread crumbs', peapodName: 'Peapod Bread Crumbs Italian Style', },
- { name: 'olive oil', peapodName: 'O-Live & Co Olive Oil Extra Virgin', },
+ { name: 'olive oil', peapodName: 'Nature\'s Promise Organic Olive Oil Extra Virgin', },
  { name: 'chicken breast', peapodName: 'Peapod Chicken Breasts Boneless Skinless Value Pack Fresh', },
  { name: 'garlic', peapodName: 'Peapod Garlic Minced in Water', },
  { name: 'zucchini', peapodName: 'Squash Zucchini', },
@@ -92,7 +92,7 @@ const arrOfIng3 = [
 // Best Steak Marinade in Existence
 const arrOfIng4 = [
  { name: 'soy sauce', peapodName: 'Kikkoman Soy Sauce All-Purpose Less Sodium', },
- { name: 'olive oil', peapodName: 'O-Live & Co Olive Oil Extra Virgin', },
+ { name: 'olive oil', peapodName: 'Nature\'s Promise Organic Olive Oil Extra Virgin', },
  { name: 'lemon juice', peapodName: 'Peapod 100% Lemon Juice from Concentrate', },
  { name: 'worcestershire sauce', peapodName: 'Lea & Perrins Worcestershire Sauce', },
  { name: 'garlic', peapodName: 'Peapod Garlic Minced in Water', },
@@ -176,7 +176,7 @@ const asianBeef = [
 
 // Chef John's Salmon in Parchment http://allrecipes.com/recipe/223154/chef-johns-salmon-in-parchment/
 const salmon = [
-  { name: 'olive oil', peapodName: 'O-Live & Co Olive Oil Extra Virgin', },
+  { name: 'olive oil', peapodName: 'Nature\'s Promise Organic Olive Oil Extra Virgin', },
   { name: 'small potatoes', peapodName: 'Potatoes Idaho Russet', },
   { name: 'asparagus', peapodName: 'Asparagus', },
   { name: 'salmon fillets', peapodName: 'Salmon Fillets Boneless Skinless Farm-Raised - 2 ct Fresh', },
@@ -190,7 +190,7 @@ const salmon = [
 const penne = [
   { name: 'pancetta bacon', peapodName: 'Boar\'s Head Pancetta Diced', },
   { name: 'fresh rosemary', peapodName: 'Green Giant Rosemary Fresh', },
-  { name: 'olive oil', peapodName: 'O-Live & Co Olive Oil Extra Virgin', },
+  { name: 'olive oil', peapodName: 'Nature\'s Promise Organic Olive Oil Extra Virgin', },
   { name: 'vodka', peapodName: 'Svedka Vodka', },
   { name: 'heavy whipping cream', peapodName: 'Peapod Cream Heavy Whipping Ultra Pasteurized', },
   { name: 'black pepper', peapodName: 'McCormick Black Pepper Pure Ground', },
@@ -218,7 +218,7 @@ const porkMars = [
   { name: 'dried oregano', peapodName: 'Peapod Oregano Leaves', },
   { name: 'boneless pork loin chops', peapodName: 'Nature\'s Promise Free from Pork Chops Loin Boneless Fresh', },
   { name: 'butter', peapodName: 'LAND O LAKES Butter Salted Sticks - 4 qrtrs', },
-  { name: 'olive oil', peapodName: 'O-Live & Co Olive Oil Extra Virgin', },
+  { name: 'olive oil', peapodName: 'Nature\'s Promise Organic Olive Oil Extra Virgin', },
   { name: 'mushroom', peapodName: 'Peapod Mushrooms White Sliced', },
   { name: 'garlic', peapodName: 'garlic', },
   { name: 'marsala wine', peapodName: 'Holland House Cooking Wine Marsala', },
@@ -300,7 +300,8 @@ function addIngredients(index) {
     if (err) {
       console.log(err)
     } else {
-      const name = ingredientsArr[index].name;
+      let name = ingredientsArr[index].name;
+      console.log(ingredientsArr[index])
       const peapodName = results.products[0].name;
       const prodId = results.products[0].prodId;
       let unitMeasure = results.products[0].unitMeasure;
@@ -338,6 +339,7 @@ function addIngredients(index) {
       size = convertSizeToNumber(size);
       // switch 'EA' with 'CT' to standardize
       if (unitMeasure === 'EA') unitMeasure = 'CT';
+      if (name === 'corn starch') name = 'cornstarch';
 
       Ingredient.findOrCreate({
         where: {
