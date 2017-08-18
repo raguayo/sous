@@ -22,7 +22,7 @@ const defaultRecipes = [];
 const getSavedRecipes = recipes => ({ type: GET_SAVED_RECIPES, recipes });
 const removeSavedRecipe = recipeId => ({ type: REMOVE_SAVED_RECIPE, recipeId });
 const addRecipe = newRecipe => ({ type: ADD_NEW_RECIPE, newRecipe });
-const toggleFavoriteRecipe = recipe => ({ type: FAVORITE_RECIPE, recipe });
+const toggleFavoriteRecipe = recipe => ({ type: TOGGLE_FAVORITE_RECIPE, recipe });
 /**
  * THUNK CREATORS
  */
