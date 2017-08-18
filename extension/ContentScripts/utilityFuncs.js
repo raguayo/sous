@@ -41,7 +41,7 @@ const hashRecipeUnitToDBUnit = {
     dbUnit: 'OZ',
   },
   'teaspoon': {
-    conversion: 0.2,
+    conversion: 0.167,
     dbUnit: 'OZ',
   },
   'tablespoons': {
@@ -49,7 +49,7 @@ const hashRecipeUnitToDBUnit = {
     dbUnit: 'OZ',
   },
   'teaspoons': {
-    conversion: 0.2,
+    conversion: 0.167,
     dbUnit: 'OZ',
   },
   'cup': {
@@ -342,6 +342,8 @@ function mapUnitToDB(recipeUnit, recipeQuantity, dbObj) {
   }
   let newUnit = recipeToDBObj.dbUnit;
   let newQuantity = recipeQuantity * recipeToDBObj.conversion;
+  console.log('Butter?: ', dbObj.name, newQuantity, dbObj.unitMeasure)
+  console.log(recipeToDBObj)
   // handle if the newUnit and peapod unit don't match
   if (newUnit !== dbObj.unitMeasure) {
     // convert to oz
