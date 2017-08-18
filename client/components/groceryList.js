@@ -135,7 +135,6 @@ const mapDispatch = (dispatch) => {
       const itemArr = ingredients.map((ingredientObj) => {
         if (excludedIds.includes(ingredientObj.id) || !ingredientObj.prodId) return null;
         return {
-          // this might fuck up the peapod api
           id: ingredientObj.id,
           productId: ingredientObj.prodId,
           coupon: null,
