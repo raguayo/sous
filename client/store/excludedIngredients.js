@@ -39,7 +39,7 @@ export const deleteExcludedIngredients = () => dispatch =>
     .then(() => {
       dispatch(clearExcludedIngredients());
     })
-    .catch(err => console.err(err));
+    .catch(err => console.log(err));
 
 export const postNewExcluded = ingredientId => dispatch =>
   axios.post('/api/grocery-list/excluded', { ingredientId })

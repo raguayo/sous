@@ -1,6 +1,6 @@
 import axios from 'axios';
 import history from 'history';
-import { deleteExcludedIngredients } from './excludedIngredients';
+import { deleteExcludedIngredients, postNewExcluded } from './excludedIngredients';
 
 /**
  * ACTION TYPES
@@ -55,6 +55,7 @@ export const deleteRecipesFromList = () =>
       })
       .then(() => {
         dispatch(clearList());
+        dispatch(deleteExcludedIngredients());
       })
       .catch(err => console.error(err));
 
@@ -64,8 +65,8 @@ export const addItemsToPeapodCart = itemsArr =>
       .then(() => {
         const newTab = window.open('https://www.peapod.com', '_blank');
         newTab.focus();
-        dispatch(deleteRecipesFromList());
-        dispatch(deleteExcludedIngredients());
+        // loop through every item in itemsArr and make excluded if not already
+        return Promise.all(itemsArr.map(item => dispatch(postNewExcluded(item.id))));
       })
       .catch(err => console.error(err));
 

@@ -80,3 +80,11 @@ router.delete('/excluded/:id', (req, res, next) => {
     })
     .catch(next);
 });
+
+router.delete('/excluded', (req, res, next) => {
+  req.user.setExcludedIngredients([])
+    .then(() => {
+      res.sendStatus(204);
+    })
+    .catch(next);
+});
