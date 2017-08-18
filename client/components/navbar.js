@@ -37,7 +37,7 @@ const mapDispatch = dispatch => ({
 });
 
 Navbar.propTypes = {
-  currentUser: PropTypes.string.isRequired,
+  currentUser: PropTypes.object.isRequired,
   logout: PropTypes.func.isRequired,
 };
 
