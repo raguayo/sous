@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { GroceryList } = require('../db/models');
+const { GroceryList, SavedRecipe } = require('../db/models');
 
 module.exports = router;
 
@@ -27,6 +27,38 @@ router.delete('/recipes', (req, res, next) => {
     })
     .catch(next);
 });
+
+router.put('/recipes/:id/transfer', (req, res, next) => {
+  const id = req.params.id;
+  req.user.getSavedRecipes({ where: { id } })
+    .then((recipe) => {
+      return req.user.addGroceryListRecipe(recipe)
+        .then(() => req.user.getGroceryListRecipes({ where: { id } }))
+        .catch(next);
+    })
+    .then((addedRecipe) => {
+      res.json(addedRecipe);
+    })
+    .catch(next);
+});
+
+router.put('/recipes/:id/favorite', (req, res, next) => {
+  const recipeId = req.params.id;
+  const userId = req.user.id;
+
+  SavedRecipe.findOne({ where: { userId, recipeId } })
+    .then((recipe) => {
+      if (recipe.isFavorite) {
+        return recipe.update({ isFavorite: false });
+      }
+      return recipe.update({ isFavorite: true });
+    })
+    .then(() => req.user.getSavedRecipes({ where: { id: recipeId } }))
+    .then((recipe) => {
+      res.json(recipe[0]);
+    })
+    .catch(next);
+})
 
 router.put('/recipes/:id', (req, res, next) => {
   const quantity = +req.body.quantity;
