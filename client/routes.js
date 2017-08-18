@@ -11,7 +11,7 @@ import {
   Signup,
   CurrentRecipes,
   Splash,
-  RecipeHistory,
+  SavedRecipes,
   GroceryList,
 } from './components';
 
@@ -40,7 +40,7 @@ class Routes extends Component {
                   {/* Routes placed here are only available after logging in */}
                   <Route path="/recipes" component={CurrentRecipes} />
                   <Route path="/grocery-list" component={GroceryList} />
-                  <Route path="/history" component={RecipeHistory} />
+                  <Route path="/history" component={SavedRecipes} />
                 </Switch>
             }
             {/* Displays our Login component as a fallback */}

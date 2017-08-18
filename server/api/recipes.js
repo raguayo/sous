@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { Recipe, Ingredient, User, IngredientQuantity } = require('../db/models');
+const { Recipe, Ingredient, User, IngredientQuantity, SavedRecipe } = require('../db/models');
 const { microformatScraper } = require('../scraper/microformat');
 
 module.exports = router;
@@ -145,6 +145,24 @@ router.post('/', (req, res, next) => {
   })
   .catch(next);
   }
+});
+
+router.put('/:id/favorite', (req, res, next) => {
+  const recipeId = req.params.id;
+  const userId = req.user.id;
+
+  SavedRecipe.findOne({ where: { userId, recipeId } })
+    .then((recipe) => {
+      if (recipe.isFavorite) {
+        return recipe.update({ isFavorite: false });
+      }
+      return recipe.update({ isFavorite: true });
+    })
+    .then(() => req.user.getSavedRecipes({ where: { id: recipeId } }))
+    .then((recipe) => {
+      res.json(recipe[0]);
+    })
+    .catch(next);
 });
 
 router.put('/:id', (req, res, next) => {

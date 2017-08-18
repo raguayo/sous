@@ -9,6 +9,7 @@ const GET_LIST_RECIPES = 'GET_LIST_RECIPES';
 const REMOVE_RECIPE_FROM_LIST = 'REMOVE_RECIPE_FROM_LIST';
 const CLEAR_LIST = 'CLEAR_LIST';
 const UPDATE_RECIPES_TOTAL = 'UPDATE_RECIPES_TOTAL';
+const ADD_SAVED_RECIPE = 'ADD_SAVED_RECIPE';
 /**
  * INITIAL STATE
  */
@@ -21,6 +22,7 @@ const getListRecipes = recipes => ({ type: GET_LIST_RECIPES, recipes });
 export const removeRecipeFromList = recipeId => ({ type: REMOVE_RECIPE_FROM_LIST, recipeId });
 const clearList = () => ({ type: CLEAR_LIST });
 const updateRecipesTotal = (newQuantityObj, recipeId) => ({ type: UPDATE_RECIPES_TOTAL, newQuantityObj, recipeId });
+const addSavedRecipe = recipe => ({ type: ADD_SAVED_RECIPE, recipe });
 
 
 /**
@@ -76,6 +78,14 @@ export const updateRecipeQuantity = (recipeId, quantity) =>
       })
       .catch(err => console.error(err));
 
+export const transferSavedRecipe = recipeId =>
+  dispatch =>
+    axios.put(`/api/grocery-list/recipes/${recipeId}/transfer`)
+      .then(res => res.data)
+      .then((transferred) => {
+        dispatch(addSavedRecipe(transferred));
+      })
+      .catch(console.error);
 /**
  * REDUCER
  */
@@ -92,7 +102,8 @@ export default function (state = defaultRecipes, action) {
         }
         return recipe;
       });
-
+    case ADD_SAVED_RECIPE:
+      return [...action.recipe, ...state];
     case CLEAR_LIST:
       return [];
     default:
