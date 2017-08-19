@@ -1,5 +1,4 @@
 const createGroceryList = (recipe, ingredients, inGroceryList) => {
-  console.log('Background: ', inGroceryList)
   $.ajax({
     type: 'POST',
     url: 'http://localhost:8080/api/recipes/',
