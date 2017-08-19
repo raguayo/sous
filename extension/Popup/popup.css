@@ -1,0 +1,36 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto+Slab');
+@import url('https://fonts.googleapis.com/css?family=Oleo+Script+Swash+Caps');
+
+.my-container {
+  min-width: 401px;
+  padding: 0 17px 17px 17px;
+}
+
+#logo {
+  font-family: 'Oleo Script Swash Caps';
+  color: #77a95f;
+  font-size: 60px;
+  margin: 0;
+  font-weight: 300;
+  padding-bottom: 0;
+}
+
+.topnav {
+  overflow: hidden;
+  height: 10vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#button-footer {
+  display: flex;
+  justify-content: center;
+}
+
+#my-button {
+  background-color: #b28b68;
+  border: none;
+  border-radius: 5px;
+  color: white;
+}
