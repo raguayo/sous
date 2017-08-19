@@ -94,12 +94,14 @@ chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       response.msg = 'createGroceryList';
       response.inGroceryList = false;
       chrome.extension.sendMessage(response);
+      window.close();
     });
 
     $('#glistBtn').click(() => {
       response.msg = 'createGroceryList';
       response.inGroceryList = true;
       chrome.extension.sendMessage(response);
+      window.close();
     });
 
     // wait to close the popup until recieves a success response
