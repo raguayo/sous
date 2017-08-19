@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Container, Grid, Header, Segment, Icon } from 'semantic-ui-react';
+import { Container, Grid, Header, Segment, Icon, Popup, Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { deleteSavedRecipe, transferSavedRecipe, favoriteToggle } from '../store/';
 
@@ -21,7 +21,19 @@ function SavedRecipes({ favRecipes, prevRecipes, handleDelete, handleFavorite, h
                     <Grid.Column floated="left" width={10} verticalAlign="middle">
                       <a href={favRecipeObj.recipeUrl} target="_blank" rel="noopener noreferrer" >{favRecipeObj.title}</a>
                     </Grid.Column>
-                    <Grid.Column floated="right" width={3} textAlign="right"><Icon onClick={() => handleTransfer(favRecipeObj.id)} name="add" /><Icon onClick={() => handleFavorite(favRecipeObj.id)} name="star" /><Icon onClick={() => handleDelete(favRecipeObj.id)} name="delete" /></Grid.Column>
+                    <Grid.Column floated="right" width={3} textAlign="right">
+                      <p>Hi</p>
+                      <Popup
+                        trigger={<Button icon='add' />}
+                        content='Add users to your feed'
+                      />
+                      <Popup
+                        trigger={<Icon onClick={() => handleTransfer(favRecipeObj.id)} name="add" />}
+                        on="hover"
+                        content="Recipe added to your grocery list" />
+                      <Icon onClick={() => handleFavorite(favRecipeObj.id)} name="star" />
+                      <Icon onClick={() => handleDelete(favRecipeObj.id)} name="delete" />
+                    </Grid.Column>
                   </Grid>
                 </Segment>
               );
