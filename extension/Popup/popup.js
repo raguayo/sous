@@ -42,7 +42,7 @@ chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     const errorArr = [];
 
     response.userIngredients.forEach((ingObj) => {
-      if (ingObj.name) {
+      if (ingObj.inDb) {
         const ingHTML = `<tr>
         <td class="one wide">${ingObj.quantity}</td>
         <td class="one wide">${ingObj.unit}</td>
@@ -50,7 +50,7 @@ chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       </tr>`;
         htmlString += ingHTML;
       } else {
-        errorArr.push(ingObj.sentence);
+        errorArr.push(ingObj);
       }
     });
 
@@ -76,10 +76,10 @@ chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
 
     // const buttonHtml = '<button style="margin: 0.857143em 0.857143em" type="button" id="btnSendRecipe" name="btnSendRecipe">Send Recipe to Sous</button></table>';
     const buttonHtml = `<div id="button-footer">
-    <div class="ui buttons">
-      <button class="ui button" id="my-button">Save Recipe</button>
+    <div class="ui buttons my-button-wrapper">
+      <button class="ui button my-button" id="saveBtn">Save Recipe</button>
       <div class="or"></div>
-      <button class="ui button" id="my-button">Add It To Your Grocery List</button>
+      <button class="ui button my-button" id="glistBtn">Add It To Your Grocery List</button>
     </div>
   </div>`;
 
@@ -90,9 +90,19 @@ chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
 
     $('body').append(htmlString);
 
-    $('#btnSendRecipe').click(() => {
+    $('#saveBtn').click(() => {
       response.msg = 'createGroceryList';
+      response.inGroceryList = false;
       chrome.extension.sendMessage(response);
     });
+
+    $('#glistBtn').click(() => {
+      response.msg = 'createGroceryList';
+      response.inGroceryList = true;
+      chrome.extension.sendMessage(response);
+    });
+
+    // wait to close the popup until recieves a success response
+    // handle error
   });
 });

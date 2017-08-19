@@ -28,7 +28,7 @@
   justify-content: center;
 }
 
-#my-button {
+.my-button-wrapper .my-button {
   background-color: #b28b68;
   border: none;
   border-radius: 5px;

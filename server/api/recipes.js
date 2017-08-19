@@ -21,6 +21,7 @@ router.post('/', (req, res, next) => {
   let ingredientArr;
 
   if (req.body.isFromChromeExt) {
+    const { inGroceryList } = req.body;
     const { title, recipeUrl, imageUrl, author, siteName, numServings } = req.body.recipe;
     recipePromise = Recipe.findOrCreate({
       where: {
@@ -42,8 +43,10 @@ router.post('/', (req, res, next) => {
 
         // TODO: modularize to set following two associations - pass user argument to handle both post branches
         req.user.addSavedRecipe(newRecipe);
-
-        req.user.addGroceryListRecipe(newRecipe);
+        // chrome extension stringifies bool for some reason
+        if (inGroceryList === 'true') {
+          req.user.addGroceryListRecipe(newRecipe);
+        }
 
         // TODO: consider modularizing with adding passed argument if from microformat branch
         if (isCreated) {
