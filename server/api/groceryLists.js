@@ -3,6 +3,8 @@ const { GroceryList, SavedRecipe } = require('../db/models');
 
 module.exports = router;
 
+router.use('/text', require('./twilio'));
+
 router.get('/recipes', (req, res, next) => {
   req.user.getGroceryListRecipes()
     .then((recipes) => {
@@ -88,3 +90,4 @@ router.delete('/excluded', (req, res, next) => {
     })
     .catch(next);
 });
+

@@ -70,6 +70,11 @@ export const addItemsToPeapodCart = itemsArr =>
       })
       .catch(err => console.error(err));
 
+export const textGroceryList = (number, itemsArr) =>
+  dispatch =>
+    axios.post('/api/grocery-list/text', { number, itemsArr })
+      .then(res => console.log(res));
+
 export const updateRecipeQuantity = (recipeId, quantity) =>
   dispatch =>
     axios.put(`/api/grocery-list/recipes/${recipeId}`, { quantity })
