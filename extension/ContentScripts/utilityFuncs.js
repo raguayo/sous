@@ -442,17 +442,21 @@ function parseIngredientElements(ingElementArr) {
 
     let dbUnit;
     let dbQuant;
+    let inDb;
     // if no db match, send the original ingredient description to popup
     if (dbMatch) {
       [dbUnit, dbQuant] = mapUnitToDB(unit, quantity, dbMatch);
       name = dbMatch.name;
+      inDb = true;
     } else {
+      inDb = false;
       dbUnit = unit;
       dbQuant = quantity;
       name = recipeName;
     }
 
     const userIngredient = {
+      inDb,
       quantity: Math.round(quantity * 100) / 100,
       unit,
       name,
