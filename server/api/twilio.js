@@ -9,11 +9,12 @@ module.exports = router;
 router.post('/', (req, res, next) => {
   const userNumber = req.body.number;
   let ingredients = req.body.ingredientArr;
+  let start = '\n -';
   ingredients = ingredients.map((ingredient) => {
-    return JSON.stringify(ingredient).replace(/]|[[]/g, '')
+    return ingredient.join(' ');
   });
-  const ingredientString = ingredients.join('');
-  console.log(ingredientString, userNumber);
+  const ingredientString = ingredients.join('\n -');
+  start = start.concat(ingredientString);
   client.messages
     .create({
       to: userNumber,

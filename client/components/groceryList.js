@@ -1,50 +1,12 @@
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import React from 'react';
+import { Container, Grid, Header, Segment, Checkbox, Button, Modal, Input, Form } from 'semantic-ui-react';
+import { postNewExcluded, deleteExcludedIngredient, addItemsToPeapodCart, deleteRecipesFromList, textGroceryList } from '../store';
+import { strikeThrough, getIngredients, addDisplayUnits } from '../utils';
 
-import {
-  Container,
-  Grid,
-  Header,
-  Segment,
-  Checkbox,
-  Button,
-  Form,
-  Modal,
-} from 'semantic-ui-react';
 
-import {
-  postNewExcluded,
-  deleteExcludedIngredient,
-  addItemsToPeapodCart,
-  deleteRecipesFromList,
-} from '../store';
-
-import { strikeThrough } from '../stylingUtilities';
-import { setDisplayUnitAndQuantity, roundOffNumber } from './utilityFuncs';
-
-const styles = {
-  container: {
-    padding: '5em 0em',
-  },
-  header: {
-    fontFamily: 'Satisfy',
-  },
-};
-
-const GroceryList = ({
-  groceryList,
-  getIngredients,
-  handleExcludedIngredient,
-  excludedIngredients,
-  handleCartPurchase,
-  addDisplayUnits,
-  handleClearList,
-}) => {
-  const ingredients = groceryList
-    ? addDisplayUnits(getIngredients(groceryList))
-    : [];
-
+function GroceryList({ ingredients, handleExcludedIngredient, excludedIngredients, handleCartPurchase, handleClearList, handleSendText }) {
   return (
     <Container style={styles.container}>
       <Header as="h2" style={styles.header}>
@@ -185,36 +147,8 @@ const GroceryList = ({
 
 const mapState = (state) => {
   return {
-    groceryList: state.groceryListRecipes,
-    getIngredients: (groceryListRecipes) => {
-      const ingredientList = [];
-      groceryListRecipes.forEach((recipe) => {
-        const recipeQuantity = recipe.grocerylist.quantity;
-        recipe.ingredients.forEach((ingredient) => {
-          const foundIng = ingredientList.find(obj => obj.id === ingredient.id);
-          if (foundIng) {
-            foundIng.quantity +=
-              ingredient.ingredientQuantity.quantity * recipeQuantity;
-          } else {
-            const { id, name, prodId, size, unitMeasure } = ingredient;
-            const quantity =
-              ingredient.ingredientQuantity.quantity * recipeQuantity;
-            ingredientList.push({
-              name,
-              id,
-              prodId,
-              unitMeasure,
-              size,
-              quantity,
-            });
-          }
-        });
-      });
-      return ingredientList;
-    },
+    ingredients: addDisplayUnits(getIngredients(state.groceryListRecipes)),
     excludedIngredients: state.excludedIngredients,
-    addDisplayUnits: ingArr =>
-      ingArr.map(ingObj => roundOffNumber(setDisplayUnitAndQuantity(ingObj))),
   };
 };
 
@@ -252,15 +186,14 @@ const mapDispatch = (dispatch) => {
     },
     handleSendText(e, ingredients, excludedIds) {
       const number = e.target.number.value;
-      console.log(number);
       let ingredientArr = ingredients.filter((ingredient) => {
         if (!excludedIds.includes(ingredient.id)) return ingredient;
       });
       ingredientArr = ingredientArr.map((ingredient) => {
-        return [ingredient.quantity, ingredient.size, ingredient.name]
+        return [ingredient.displayQuantity, ingredient.displayUnit, ingredient.name];
       });
-      dispatch(textGroceryList(number, ingredientArr))
-    }
+      dispatch(textGroceryList(number, ingredientArr));
+    },
   };
 };
 
@@ -268,10 +201,9 @@ export default connect(mapState, mapDispatch)(GroceryList);
 
 GroceryList.propTypes = {
   handleCartPurchase: PropTypes.func.isRequired,
-  groceryList: PropTypes.array.isRequired,
-  addDisplayUnits: PropTypes.func.isRequired,
   excludedIngredients: PropTypes.array.isRequired,
-  getIngredients: PropTypes.func.isRequired,
+  ingredients: PropTypes.array.isRequired,
   handleExcludedIngredient: PropTypes.func.isRequired,
   handleClearList: PropTypes.func.isRequired,
+  handleSendText: PropTypes.func.isRequired,
 };
