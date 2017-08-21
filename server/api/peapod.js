@@ -1,9 +1,10 @@
-const Peapod = require('../../peapod/api');
-const router = require('express').Router();
+const Peapod = require("../../peapod/api");
+const router = require("express").Router();
 
-const config = require('../../secrets');
-
-const peapod = new Peapod(config);
+  const peapod = new Peapod({
+    username: 'wraedy@gmail.com',
+    password: 'BI!!yg0at7117',
+  });
 
 module.exports = router;
 

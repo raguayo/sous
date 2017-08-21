@@ -314,7 +314,7 @@ function convertToOz(unit, quantity, ingName) {
     quantity *= conversionTableBtwnDozOz[ingName][unit];
   } else {
     // will this even need to happen?
-    console.log('Last if: ', unit, quantity, ingName);
+    // console.log('Last if: ', unit, quantity, ingName);
     return [unit, quantity];
   }
   return ['OZ', quantity];
@@ -337,13 +337,13 @@ function convertOzToDBUnit(unit, quantity, dbUnit, ingName) {
 function mapUnitToDB(recipeUnit, recipeQuantity, dbObj) {
   const recipeToDBObj = hashRecipeUnitToDBUnit[recipeUnit];
   if (!recipeToDBObj) {
-    console.log('Error: Unit not found in DB ' + recipeUnit);
+    // console.log('Error: Unit not found in DB ' + recipeUnit);
     return [null, null]; // hanlde this error better
   }
   let newUnit = recipeToDBObj.dbUnit;
   let newQuantity = recipeQuantity * recipeToDBObj.conversion;
-  console.log('Butter?: ', dbObj.name, newQuantity, dbObj.unitMeasure)
-  console.log(recipeToDBObj)
+  // console.log('Butter?: ', dbObj.name, newQuantity, dbObj.unitMeasure)
+  // console.log(recipeToDBObj)
   // handle if the newUnit and peapod unit don't match
   if (newUnit !== dbObj.unitMeasure) {
     // convert to oz
