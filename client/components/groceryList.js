@@ -4,13 +4,17 @@ import React from 'react';
 import { Container, Grid, Header, Segment, Checkbox, Button } from 'semantic-ui-react';
 import { postNewExcluded, deleteExcludedIngredient, addItemsToPeapodCart, deleteRecipesFromList } from '../store';
 import { strikeThrough } from '../stylingUtilities';
-import { setDisplayUnitAndQuantity, roundOffNumber, calculateLeftovers, filterPeapodIng } from './utilityFuncs';
+import { setDisplayUnitAndQuantity, roundOffNumber, calculateLeftovers, filterPeapodIng, getLeftoverRecipes, getLeftoverRecipeDetails } from './utilityFuncs';
 
-function GroceryList({ groceryList, getIngredients, handleExcludedIngredient, excludedIngredients, handleCartPurchase, addDisplayUnits, handleClearList }) {
-
+function GroceryList({
+  groceryList, getIngredients,
+  excludedIngredients, handleExcludedIngredient,
+  handleCartPurchase, handleClearList, handleLeftoverSuggestions,
+  addDisplayUnits,
+}) {
   const ingredients = groceryList ? addDisplayUnits(getIngredients(groceryList)) : [];
   const peapodIngredients = filterPeapodIng(ingredients, excludedIngredients);
-
+  handleLeftoverSuggestions(peapodIngredients);
   return (
     <Container style={styles.container}>
       <Header as="h2" style={styles.header} >Grocery List</Header>
@@ -149,7 +153,10 @@ const mapDispatch = (dispatch) => {
     },
     handleLeftoverSuggestions(peapodIngredients) {
       const leftovers = calculateLeftovers(peapodIngredients);
-
+      getLeftoverRecipes(leftovers)
+      .then(leftoverRecipes => getLeftoverRecipeDetails(leftoverRecipes))
+      .then(results => console.log(results))
+      .catch(console.error);
     },
   };
 };
@@ -164,5 +171,6 @@ GroceryList.propTypes = {
   getIngredients: PropTypes.func.isRequired,
   handleExcludedIngredient: PropTypes.func.isRequired,
   handleClearList: PropTypes.func.isRequired,
+  handleLeftoverSuggestions: PropTypes.func.isRequired,
 };
 

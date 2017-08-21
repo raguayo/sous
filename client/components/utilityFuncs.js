@@ -1,3 +1,10 @@
+import axios from 'axios';
+
+const config = {
+  baseURL: 'https://spoonacular-recipe-food-nutrition-v1.p.mashape.com',
+  headers: {"X-Mashape-Key": "YyZySSmshzmshUvFJgXCNd0oeM57p11ZPWNjsns9qV945YLMWs"},
+}
+
 function setDisplayUnitAndQuantity(ingObj) {
   let conversionFactor = 1;
   if (ingObj.unitMeasure === 'OZ') {
@@ -85,9 +92,35 @@ function filterPeapodIng(ingredients, excludedIds) {
   }).filter(ing => !!ing);
 }
 
+function getLeftoverRecipes(leftoverArr) {
+  const ingredientCSV = leftoverArr.map((leftoverObj) =>{
+    return leftoverObj.name.replace(' ', '+');
+  }).join('%2C');
+  return axios.get(
+  `/recipes/findByIngredients?fillIngredients=false&ingredients=${ingredientCSV}&limitLicense=false&number=3&ranking=1`,
+  config)
+  .then(res => res.data)
+  .catch(console.error);
+}
+
+function getLeftoverRecipeDetails(arrOfRecipes) {
+  return Promise.all(arrOfRecipes.map((recipeObj) => {
+    return axios.get(`/recipes/${recipeObj.id}/information`, config)
+    .then(res => res.data)
+    .then((recipeDetailsObj) => {
+      recipeDetailsObj.missedIngredientCount = recipeObj.missedIngredientCount;
+      recipeDetailsObj.usedIngredientCount = recipeObj.usedIngredientCount;
+      return recipeDetailsObj;
+    })
+    .catch(console.error);
+  }));
+}
+
 module.exports = {
   setDisplayUnitAndQuantity,
   roundOffNumber,
   calculateLeftovers,
   filterPeapodIng,
+  getLeftoverRecipes,
+  getLeftoverRecipeDetails,
 };
