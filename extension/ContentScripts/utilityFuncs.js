@@ -342,7 +342,7 @@ function mapUnitToDB(recipeUnit, recipeQuantity, dbObj) {
   }
   let newUnit = recipeToDBObj.dbUnit;
   let newQuantity = recipeQuantity * recipeToDBObj.conversion;
-  console.log('Butter?: ', dbObj.name, newQuantity, dbObj.unitMeasure)
+  // console.log('Butter?: ', dbObj.name, newQuantity, dbObj.unitMeasure)
   console.log(recipeToDBObj)
   // handle if the newUnit and peapod unit don't match
   if (newUnit !== dbObj.unitMeasure) {
