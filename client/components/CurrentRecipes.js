@@ -11,7 +11,7 @@ function CurrentRecipe({ handleAddRecipe, handleDeleteRecipe, handleDeleteRecipe
     <Container style={styles.container}>
       <Grid textAlign="center">
         <Grid.Row>
-          <Header as="h2">Welcome {user.name}</Header>
+          <Header as="h2" style={styles.header}>Welcome {user.name}</Header>
         </Grid.Row>
         <Grid.Row >
           <Grid.Column width={12}>
@@ -20,7 +20,7 @@ function CurrentRecipe({ handleAddRecipe, handleDeleteRecipe, handleDeleteRecipe
                 <Input
                   name="recipeUrl"
                   style={styles.recipeInput}
-                  action={{ color: 'teal', labelPosition: 'left', icon: 'add', content: 'Add' }}
+                  action={{ color: 'green', labelPosition: 'left', icon: 'add', content: 'Add' }}
                   placeholder="Recipe url..."
                 />
               </Form>
@@ -30,7 +30,7 @@ function CurrentRecipe({ handleAddRecipe, handleDeleteRecipe, handleDeleteRecipe
       </Grid>
       <Segment.Group>
         <Segment>
-          <p>Your currently selected recipes:</p>
+          <p style={styles.color}>Your currently selected recipes:</p>
         </Segment>
         <Segment.Group>
           {groceryListRecipes && groceryListRecipes.map((currRecipe) => {
@@ -52,22 +52,14 @@ function CurrentRecipe({ handleAddRecipe, handleDeleteRecipe, handleDeleteRecipe
           })}
         </Segment.Group>
         <Segment>
-          <Button as={Link} to={'./grocery-list'}>View Your Grocery List!</Button>
-          <Button onClick={() => handleDeleteRecipes()}>Clear Recipe List</Button>
+          <Button as={Link} to={'./grocery-list'} color='green' >View Your Grocery List!</Button>
+          <Button onClick={() => handleDeleteRecipes()} color='green'>Clear Recipe List</Button>
         </Segment>
       </Segment.Group>
     </Container>
   );
 }
 
-const styles = {
-  container: {
-    padding: '5em 0em',
-  },
-  recipeInput: {
-    width: '80%',
-  },
-};
 
 const mapState = (state) => {
   return {
@@ -102,3 +94,26 @@ CurrentRecipe.propTypes = {
 };
 
 export default connect(mapState, mapDispatch)(CurrentRecipe);
+
+const styles = {
+  header: {
+    maxWidth: '450',
+    color: '#84643B',
+  },
+  button: {
+    backgroundColor: '#77a95f',
+    color: '#F1F9EE',
+    hover: {
+      color: '#3E6025',
+    },
+  },
+  container: {
+    padding: '5em 0em',
+  },
+  recipeInput: {
+    width: '80%',
+  },
+  color: {
+    color: '#84643B',
+  },
+};
