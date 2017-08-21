@@ -75,7 +75,7 @@ function GroceryList({ groceryList, getIngredients, handleExcludedIngredient, ex
         </Segment.Group>
         <Button onClick={() => handleCartPurchase(ingredients, excludedIngredients)}>Add to Peapod Cart</Button>
         <Button onClick={() => handleClearList()}>Clear list</Button>
-        <Modal trigger={<Button>Text me my list</Button>} basic size='small' >
+        <Modal trigger={<Button>Text me my list</Button>} basic size='small' actions={[{ triggerClose: true }]} >
           <Modal.Content>
             <Form onSubmit={(e) => handleSendText(e, ingredients, excludedIngredients)}>
               <Input
