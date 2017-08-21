@@ -4,10 +4,12 @@ import React from 'react';
 import { Container, Grid, Header, Segment, Checkbox, Button } from 'semantic-ui-react';
 import { postNewExcluded, deleteExcludedIngredient, addItemsToPeapodCart, deleteRecipesFromList } from '../store';
 import { strikeThrough } from '../stylingUtilities';
-import { setDisplayUnitAndQuantity, roundOffNumber } from './utilityFuncs';
+import { setDisplayUnitAndQuantity, roundOffNumber, calculateLeftovers, filterPeapodIng } from './utilityFuncs';
 
 function GroceryList({ groceryList, getIngredients, handleExcludedIngredient, excludedIngredients, handleCartPurchase, addDisplayUnits, handleClearList }) {
+
   const ingredients = groceryList ? addDisplayUnits(getIngredients(groceryList)) : [];
+  const peapodIngredients = filterPeapodIng(ingredients, excludedIngredients);
 
   return (
     <Container style={styles.container}>
@@ -73,7 +75,7 @@ function GroceryList({ groceryList, getIngredients, handleExcludedIngredient, ex
             })
           }
         </Segment.Group>
-        <Button onClick={() => handleCartPurchase(ingredients, excludedIngredients)}>Add to Peapod Cart</Button>
+        <Button onClick={() => handleCartPurchase(peapodIngredients)}>Add to Peapod Cart</Button>
         <Button onClick={() => handleClearList()}>Clear list</Button>
       </Segment.Group>
     </Container>
@@ -131,20 +133,23 @@ const mapDispatch = (dispatch) => {
         dispatch(deleteExcludedIngredient(excludedId));
       }
     },
-    handleCartPurchase(ingredients, excludedIds) {
-      const itemArr = ingredients.map((ingredientObj) => {
-        if (excludedIds.includes(ingredientObj.id) || !ingredientObj.prodId) return null;
+    handleCartPurchase(peapodItems) {
+      const itemArr = peapodItems.map((ingredientObj) => {
         return {
           id: ingredientObj.id,
           productId: ingredientObj.prodId,
           coupon: null,
           quantity: Math.ceil(ingredientObj.quantity / ingredientObj.size),
         };
-      }).filter(ing => !!ing);
+      });
       dispatch(addItemsToPeapodCart(itemArr));
     },
     handleClearList() {
       dispatch(deleteRecipesFromList());
+    },
+    handleLeftoverSuggestions(peapodIngredients) {
+      const leftovers = calculateLeftovers(peapodIngredients);
+
     },
   };
 };

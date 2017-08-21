@@ -63,7 +63,31 @@ function roundOffNumber(ingObj) {
   return ingObj;
 }
 
+function calculateLeftovers(arrOfPeapodIng) {
+  const extraIngArr = [];
+  arrOfPeapodIng.forEach((ingObj) => {
+    if (ingObj.size > ingObj.quantity) {
+      const leftoverObj = {
+        name: ingObj.name,
+        leftoverAmount: ingObj.size - ingObj.quantity,
+        unit: ingObj.unitMeasure,
+      };
+      extraIngArr.push(leftoverObj);
+    }
+  });
+  return extraIngArr;
+}
+
+function filterPeapodIng(ingredients, excludedIds) {
+  return ingredients.map((ingredientObj) => {
+    if (excludedIds.includes(ingredientObj.id) || !ingredientObj.prodId) return null;
+    return ingredientObj;
+  }).filter(ing => !!ing);
+}
+
 module.exports = {
   setDisplayUnitAndQuantity,
   roundOffNumber,
+  calculateLeftovers,
+  filterPeapodIng,
 };
