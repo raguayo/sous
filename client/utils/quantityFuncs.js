@@ -1,4 +1,4 @@
-function setDisplayUnitAndQuantity(ingObj) {
+export function setDisplayUnitAndQuantity(ingObj) {
   let conversionFactor = 1;
   if (ingObj.unitMeasure === 'OZ') {
     if (ingObj.quantity < 0.5) {
@@ -54,7 +54,7 @@ function setDisplayUnitAndQuantity(ingObj) {
   return ingObj;
 }
 
-function roundOffNumber(ingObj) {
+export function roundOffNumber(ingObj) {
   if (ingObj.displayUnit === 'CT' || ingObj.displayUnit === 'OZ') {
     ingObj.displayQuantity = Math.ceil(ingObj.displayQuantity);
   } else if (ingObj.displayUnit === 'TSB' || ingObj.displayUnit === 'TSB' || ingObj.unitMeasure === 'LB') {
@@ -63,7 +63,3 @@ function roundOffNumber(ingObj) {
   return ingObj;
 }
 
-module.exports = {
-  setDisplayUnitAndQuantity,
-  roundOffNumber,
-};
