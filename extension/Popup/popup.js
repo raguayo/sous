@@ -6,8 +6,9 @@ const styles = {
 };
 
 chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-  const tabId = tabs[0].id;
-  chrome.tabs.sendMessage(tabId, { greeting: 'Yo!' }, (response) => {
+  const recipeUrl = tabs[0].url;
+  console.log(recipeUrl);
+  chrome.runtime.sendMessage({ recipeUrl, msg: 'getRecipeDetails' }, (recipe) => {
     let htmlString = `<div class="my-container">
     <div class="topnav" id="myTopnav">
       <p id="logo">sous</p>
@@ -17,15 +18,11 @@ chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     <tbody>
       <tr>
         <td class="four wide">Title:</td>
-        <td>${response.recipe.title}</td>
-      </tr>
-      <tr>
-        <td class="four wide">Author:</td>
-        <td>${response.recipe.author}</td>
+        <td>${recipe.title}</td>
       </tr>
       <tr>
         <td class="four wide">Servings:</td>
-        <td>${response.recipe.numServings}</td>
+        <td>${recipe.servings}</td>
       </tr>
   </tbody>
   </table>
@@ -41,7 +38,7 @@ chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
 
     const errorArr = [];
 
-    response.userIngredients.forEach((ingObj) => {
+    recipe.extendedIngredients.forEach((ingObj) => {
       if (ingObj.inDb) {
         const ingHTML = `<tr>
         <td class="one wide">${ingObj.quantity}</td>
