@@ -155,7 +155,7 @@ const mapDispatch = (dispatch) => {
       const leftovers = calculateLeftovers(peapodIngredients);
       getLeftoverRecipes(leftovers)
       .then(leftoverRecipes => getLeftoverRecipeDetails(leftoverRecipes))
-      .then(results => console.log(results))
+      .then(results => hasSufficientQuantities(peapodIngredients, results))
       .catch(console.error);
     },
   };

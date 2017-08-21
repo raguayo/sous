@@ -116,8 +116,13 @@ function getLeftoverRecipeDetails(arrOfRecipes) {
   }));
 }
 
-function hasSufficientQuantity() {
+function hasSufficientQuantity(leftoverIng, recipeObj) {
   // return true or false if leftover quantities are sufficient to make given recipe
+
+}
+
+function hasSufficientQuantities(leftoverIng, recipeArr) {
+  return recipeArr.filter(recipeObj => hasSufficientQuantity(leftoverIng, recipeObj));
 }
 
 module.exports = {
