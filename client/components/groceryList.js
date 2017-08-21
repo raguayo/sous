@@ -1,12 +1,12 @@
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import React from 'react';
-import { Container, Grid, Header, Segment, Checkbox, Button } from 'semantic-ui-react';
-import { postNewExcluded, deleteExcludedIngredient, addItemsToPeapodCart, deleteRecipesFromList } from '../store';
+import { Container, Grid, Header, Segment, Checkbox, Button, Modal, Input, Form } from 'semantic-ui-react';
+import { postNewExcluded, deleteExcludedIngredient, addItemsToPeapodCart, deleteRecipesFromList, textGroceryList } from '../store';
 import { strikeThrough } from '../stylingUtilities';
 import { setDisplayUnitAndQuantity, roundOffNumber } from './utilityFuncs';
 
-function GroceryList({ groceryList, getIngredients, handleExcludedIngredient, excludedIngredients, handleCartPurchase, addDisplayUnits, handleClearList }) {
+function GroceryList({ groceryList, getIngredients, handleExcludedIngredient, excludedIngredients, handleCartPurchase, addDisplayUnits, handleClearList, handleSendText }) {
   const ingredients = groceryList ? addDisplayUnits(getIngredients(groceryList)) : [];
 
   return (
@@ -75,6 +75,17 @@ function GroceryList({ groceryList, getIngredients, handleExcludedIngredient, ex
         </Segment.Group>
         <Button onClick={() => handleCartPurchase(ingredients, excludedIngredients)}>Add to Peapod Cart</Button>
         <Button onClick={() => handleClearList()}>Clear list</Button>
+        <Modal trigger={<Button>Text me my list</Button>} basic size='small' >
+          <Modal.Content>
+            <Form onSubmit={(e) => handleSendText(e, ingredients, excludedIngredients)}>
+              <Input
+                name="number"
+                action={{ color: 'teal', labelPosition: 'left', icon: 'add', content: 'Submit' }}
+                placeholder="input your phone number"
+              />
+            </Form>
+          </Modal.Content>
+        </Modal>
       </Segment.Group>
     </Container>
   );
@@ -146,6 +157,17 @@ const mapDispatch = (dispatch) => {
     handleClearList() {
       dispatch(deleteRecipesFromList());
     },
+    handleSendText(e, ingredients, excludedIds) {
+      const number = e.target.number.value;
+      console.log(number);
+      let ingredientArr = ingredients.filter((ingredient) => {
+        if (!excludedIds.includes(ingredient.id)) return ingredient;
+      });
+      ingredientArr = ingredientArr.map((ingredient) => {
+        return [ingredient.quantity, ingredient.size, ingredient.name]
+      });
+      dispatch(textGroceryList(number, ingredientArr))
+    }
   };
 };
 
