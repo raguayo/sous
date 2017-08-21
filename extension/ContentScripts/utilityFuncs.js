@@ -334,25 +334,25 @@
 //   return [dbUnit, quantity];
 // }
 
-// function mapUnitToDB(recipeUnit, recipeQuantity, dbObj) {
-//   const recipeToDBObj = hashRecipeUnitToDBUnit[recipeUnit];
-//   if (!recipeToDBObj) {
-//     console.log('Error: Unit not found in DB ' + recipeUnit);
-//     return [null, null]; // hanlde this error better
-//   }
-//   let newUnit = recipeToDBObj.dbUnit;
-//   let newQuantity = recipeQuantity * recipeToDBObj.conversion;
-//   console.log('Butter?: ', dbObj.name, newQuantity, dbObj.unitMeasure)
-//   console.log(recipeToDBObj)
-//   // handle if the newUnit and peapod unit don't match
-//   if (newUnit !== dbObj.unitMeasure) {
-//     // convert to oz
-//     [newUnit, newQuantity] = convertToOz(newUnit, newQuantity, dbObj.name);
-//     // convert to db units
-//     [newUnit, newQuantity] = convertOzToDBUnit(newUnit, newQuantity, dbObj.unitMeasure, dbObj.name);
-//   }
-//   return [newUnit, newQuantity];
-// }
+function mapUnitToDB(recipeUnit, recipeQuantity, dbObj) {
+  const recipeToDBObj = hashRecipeUnitToDBUnit[recipeUnit];
+  if (!recipeToDBObj) {
+    console.log('Error: Unit not found in DB ' + recipeUnit);
+    return [null, null]; // hanlde this error better
+  }
+  let newUnit = recipeToDBObj.dbUnit;
+  let newQuantity = recipeQuantity * recipeToDBObj.conversion;
+  // console.log('Butter?: ', dbObj.name, newQuantity, dbObj.unitMeasure)
+  console.log(recipeToDBObj)
+  // handle if the newUnit and peapod unit don't match
+  if (newUnit !== dbObj.unitMeasure) {
+    // convert to oz
+    [newUnit, newQuantity] = convertToOz(newUnit, newQuantity, dbObj.name);
+    // convert to db units
+    [newUnit, newQuantity] = convertOzToDBUnit(newUnit, newQuantity, dbObj.unitMeasure, dbObj.name);
+  }
+  return [newUnit, newQuantity];
+}
 
 // function findDatabaseMatch(searchTerm, dictionaryArr) {
 //   const bestMatch = {
