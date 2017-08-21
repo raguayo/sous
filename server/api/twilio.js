@@ -10,10 +10,9 @@ router.post('/', (req, res, next) => {
   const userNumber = req.body.number;
   let ingredients = req.body.ingredientArr;
   ingredients = ingredients.map((ingredient) => {
-    return JSON.stringify(ingredient).replace(/]|[[]/g, '')
+    return ingredient.join(' ');
   });
-  const ingredientString = ingredients.join('');
-  console.log(ingredientString, userNumber);
+  const ingredientString = ingredients.join('\n');
   client.messages
     .create({
       to: userNumber,

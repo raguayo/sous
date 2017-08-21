@@ -159,14 +159,14 @@ const mapDispatch = (dispatch) => {
     },
     handleSendText(e, ingredients, excludedIds) {
       const number = e.target.number.value;
-      console.log(number);
       let ingredientArr = ingredients.filter((ingredient) => {
         if (!excludedIds.includes(ingredient.id)) return ingredient;
       });
       ingredientArr = ingredientArr.map((ingredient) => {
-        return [ingredient.quantity, ingredient.size, ingredient.name]
+        return [ingredient.quantity, ingredient.size, ingredient.name];
       });
-      dispatch(textGroceryList(number, ingredientArr))
+      // console.log(ingredientArr)
+      dispatch(textGroceryList(number, ingredientArr));
     }
   };
 };
