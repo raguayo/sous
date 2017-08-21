@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import React from 'react';
+
 import {
   Container,
   Grid,
@@ -166,6 +167,17 @@ const GroceryList = ({
           </Modal.Content>
         </Modal>
         <Button onClick={() => handleClearList()}>Clear list</Button>
+        <Modal trigger={<Button>Text me my list</Button>} basic size='small' actions={[{ triggerClose: true }]} >
+          <Modal.Content>
+            <Form onSubmit={(e) => handleSendText(e, ingredients, excludedIngredients)}>
+              <Input
+                name="number"
+                action={{ color: 'teal', labelPosition: 'left', icon: 'add', content: 'Submit' }}
+                placeholder="input your phone number"
+              />
+            </Form>
+          </Modal.Content>
+        </Modal>
       </Segment.Group>
     </Container>
   );
@@ -238,6 +250,17 @@ const mapDispatch = (dispatch) => {
     handleClearList() {
       dispatch(deleteRecipesFromList());
     },
+    handleSendText(e, ingredients, excludedIds) {
+      const number = e.target.number.value;
+      console.log(number);
+      let ingredientArr = ingredients.filter((ingredient) => {
+        if (!excludedIds.includes(ingredient.id)) return ingredient;
+      });
+      ingredientArr = ingredientArr.map((ingredient) => {
+        return [ingredient.quantity, ingredient.size, ingredient.name]
+      });
+      dispatch(textGroceryList(number, ingredientArr))
+    }
   };
 };
 

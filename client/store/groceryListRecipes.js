@@ -87,14 +87,20 @@ export const addItemsToPeapodCart = (itemsArr, peapodLoginCreds) => (dispatch) =
     .catch(addError);
 };
 
-export const updateRecipeQuantity = (recipeId, quantity) => dispatch =>
-  axios
-    .put(`/api/grocery-list/recipes/${recipeId}`, { quantity })
-    .then(res => res.data)
-    .then(updatedQuantityObj => {
-      dispatch(updateRecipesTotal(updatedQuantityObj, recipeId));
-    })
-    .catch(addError);
+
+export const textGroceryList = (number, ingredientArr) =>
+  dispatch =>
+    axios.post('/api/grocery-list/text', { number, ingredientArr })
+      .then(res => console.log(res));
+
+export const updateRecipeQuantity = (recipeId, quantity) =>
+  dispatch =>
+    axios.put(`/api/grocery-list/recipes/${recipeId}`, { quantity })
+      .then(res => res.data)
+      .then((updatedQuantityObj) => {
+        dispatch(updateRecipesTotal(updatedQuantityObj, recipeId));
+      })
+      .catch(addError);
 
 export const transferSavedRecipe = recipeId => dispatch =>
   axios
