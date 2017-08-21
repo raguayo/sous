@@ -116,6 +116,10 @@ function getLeftoverRecipeDetails(arrOfRecipes) {
   }));
 }
 
+function hasSufficientQuantity() {
+  // return true or false if leftover quantities are sufficient to make given recipe
+}
+
 module.exports = {
   setDisplayUnitAndQuantity,
   roundOffNumber,
