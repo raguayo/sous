@@ -116,14 +116,33 @@ function getLeftoverRecipeDetails(arrOfRecipes) {
   }));
 }
 
-function hasSufficientQuantity(leftoverIng, recipeObj) {
-  // return true or false if leftover quantities are sufficient to make given recipe
-
+function hasSufficientQuantity(leftoverIngredients, recipeObj) {
+  console.log('********* New RECIPE', recipeObj.title)
+  return recipeObj.extendedIngredients.every((recipeIng) => {
+    const leftoverIng = leftoverIngredients.find(ing => {
+      console.log('Inputs', recipeIng.name, ing.name)
+      return ing.name === recipeIng.name;
+      // misses garlic cloves, red onion,
+    });
+    console.log('Result:', leftoverIng)
+    if (leftoverIng) {
+      // console.log('Ing unit', leftoverIng.unitMeasure, 'Recipe unit', recipeObj.unit)
+      return leftoverIng.quantity > recipeIng.amount;
+    }
+    // might have to convert units for this
+    return true;
+  });
 }
 
 function hasSufficientQuantities(leftoverIng, recipeArr) {
   return recipeArr.filter(recipeObj => hasSufficientQuantity(leftoverIng, recipeObj));
 }
+
+// calculate leftover ingredients
+// make query to api
+// get results back
+// filter to make sure user has enough of each ingredient
+// return recipes filtered by number of favorites
 
 module.exports = {
   setDisplayUnitAndQuantity,
@@ -132,4 +151,5 @@ module.exports = {
   filterPeapodIng,
   getLeftoverRecipes,
   getLeftoverRecipeDetails,
+  hasSufficientQuantities,
 };

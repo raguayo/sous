@@ -4,7 +4,7 @@ import React from 'react';
 import { Container, Grid, Header, Segment, Checkbox, Button } from 'semantic-ui-react';
 import { postNewExcluded, deleteExcludedIngredient, addItemsToPeapodCart, deleteRecipesFromList } from '../store';
 import { strikeThrough } from '../stylingUtilities';
-import { setDisplayUnitAndQuantity, roundOffNumber, calculateLeftovers, filterPeapodIng, getLeftoverRecipes, getLeftoverRecipeDetails } from './utilityFuncs';
+import { setDisplayUnitAndQuantity, roundOffNumber, calculateLeftovers, filterPeapodIng, getLeftoverRecipes, getLeftoverRecipeDetails, hasSufficientQuantities } from './utilityFuncs';
 
 function GroceryList({
   groceryList, getIngredients,
@@ -153,9 +153,13 @@ const mapDispatch = (dispatch) => {
     },
     handleLeftoverSuggestions(peapodIngredients) {
       const leftovers = calculateLeftovers(peapodIngredients);
+      console.log('Leftovers: ', leftovers)
       getLeftoverRecipes(leftovers)
       .then(leftoverRecipes => getLeftoverRecipeDetails(leftoverRecipes))
-      .then(results => hasSufficientQuantities(peapodIngredients, results))
+      .then(results => {
+        console.log('Results: ', results)
+        hasSufficientQuantities(peapodIngredients, results)
+      })
       .catch(console.error);
     },
   };
