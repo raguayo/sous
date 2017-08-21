@@ -63,3 +63,7 @@ export function roundOffNumber(ingObj) {
   return ingObj;
 }
 
+
+export function addDisplayUnits(ingArr) {
+  return ingArr.map(ingObj => roundOffNumber(setDisplayUnitAndQuantity(ingObj)));
+}
