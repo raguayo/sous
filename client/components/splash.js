@@ -28,13 +28,13 @@ export default class Splash extends Component {
                 Sign Up
                 </Button>
             </div>
-            <a href="#middle">Learn More</a>
+            <a href="#middle" style={{ color: '#77a95f' }} >Learn More</a>
           </div>
         </div>
 
 
         <Segment style={styles.topSegment} vertical id="middle">
-          <Grid container stackable verticalAlign='middle'>
+          <Grid container stackable verticalAlign="middle">
             <Grid.Row>
               <Grid.Column width={8}>
                 <Header as="h3" style={styles.header}>Step 1:</Header>
@@ -45,7 +45,7 @@ export default class Splash extends Component {
               <Grid.Column floated="right" width={6}>
                 <Image
                   bordered
-                  shape='rounded'
+                  shape="rounded"
                   size="large"
                   src="/assets/images/wireframe/white-image.png"
                 />
@@ -54,14 +54,14 @@ export default class Splash extends Component {
           </Grid>
         </Segment>
         <Segment style={styles.bottomSegement} vertical>
-          <Grid celled='internally' columns='equal' stackable>
-            <Grid.Row textAlign='center'>
+          <Grid celled="internally" columns="equal" stackable>
+            <Grid.Row textAlign="center">
               <Grid.Column style={styles.column}>
-                <Header as='h3' style={styles.header}>Step 2:</Header>
+                <Header as="h3" style={styles.header}>Step 2:</Header>
                 <p style={styles.paragraph}>Add to your list through our Chrome Extension "link Here" </p>
               </Grid.Column>
               <Grid.Column style={styles.column}>
-                <Header as='h3' style={styles.header}>Step 3:</Header>
+                <Header as="h3" style={styles.header}>Step 3:</Header>
                 <p style={styles.paragraph}>Shop!
                 </p>
               </Grid.Column>

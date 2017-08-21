@@ -18,9 +18,6 @@ const Footer = () => (
           <Grid.Column width={3}>
             <Header inverted as="h4" content="Services" />
             <List link inverted>
-              <List.Item as="a">placeholder</List.Item>
-              <List.Item as="a">placeholder</List.Item>
-              <List.Item as="a">placeholder</List.Item>
             </List>
           </Grid.Column>
           <Grid.Column width={3}>
@@ -28,8 +25,8 @@ const Footer = () => (
             <p>More Details</p>
           </Grid.Column>
           <Grid.Column width={5}>
-            <div>
-              Logo!
+            <div style={styles.logo}>
+              sous
             </div>
           </Grid.Column>
         </Grid.Row>
@@ -39,3 +36,13 @@ const Footer = () => (
 );
 
 export default Footer;
+const styles = {
+  logo: {
+    fontFamily: 'Oleo Script Swash Caps',
+    color: '#77a95f',
+    fontSize: '3rem',
+    margin: '0 3rem',
+    fontWeight: '300',
+    paddingBottom: '0.5rem',
+  },
+};
