@@ -7,7 +7,6 @@ const styles = {
 
 chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
   const recipeUrl = tabs[0].url;
-  console.log(recipeUrl);
   chrome.runtime.sendMessage({ recipeUrl, msg: 'getRecipeDetails' }, (recipe) => {
     let htmlString = `<div class="my-container">
     <div class="topnav" id="myTopnav">
@@ -30,48 +29,22 @@ chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
   <table class="ui table unstackable">
     <thead>
       <tr>
-        <th colspan="2">Quantity</th>
+        <th>Quantity</th>
         <th class="eight wide">Name</th>
       </tr>
     </thead>
     <tbody>`;
 
-    const errorArr = [];
-
     recipe.extendedIngredients.forEach((ingObj) => {
-      if (ingObj.inDb) {
-        const ingHTML = `<tr>
-        <td class="one wide">${ingObj.quantity}</td>
-        <td class="one wide">${ingObj.unit}</td>
+      const ingHTML = `<tr>
+        <td class="two wide">${ingObj.amount} ${ingObj.unit}</td>
         <td>${ingObj.name}</td>
       </tr>`;
-        htmlString += ingHTML;
-      } else {
-        errorArr.push(ingObj);
-      }
+      htmlString += ingHTML;
     });
 
     htmlString += '</tbody></table>';
 
-    if (errorArr.length) {
-      htmlString += `<h5 style="margin: 0.857143em 0.857143em">We couldn't find these items in our databse:</h5>
-      <table class="ui table unstackable">
-      <thead>
-      <tr>
-        <th colspan="2" class="center aligned">Quantity</th>
-        <th class="eight wide">Name</th>
-      </tr>
-      </thead>
-      <tbody>`;
-      errorArr.forEach((errorObj) => htmlString += `<tr>
-        <td class="one wide">${errorObj.quantity}</td>
-        <td class="one wide">${errorObj.unit}</td>
-        <td>${errorObj.name}</td>
-      </tr>`);
-      htmlString += '</tbody></table>';
-    }
-
-    // const buttonHtml = '<button style="margin: 0.857143em 0.857143em" type="button" id="btnSendRecipe" name="btnSendRecipe">Send Recipe to Sous</button></table>';
     const buttonHtml = `<div id="button-footer">
     <div class="ui buttons my-button-wrapper">
       <button class="ui button my-button" id="saveBtn">Save Recipe</button>
@@ -88,19 +61,14 @@ chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     $('body').append(htmlString);
 
     $('#saveBtn').click(() => {
-      response.msg = 'createGroceryList';
-      response.inGroceryList = false;
-      chrome.extension.sendMessage(response);
+      chrome.extension.sendMessage({ msg: 'createGroceryList', recipe, inGroceryList: false });
       window.close();
     });
 
     $('#glistBtn').click(() => {
-      response.msg = 'createGroceryList';
-      response.inGroceryList = true;
-      chrome.extension.sendMessage(response);
+      chrome.extension.sendMessage({ msg: 'createGroceryList', recipe, inGroceryList: true });
       window.close();
     });
-
     // wait to close the popup until recieves a success response
     // handle error
   });

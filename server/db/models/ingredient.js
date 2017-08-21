@@ -7,12 +7,6 @@ const Ingredient = db.define('ingredient', {
     unique: true,
     allowNull: false,
   },
-  peapodName: {
-    type: Sequelize.STRING,
-  },
-  price: {
-    type: Sequelize.FLOAT,
-  },
   size: {
     type: Sequelize.FLOAT,
   },
@@ -23,5 +17,9 @@ const Ingredient = db.define('ingredient', {
     type: Sequelize.INTEGER,
   },
 });
+
+Ingredient.prototype.mapToPeapod = () => {
+
+}
 
 module.exports = Ingredient;

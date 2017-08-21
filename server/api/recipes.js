@@ -22,20 +22,20 @@ router.post('/', (req, res, next) => {
 
   if (req.body.isFromChromeExt) {
     const { inGroceryList } = req.body;
-    const { title, recipeUrl, imageUrl, author, siteName, numServings } = req.body.recipe;
+    const { title, sourceUrl, imageUrls, servings } = req.body.recipe;
     recipePromise = Recipe.findOrCreate({
       where: {
-        recipeUrl,
+        recipeUrl: sourceUrl,
       },
       defaults: {
         title,
-        imageUrl,
-        author,
-        siteName,
-        numServings,
+        imageUrl: imageUrls[0],
+        numServings: servings,
       },
     });
+
     ingredientArr = req.body.ingredients;
+
     Promise.all([recipePromise, ...ingredientArr])
       .then(([recipeArr, ...arrIngredients]) => {
         const newRecipe = recipeArr[0];
@@ -51,6 +51,7 @@ router.post('/', (req, res, next) => {
         // TODO: consider modularizing with adding passed argument if from microformat branch
         if (isCreated) {
           const arrIngredientPromises = arrIngredients.map((ingredient) => {
+            if (ingredient.unit === '') ingredient.unit = 'count';
             return Ingredient.findOrCreate({
               where: {
                 name: ingredient.name,
@@ -61,8 +62,11 @@ router.post('/', (req, res, next) => {
             })
               .then(([foundIngredient, ingIsCreated]) => {
                 // TODO: only line different from microformat branch
-                if (!ingredient.quantity) ingredient.quantity = 1;
-                return IngredientQuantity.create({ recipeId: newRecipe.id, ingredientId: foundIngredient.id, quantity: ingredient.quantity })
+                if (ingIsCreated) {
+                  // map to peapod
+                }
+                // if (!ingredient.quantity) ingredient.quantity = 1;
+                return IngredientQuantity.create({ recipeId: newRecipe.id, ingredientId: foundIngredient.id, quantity: ingredient.amount })
                 .then(() => foundIngredient)
                 .catch(next);
               })

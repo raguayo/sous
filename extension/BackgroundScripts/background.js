@@ -14,7 +14,8 @@ const createGroceryList = (recipe, ingredients, inGroceryList) => {
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.msg === 'createGroceryList') {
-    createGroceryList(request.recipe, request.dbIngredients, request.inGroceryList);
+
+    createGroceryList(request.recipe, request.recipe.extendedIngredients, request.inGroceryList);
     // send response back to popup if successful
     // error handling
   } else if (request.msg === 'getRecipeDetails') {
@@ -28,7 +29,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       sendResponse(response);
     })
     .fail((response) => {
-      console.log('In fail', response);
       sendResponse(response);
     });
     return true;
