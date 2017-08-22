@@ -13,6 +13,7 @@ import {
   Splash,
   SavedRecipes,
   GroceryList,
+  UserProfile,
 } from './components';
 
 import { me, fetchGroceryListRecipes, fetchSavedRecipes, fetchExcludedIngredients } from './store';
@@ -41,6 +42,7 @@ class Routes extends Component {
                   <Route path="/recipes" component={CurrentRecipes} />
                   <Route path="/grocery-list" component={GroceryList} />
                   <Route path="/history" component={SavedRecipes} />
+                  <Route path="/user-profile" component={UserProfile} />
                 </Switch>
             }
             {/* Displays our Login component as a fallback */}
