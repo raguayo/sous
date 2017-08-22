@@ -20,7 +20,7 @@ function CurrentRecipe({ handleAddRecipe, handleDeleteRecipe, handleDeleteRecipe
                 <Input
                   name="recipeUrl"
                   style={styles.recipeInput}
-                  action={{ color: 'green', labelPosition: 'left', icon: 'add', content: 'Add' }}
+                  action={{ labelPosition: 'left', icon: 'add', content: 'Add', style: { background: 'green' } }}
                   placeholder="Recipe url..."
                 />
               </Form>
@@ -52,8 +52,11 @@ function CurrentRecipe({ handleAddRecipe, handleDeleteRecipe, handleDeleteRecipe
           })}
         </Segment.Group>
         <Segment>
-          <Button as={Link} to={'./grocery-list'} color='green' >View Your Grocery List!</Button>
-          <Button onClick={() => handleDeleteRecipes()} color='green'>Clear Recipe List</Button>
+          <Link to={'./grocery-list'} className="appButton" >View Your Grocery List!</Link>
+          <a
+            onClick={() => handleDeleteRecipes()}
+            className="appButton"
+          > Clear Recipe List</a>
         </Segment>
       </Segment.Group>
     </Container>
@@ -110,10 +113,10 @@ const styles = {
   container: {
     padding: '5em 0em',
   },
-  recipeInput: {
-    width: '80%',
-  },
   color: {
     color: '#84643B',
+  },
+  recipeInput: {
+    width: '80%',
   },
 };

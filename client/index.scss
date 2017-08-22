@@ -138,12 +138,19 @@ button {
   color: white;
 };
 
-.appButtonsColor {
-  background-color: #77a95f
+.appButton {
+  background-color: #77a95f;
+  border: none;
+  border-radius: 5px;
+  padding: 0.5rem 1.5rem;
+  font-size: 1.2rem;
+  color: white;
+  margin: .5rem;
 }
 
-.appButtonsColor:hover {
-  background-color: #3E6025
+.appButton:hover {
+  background-color: #3E6025;
+  color: white;
 }
 
 button:hover {
