@@ -7,10 +7,10 @@ import { logout } from '../store/user';
 function Navbar(props) {
   const user = props.currentUser;
   return (
-    <div className="topnav" id="myTopnav">
+    <div className="topnav">
       <Link to={'/recipes'} >Selected Recipes</Link>
       <Link to={'/grocery-list'}>Grocery List</Link>
-      <Link to={'/recipes'} style={styles.logo}>sous</Link>
+      <Link to={'/recipes'} id="logo" >sous</Link>
       <Link to={'/history'}>My Recipes</Link>
       <Link to={'/home'}>{user.name || null}</Link>
       <Link to={'/'}onClick={props.logout}>Log out</Link>
@@ -36,13 +36,3 @@ Navbar.propTypes = {
 
 export default connect(mapState, mapDispatch)(Navbar);
 
-const styles = {
-  logo: {
-    fontFamily: 'Oleo Script Swash Caps',
-    color: '#77a95f',
-    fontSize: '3rem',
-    margin: '0 3rem',
-    fontWeight: '300',
-    paddingBottom: '0.5rem',
-  },
-};

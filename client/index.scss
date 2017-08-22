@@ -40,7 +40,7 @@ body {
   margin: 0;
 }
 
-.logo {
+#logo {
   font-family: 'Oleo Script Swash Caps';
   color: #77a95f;
   font-size: 3rem;
@@ -48,6 +48,7 @@ body {
   font-weight: 300;
   padding-bottom: 0.5rem;
 }
+
 
 .topnav {
   overflow: hidden;
@@ -75,6 +76,11 @@ body {
 .topnav a.active {
   background-color: #4CAF50;
   color: white;
+}
+
+#logo a:hover {
+  font-size: 4rem !important;
+  background-color: white !important;
 }
 
 .header-container {
