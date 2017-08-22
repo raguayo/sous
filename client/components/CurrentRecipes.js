@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Container, Grid, Header, Segment, Button, Icon, Input, Form } from 'semantic-ui-react';
+import { Container, Grid, Header, Segment, Icon, Input, Form } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import { deleteRecipeFromList, deleteRecipesFromList, updateRecipeQuantity } from '../store/groceryListRecipes';
 import { postNewRecipe } from '../store/savedRecipes';

@@ -6,8 +6,6 @@ import {
   Grid,
   Header,
   Segment,
-  Checkbox,
-  Button,
   Modal,
   Input,
   Form,
@@ -45,7 +43,7 @@ function UserProfile({ user, handleNameUpdate, handleEmailUpdate, handlePassword
                   <Form.Input
                     name="name"
                     value={user.name}
-                    disabled="true"
+                    readOnly
                     fluid
                     icon="user"
                     iconPosition="left"
@@ -71,7 +69,7 @@ function UserProfile({ user, handleNameUpdate, handleEmailUpdate, handlePassword
                   <Form.Input
                     name="email"
                     value={user.email}
-                    disabled="true"
+                    readOnly
                     fluid
                     icon="mail"
                     iconPosition="left"
@@ -96,8 +94,8 @@ function UserProfile({ user, handleNameUpdate, handleEmailUpdate, handlePassword
                 <Grid.Column floated="left" width={13} verticalAlign="middle">
                   <Form.Input
                     name="password"
-                    value={user.password}
-                    disabled="true"
+                    value="123456"
+                    readOnly
                     fluid
                     icon="lock"
                     iconPosition="left"
@@ -132,7 +130,6 @@ function UserProfile({ user, handleNameUpdate, handleEmailUpdate, handlePassword
 }
 
 const mapState = (state) => {
-  // console.log('UserProfile - state.user: ', state.user);
   return {
     user: state.user,
   };
@@ -141,18 +138,14 @@ const mapState = (state) => {
 const mapDispatch = (dispatch) => {
   return {
     handleNameUpdate(e, user) {
-      // console.log('handleNameUpdate = e.target.name.value: ', e.target.name.value);
       const objUser = { id: user.id, name: e.target.name.value };
       dispatch(editUserName(objUser));
     },
     handleEmailUpdate(e, user) {
-      // console.log('handleNameUpdate = e.target.email.value: ', e.target.email.value);
       const objUser = { id: user.id, email: e.target.email.value };
-      console.log('objUser: ', objUser);
       dispatch(editUserEmail(objUser));
     },
     handlePasswordUpdate(e, user) {
-      // console.log('handleNameUpdate = e.target.password.value: ', e.target.password.value);
       const objUser = { id: user.id, password: e.target.password.value };
       dispatch(editUserPassword(objUser));
     },
@@ -163,7 +156,6 @@ export default connect(mapState, mapDispatch)(UserProfile);
 
 UserProfile.propTypes = {
   user: PropTypes.object.isRequired,
-  // ingredients: PropTypes.array.isRequired,
   handleNameUpdate: PropTypes.func.isRequired,
   handleEmailUpdate: PropTypes.func.isRequired,
   handlePasswordUpdate: PropTypes.func.isRequired,

@@ -16,7 +16,6 @@ const styles = {
 };
 
 function Navbar(props) {
-  const user = props.currentUser;
   return (
     <div>
       <div className="topnav" id="myTopnav">
@@ -42,7 +41,6 @@ const mapDispatch = dispatch => ({
 });
 
 Navbar.propTypes = {
-  currentUser: PropTypes.object.isRequired,
   logout: PropTypes.func.isRequired,
 };
 

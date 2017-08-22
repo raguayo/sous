@@ -30,7 +30,6 @@ const AuthForm = ({ name, displayName, handleSubmit, error }) => (
           }
         </Header>
         <Form size="large" onSubmit={handleSubmit} name={name}>
-          <Segment stacked>
             {
               displayName === 'Sign Up' ?
                 <Form.Input
@@ -56,20 +55,18 @@ const AuthForm = ({ name, displayName, handleSubmit, error }) => (
               placeholder="Password"
               type="password"
             />
-
-            <Form.Button color='olive' fluid size="large">{displayName}</Form.Button>
+            <Form.Button as="button" className="appButton" fluid size="large" style={styles.button}>{displayName}</Form.Button>
             <Form.Button size="large" as="a" href="/auth/google" >{displayName} with Google</Form.Button>
-          </Segment>
         </Form>
         {
           error && error.response && <Message error>{error.response.data}</Message>
         }
         {
           displayName === 'Login' ?
-            <Message>
+            <Message style={styles.textColor}>
               New to us? <Link to="/signup">Sign Up</Link>
             </Message> :
-            <Message>
+            <Message style={styles.textColor}>
               Already have an account? <Link to="/login">Login</Link>
             </Message>
         }
@@ -146,10 +143,11 @@ const styles = {
     color: '#84643B',
   },
   button: {
-    backgroundColor: '#77a95f',
-    color: '#F1F9EE',
-    hover: {
-      color: '#3E6025',
-    },
+    width: '100%',
+    marginLeft: '0px',
+    marginTop: '10px',
   },
+  textColor: {
+    color: '#84643B',
+  }
 };
