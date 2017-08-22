@@ -8,23 +8,27 @@ const styles = {
   logo: {
     fontFamily: 'Oleo Script Swash Caps',
     color: '#77a95f',
-    fontSize: '3rem',
-    margin: '0 3rem',
-    fontWeight: '300',
-    paddingBottom: '0.5rem',
+    fontSize: '2rem',
+    margin: '0 1.75rem',
+    fontWeight: '200',
+    paddingBottom: '0.25rem',
   },
 };
 
 function Navbar(props) {
   const user = props.currentUser;
   return (
-    <div className="topnav" id="myTopnav">
-      <Link to={'/recipes'} >Recipes</Link>
-      <Link to={'/grocery-list'}>Grocery List</Link>
-      <Link to={'/recipes'} style={styles.logo}>sous</Link>
-      <Link to={'/user-profile'}>Profile</Link>
-      <Link to={'/home'}>{user.name || null}</Link>
-      <Link to={'/'}onClick={props.logout}>Log out</Link>
+    <div>
+      <div className="topnav" id="myTopnav">
+        <Link to={'/recipes'} >Recipes</Link>
+        <Link to={'/grocery-list'}>Grocery List</Link>
+        <Link to={'/recipes'} style={styles.logo}>sous</Link>
+        <Link to={'/user-profile'}>Profile</Link>
+        <Link to={'/'}onClick={props.logout}>Log out</Link>
+      </div>
+      <div style={styles.logo}>
+        {user.name ? `Welcome ${user.name}` : null}
+      </div>
     </div>
   );
 }
