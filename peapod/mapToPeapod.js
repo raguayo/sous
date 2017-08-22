@@ -63,7 +63,7 @@ module.exports = function mapToPeapod(ingObj) {
       // change Peapod unit and size to match our db
       return axios.get(`https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/convert?ingredientName=${name}&sourceAmount=${size}&sourceUnit=${unitMeasure}&targetUnit=${ingObj.unitMeasure}`, {
         baseURL: 'https://spoonacular-recipe-food-nutrition-v1.p.mashape.com',
-        headers: { 'X-Mashape-Key': 'QpiCUHgeacmsh7OCAFkHGpAnLuFjp1Oeo8ljsnR10CzIJ4x9oM' },
+        headers: { 'X-Mashape-Key': process.env.RECIPE_API_KEY },
       }).then(res => res.data)
         .then((conversion) => {
           return PeapodIngredient.findOrCreate({
