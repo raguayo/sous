@@ -11,7 +11,7 @@ function CurrentRecipe({ handleAddRecipe, handleDeleteRecipe, handleDeleteRecipe
     <Container style={styles.container}>
       <Grid textAlign="center">
         <Grid.Row>
-          <Header as="h2" style={styles.header}>Welcome {user.name}</Header>
+          <Header as="h1" style={styles.header}>Welcome {user.name}</Header>
         </Grid.Row>
         <Grid.Row >
           <Grid.Column width={12}>
@@ -20,7 +20,7 @@ function CurrentRecipe({ handleAddRecipe, handleDeleteRecipe, handleDeleteRecipe
                 <Input
                   name="recipeUrl"
                   style={styles.recipeInput}
-                  action={{ labelPosition: 'left', icon: 'add', content: 'Add', style: { background: 'green' } }}
+                  action={{ labelPosition: 'left', icon: 'add', content: 'Add', style: { backgroundColor: '#77a95f', color: 'white' } }}
                   placeholder="Recipe url..."
                 />
               </Form>
@@ -29,28 +29,40 @@ function CurrentRecipe({ handleAddRecipe, handleDeleteRecipe, handleDeleteRecipe
         </Grid.Row>
       </Grid>
       <Segment.Group>
-        <Segment>
-          <p style={styles.color}>Your currently selected recipes:</p>
-        </Segment>
-        <Segment.Group>
-          {groceryListRecipes && groceryListRecipes.map((currRecipe) => {
-            return (
-              <Segment key={currRecipe.id}>
-                <Grid>
-                  <Grid.Column floated="left" width={2}>
-                    <Form>
-                      <Form.Input placeholder={currRecipe.grocerylist.quantity} onChange={(e) => handleUpdateQuantity(currRecipe.id, e)} />
-                    </Form>
-                  </Grid.Column>
-                  <Grid.Column floated="left" width={10} verticalAlign="middle">
-                    <a href={currRecipe.recipeUrl} target="_blank" rel="noopener noreferrer">{currRecipe.title}</a>
-                  </Grid.Column>
-                  <Grid.Column floated="right" width={3} textAlign="right"><Icon onClick={() => handleDeleteRecipe(currRecipe.id)} name="delete" /></Grid.Column>
-                </Grid>
+        {
+          groceryListRecipes.length === 0 ?
+            <div>
+              <Segment>
+                <p style={styles.color}>Your list is currently empty, why not add a recipe from <Link to={'./history'}>your recipes</Link> or upload a recipe using our CHROME EXTENSION LINK!</p>
               </Segment>
-            );
-          })}
-        </Segment.Group>
+            </div>
+            :
+            <div>
+              <Segment>
+                <p style={styles.color}>Your currently selected recipes:</p>
+              </Segment>
+              <Segment.Group>
+                {groceryListRecipes && groceryListRecipes.map((currRecipe) => {
+                  return (
+                    <Segment key={currRecipe.id}>
+                      <Grid>
+                        <Grid.Column floated="left" width={2}>
+                          <Form>
+                            <Form.Input placeholder={currRecipe.grocerylist.quantity} onChange={(e) => handleUpdateQuantity(currRecipe.id, e)} />
+                          </Form>
+                        </Grid.Column>
+                        <Grid.Column floated="left" width={10} verticalAlign="middle">
+                          <a href={currRecipe.recipeUrl} target="_blank" rel="noopener noreferrer">{currRecipe.title}</a>
+                        </Grid.Column>
+                        <Grid.Column floated="right" width={3} textAlign="right"><Icon onClick={() => handleDeleteRecipe(currRecipe.id)} name="delete" /></Grid.Column>
+                      </Grid>
+                    </Segment>
+                  );
+                },
+                )}
+              </Segment.Group>
+            </div>
+        }
         <Segment>
           <Link to={'./grocery-list'} className="appButton" >View Your Grocery List!</Link>
           <a
@@ -102,13 +114,8 @@ const styles = {
   header: {
     maxWidth: '450',
     color: '#84643B',
-  },
-  button: {
-    backgroundColor: '#77a95f',
-    color: '#F1F9EE',
-    hover: {
-      color: '#3E6025',
-    },
+    fontFamily: 'Oleo Script Swash Caps',
+    fontSize: '4rem',
   },
   container: {
     padding: '5em 0em',
