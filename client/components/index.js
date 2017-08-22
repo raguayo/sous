@@ -11,3 +11,4 @@ export { default as Splash } from './splash';
 export { default as GroceryList } from './groceryList';
 export { default as SavedRecipes } from './SavedRecipes';
 export { default as UserProfile } from './UserProfile';
+export { default as RecipeCard } from './RecipeCard';

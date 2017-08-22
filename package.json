@@ -28,6 +28,7 @@
     "history": "^4.6.3",
     "jaro-winkler": "^0.2.8",
     "microformat-node": "^2.0.1",
+    "moment": "^2.18.1",
     "morgan": "^1.8.1",
     "passport": "^0.3.2",
     "passport-google-oauth": "^1.0.0",
