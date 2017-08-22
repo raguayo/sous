@@ -40,9 +40,9 @@ const Main = (props) => {
       <div>
         {children}
       </div>
-      <div style={styles.footer}>
+      {/* <div style={styles.footer}>
         <Footer />
-      </div>
+      </div> */}
     </div>
   );
 };

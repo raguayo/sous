@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 import {
-  Button,
-  Container,
   Grid,
   Header,
   Image,
@@ -21,12 +19,12 @@ export default class Splash extends Component {
             <h2>Your personal recipe manager.</h2>
 
             <div className="buttons" style={styles.buttons}>
-              <Button as={Link} to="/login" primary size="large" style={styles.button} >
+              <Link to="/login" primary size="large" className="splashButton">
                 Log In
-                </Button>
-              <Button primary size="large" as={Link} to="/signup" style={styles.button}>
+                </Link>
+              <Link to="/signup" primary size="large" className="splashButton">
                 Sign Up
-                </Button>
+                </Link>
             </div>
             <a href="#middle" style={{ color: '#77a95f' }} >Learn More</a>
           </div>
@@ -104,17 +102,6 @@ let styles = {
     fontFamily: 'sans-serif',
     fontSize: '3em',
     fontWeight: 'normal',
-  },
-  button: {
-    backgroundColor: '#b28b68',
-    border: 'none',
-    borderRadius: '5px',
-    padding: '0.5rem 1.5rem',
-    fontSize: '1.2rem',
-    color: 'white',
-    hover: {
-      color: '#946e4f',
-    },
   },
   buttons: {
     marginBottom: '1rem',

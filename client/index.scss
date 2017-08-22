@@ -125,6 +125,27 @@ button {
   color: white;
 }
 
+.splashButton {
+  background-color: #b28b68;
+  border: none;
+  border-radius: 5px;
+  padding: 0.5rem 1.5rem;
+  font-size: 1.2rem;
+  color: white;
+};
+.splashButton:hover {
+  background-color: #946e4f;
+  color: white;
+};
+
+.appButtonsColor {
+  background-color: #77a95f
+}
+
+.appButtonsColor:hover {
+  background-color: #3E6025
+}
+
 button:hover {
   background-color: #F86055;
 }
