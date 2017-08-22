@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import React from 'react';
 
 import { Container, Grid, Header, Segment, Checkbox, Button, Modal, Input, Form } from 'semantic-ui-react';
-import { postNewExcluded, deleteExcludedIngredient, addItemsToPeapodCart, deleteRecipesFromList, textGroceryList } from '../store';
+import { postNewExcluded, deleteExcludedIngredient, addItemsToPeapodCart, deleteRecipesFromList, textGroceryList, addSuggestedRecipes } from '../store';
 import { strikeThrough, getIngredients, addDisplayUnits, calculateLeftovers, filterPeapodIng, getLeftoverRecipes,
   getLeftoverRecipeDetails, hasSufficientQuantities } from '../utils';
 
@@ -16,37 +16,84 @@ const styles = {
   },
 };
 
-function GroceryList({ ingredients, handleExcludedIngredient, excludedIngredients, handleCartPurchase, handleClearList, handleSendText, handleLeftoverSuggestions }) {
+class GroceryList extends React.Component {
+  constructor() {
+    super()
+  }
 
-  const peapodIngredients = filterPeapodIng(ingredients, excludedIngredients);
-  // handleLeftoverSuggestions(peapodIngredients);
+  componentWillReceiveProps() {
+    console.log('In receive props')
+    this.props.generateLeftoverSuggestions(this.props.peapodIngredients);
+  }
 
-  return (
-    <Container style={styles.container}>
-      <Header as="h2" style={styles.header}>
-        Grocery List
-      </Header>
-      <Segment.Group>
-        <Segment>
-          <p>Ingredients:</p>
-        </Segment>
+  render() {
+    const { ingredients, excludedIngredients, peapodIngredients, handleExcludedIngredient, handleCartPurchase, handleClearList, handleSendText, suggestedRecipes } = this.props;
+
+    return (
+      <Container style={styles.container}>
+        <Header as="h2" style={styles.header}>
+          Grocery List
+        </Header>
+        <Header as="h2" style={styles.header}>
+          {
+            suggestedRecipes ? suggestedRecipes.map(recipe => (<p>{recipe.title}</p>)) : null
+          }
+        </Header>
         <Segment.Group>
-          {ingredients.filter(ing => !!ing.prodId).map((ingredient) => {
-            return (
-              <Segment key={ingredient.id}>
-                <Grid>
-                  {excludedIngredients.indexOf(ingredient.id) !== -1
-                    ? <Grid.Column
-                      as={Checkbox}
-                      checked
-                      floated="left"
-                      width={13}
-                      verticalAlign="middle"
-                      style={{ textDecoration: 'line-through' }}
-                      onClick={e =>
-                        handleExcludedIngredient(e, ingredient.id)}
-                      label={`${ingredient.name} ${ingredient.displayUnit} ${ingredient.displayQuantity}`}
-                    />
+          <Segment>
+            <p>Ingredients:</p>
+          </Segment>
+          <Segment.Group>
+            {ingredients.filter(ing => !!ing.prodId).map((ingredient) => {
+              return (
+                <Segment key={ingredient.id}>
+                  <Grid>
+                    {excludedIngredients.indexOf(ingredient.id) !== -1
+                      ? <Grid.Column
+                        as={Checkbox}
+                        checked
+                        floated="left"
+                        width={13}
+                        verticalAlign="middle"
+                        style={{ textDecoration: 'line-through' }}
+                        onClick={e =>
+                          handleExcludedIngredient(e, ingredient.id)}
+                        label={`${ingredient.name} ${ingredient.displayUnit} ${ingredient.displayQuantity}`}
+                      />
+                      : <Grid.Column
+                        as={Checkbox}
+                        floated="left"
+                        width={13}
+                        verticalAlign="middle"
+                        onClick={e =>
+                          handleExcludedIngredient(e, ingredient.id)}
+                        label={`${ingredient.name} ${ingredient.displayUnit} ${ingredient.displayQuantity}`}
+                      />}
+                  </Grid>
+                </Segment>
+              );
+            })}
+          </Segment.Group>
+          <Segment>
+            <p>Unknown Ingredients:</p>
+          </Segment>
+          <Segment.Group>
+            {ingredients.filter(ing => !ing.prodId).map((ingredient) => {
+              return (
+                <Segment key={ingredient.id}>
+                  <Grid>
+                    {excludedIngredients.indexOf(ingredient.id) !== -1
+                  ? <Grid.Column
+                    as={Checkbox}
+                    checked
+                    floated="left"
+                    width={13}
+                    verticalAlign="middle"
+                    style={{ textDecoration: 'line-through' }}
+                    onClick={e =>
+                      handleExcludedIngredient(e, ingredient.id)}
+                    label={`${ingredient.name} ${ingredient.displayUnit} ${ingredient.displayQuantity}`}
+                  />
                     : <Grid.Column
                       as={Checkbox}
                       floated="left"
@@ -56,113 +103,84 @@ function GroceryList({ ingredients, handleExcludedIngredient, excludedIngredient
                         handleExcludedIngredient(e, ingredient.id)}
                       label={`${ingredient.name} ${ingredient.displayUnit} ${ingredient.displayQuantity}`}
                     />}
-                </Grid>
-              </Segment>
-            );
-          })}
-        </Segment.Group>
-        <Segment>
-          <p>Unknown Ingredients:</p>
-        </Segment>
-        <Segment.Group>
-          {ingredients.filter(ing => !ing.prodId).map((ingredient) => {
-            return (
-              <Segment key={ingredient.id}>
-                <Grid>
-                  {excludedIngredients.indexOf(ingredient.id) !== -1
-                ? <Grid.Column
-                  as={Checkbox}
-                  checked
-                  floated="left"
-                  width={13}
+                  </Grid>
+                </Segment>
+              );
+            })}
+          </Segment.Group>
+          <Modal trigger={<Button>Add to Peapod Cart</Button>} basicSize="medium">
+            <Modal.Content>
+              <div>
+                <Grid
+                  textAlign="center"
+                  style={{ height: '100%' }}
                   verticalAlign="middle"
-                  style={{ textDecoration: 'line-through' }}
-                  onClick={e =>
-                    handleExcludedIngredient(e, ingredient.id)}
-                  label={`${ingredient.name} ${ingredient.displayUnit} ${ingredient.displayQuantity}`}
-                />
-                  : <Grid.Column
-                    as={Checkbox}
-                    floated="left"
-                    width={13}
-                    verticalAlign="middle"
-                    onClick={e =>
-                      handleExcludedIngredient(e, ingredient.id)}
-                    label={`${ingredient.name} ${ingredient.displayUnit} ${ingredient.displayQuantity}`}
-                  />}
+                >
+                  <Grid.Column style={{ maxWidth: 450 }}>
+                    <Header as="h2" color="teal" textAlign="center">
+                      Enter Peapod Login Credentials
+                    </Header>
+                    <Form
+                      size="large"
+                      onSubmit={e =>
+                        handleCartPurchase(peapodIngredients, e)}
+                      name={name}
+                    >
+                      <Segment stacked>
+                        <Form.Input
+                          name="username"
+                          fluid
+                          icon="id badge"
+                          iconPosition="left"
+                          placeholder="Name"
+                        />
+                        <Form.Input
+                          name="password"
+                          fluid
+                          icon="lock"
+                          iconPosition="left"
+                          placeholder="Password"
+                          type="password"
+                        />
+                        <Form.Button color="teal" fluid size="large">
+                          Submit
+                        </Form.Button>
+                        <Form.Button color="teal" fluid onClick="self.close()">
+                          Cancel
+                        </Form.Button>
+                      </Segment>
+                    </Form>
+                  </Grid.Column>
                 </Grid>
-              </Segment>
-            );
-          })}
+              </div>
+            </Modal.Content>
+          </Modal>
+          <Button onClick={() => handleClearList()}>Clear list</Button>
+          <Modal trigger={<Button>Text me my list</Button>} basic size='small' actions={[{ triggerClose: true }]} >
+            <Modal.Content>
+              <Form onSubmit={(e) => handleSendText(e, ingredients, excludedIngredients)}>
+                <Input
+                  name="number"
+                  action={{ color: 'teal', labelPosition: 'left', icon: 'add', content: 'Submit' }}
+                  placeholder="input your phone number"
+                />
+              </Form>
+            </Modal.Content>
+          </Modal>
         </Segment.Group>
-        <Modal trigger={<Button>Add to Peapod Cart</Button>} basicSize="medium">
-          <Modal.Content>
-            <div>
-              <Grid
-                textAlign="center"
-                style={{ height: '100%' }}
-                verticalAlign="middle"
-              >
-                <Grid.Column style={{ maxWidth: 450 }}>
-                  <Header as="h2" color="teal" textAlign="center">
-                    Enter Peapod Login Credentials
-                  </Header>
-                  <Form
-                    size="large"
-                    onSubmit={e =>
-                      handleCartPurchase(peapodIngredients, e)}
-                    name={name}
-                  >
-                    <Segment stacked>
-                      <Form.Input
-                        name="username"
-                        fluid
-                        icon="id badge"
-                        iconPosition="left"
-                        placeholder="Name"
-                      />
-                      <Form.Input
-                        name="password"
-                        fluid
-                        icon="lock"
-                        iconPosition="left"
-                        placeholder="Password"
-                        type="password"
-                      />
-                      <Form.Button color="teal" fluid size="large">
-                        Submit
-                      </Form.Button>
-                      <Form.Button color="teal" fluid onClick="self.close()">
-                        Cancel
-                      </Form.Button>
-                    </Segment>
-                  </Form>
-                </Grid.Column>
-              </Grid>
-            </div>
-          </Modal.Content>
-        </Modal>
-        <Button onClick={() => handleClearList()}>Clear list</Button>
-        <Modal trigger={<Button>Text me my list</Button>} basic size='small' actions={[{ triggerClose: true }]} >
-          <Modal.Content>
-            <Form onSubmit={(e) => handleSendText(e, ingredients, excludedIngredients)}>
-              <Input
-                name="number"
-                action={{ color: 'teal', labelPosition: 'left', icon: 'add', content: 'Submit' }}
-                placeholder="input your phone number"
-              />
-            </Form>
-          </Modal.Content>
-        </Modal>
-      </Segment.Group>
-    </Container>
-  );
+      </Container>
+    );
+  }
 }
 
 const mapState = (state) => {
+  const ingredients = addDisplayUnits(getIngredients(state.groceryListRecipes));
+  const peapodIngredients = filterPeapodIng(ingredients, state.excludedIngredients);
   return {
-    ingredients: addDisplayUnits(getIngredients(state.groceryListRecipes)),
+    ingredients,
     excludedIngredients: state.excludedIngredients,
+    peapodIngredients,
+    suggestedRecipes: state.suggestedRecipes,
   };
 };
 
@@ -193,14 +211,14 @@ const mapDispatch = (dispatch) => {
     handleClearList() {
       dispatch(deleteRecipesFromList());
     },
-    handleLeftoverSuggestions(peapodIngredients) {
+    generateLeftoverSuggestions(peapodIngredients) {
       const leftovers = calculateLeftovers(peapodIngredients);
-      console.log('Leftovers: ', leftovers)
       getLeftoverRecipes(leftovers)
       .then(leftoverRecipes => getLeftoverRecipeDetails(leftoverRecipes))
-      .then(results => {
-        console.log('Results: ', results)
-        hasSufficientQuantities(peapodIngredients, results)
+      .then(results => hasSufficientQuantities(leftovers, results))
+      .then((suggRecipes) => {
+        console.log(suggRecipes)
+        dispatch(addSuggestedRecipes(suggRecipes))
       })
       .catch(console.error);
     },
@@ -223,8 +241,10 @@ GroceryList.propTypes = {
   handleCartPurchase: PropTypes.func.isRequired,
   excludedIngredients: PropTypes.array.isRequired,
   ingredients: PropTypes.array.isRequired,
+  suggestedRecipes: PropTypes.array.isRequired,
+  peapodIngredients: PropTypes.array.isRequired,
   handleExcludedIngredient: PropTypes.func.isRequired,
   handleClearList: PropTypes.func.isRequired,
-  handleLeftoverSuggestions: PropTypes.func.isRequired,
+  generateLeftoverSuggestions: PropTypes.func.isRequired,
   handleSendText: PropTypes.func.isRequired,
 };
