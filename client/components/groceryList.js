@@ -5,6 +5,15 @@ import { Container, Grid, Header, Segment, Checkbox, Button, Modal, Input, Form 
 import { postNewExcluded, deleteExcludedIngredient, addItemsToPeapodCart, deleteRecipesFromList, textGroceryList } from '../store';
 import { strikeThrough, getIngredients, addDisplayUnits } from '../utils';
 
+const styles = {
+  container: {
+    padding: '5em 0em',
+  },
+  header: {
+    fontFamily: 'Satisfy',
+  },
+};
+
 
 function GroceryList({ ingredients, handleExcludedIngredient, excludedIngredients, handleCartPurchase, handleClearList, handleSendText }) {
   return (
