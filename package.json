@@ -47,7 +47,8 @@
     "semantic-ui-css": "^2.2.12",
     "semantic-ui-react": "^0.71.3",
     "sequelize": "^4.3.1",
-    "socket.io": "^2.0.3"
+    "socket.io": "^2.0.3",
+    "twilio": "^3.6.3"
   },
   "devDependencies": {
     "axios-mock-adapter": "^1.9.0",
