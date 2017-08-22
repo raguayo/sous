@@ -3,6 +3,8 @@ const { Recipe, Ingredient, User, IngredientQuantity, SavedRecipe } = require('.
 const { microformatScraper } = require('../scraper/microformat');
 const mapToPeapod = require('../../peapod/mapToPeapod');
 
+let count = 0;
+
 module.exports = router;
 
 router.get('/', (req, res, next) => {
@@ -63,12 +65,18 @@ router.post('/', (req, res, next) => {
             })
               .then(([foundIngredient, ingIsCreated]) => {
                 // TODO: only line different from microformat branch
-                if (ingIsCreated) {
+
+
+                if (ingIsCreated && count < 1) {
                   // map to peapod
+                  count += 1;
                   mapToPeapod(foundIngredient)
-                  .then(peapod => console.log(peapod))
-                  .catch(console.log);
+                  .then(peapod => console.log('Peapod result', peapod))
+                  .catch(err => console.log('Error: ', err));
                 }
+
+
+
                 // if (!ingredient.quantity) ingredient.quantity = 1;
                 return IngredientQuantity.create({ recipeId: newRecipe.id, ingredientId: foundIngredient.id, quantity: ingredient.amount })
                 .then(() => foundIngredient)

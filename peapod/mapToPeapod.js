@@ -7,11 +7,21 @@ const config = require('../secrets');
 
 const peapod = new Peapod(config);
 
+const promisifiedSearch = function (ingredientName) {
+  return new Promise((success, reject) => {
+    peapod.search(ingredientName, (err, result) => {
+      if (err) {
+        return reject(err.message);
+      }
+      success(result);
+    });
+  });
+};
+
 module.exports = function mapToPeapod(ingObj) {
-  peapod.search(ingObj.name, (err, results) => {
-    if (err) {
-      console.log(err)
-    } else {
+  console.log('##########################', ingObj.name)
+  return promisifiedSearch(ingObj.name)
+    .then((results) => {
       const name = ingObj.name;
       // console.log(IngArr[index])
       const peapodName = results.products[0].name;
@@ -52,30 +62,25 @@ module.exports = function mapToPeapod(ingObj) {
       // switch 'EA' with 'CT' to standardize
       if (unitMeasure === 'EA') unitMeasure = 'CT';
       // if (name === 'corn starch') name = 'cornstarch';
-
+      console.log('API Inputs:', name, size, unitMeasure, ingObj.unitMeasure);
       // change Peapod unit and size to match our db
-      return axios.get({
-        baseURL: 'https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/convert',
+      return axios.get(`https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/convert?ingredientName=${name}&sourceAmount=${size}&sourceUnit=${unitMeasure}&targetUnit=${ingObj.unitMeasure}`, {
+        baseURL: 'https://spoonacular-recipe-food-nutrition-v1.p.mashape.com',
         headers: { 'X-Mashape-Key': 'YyZySSmshzmshUvFJgXCNd0oeM57p11ZPWNjsns9qV945YLMWs' },
-        data: {
-          ingredientName: name,
-          sourceAmount: +size,
-          sourceUnit: unitMeasure,
-          targetUnit: ingObj.unitMeasure,
-        },
-      })
-      .then((conversion) => {
-        return PeapodIngredient.findOrCreate({
-          where: {
-            prodId,
-          },
-          defaults: {
-            peapodName, price, size: conversion.targetAmount,
-          },
-        });
-      })
-      .catch(console.error);
+      }).then(res => res.data)
+        .then((conversion) => {
+          console.log('Conversion obj: ', conversion)
+          return PeapodIngredient.findOrCreate({
+            where: {
+              prodId,
+            },
+            defaults: {
+              name: peapodName, price, size: conversion.targetAmount,
+            },
+          });
+        })
+        .catch(console.error);
       // do something better here
-    }
-  });
+    })
+    .catch(err => console.log('Error in mtp: ', err));
 }
