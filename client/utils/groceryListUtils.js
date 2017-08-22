@@ -7,8 +7,10 @@ export function getIngredients(groceryListRecipes) {
       if (foundIng) {
         foundIng.quantity += ingredient.ingredientQuantity.quantity * recipeQuantity;
       } else {
-        const { id, name, prodId, size, unitMeasure } = ingredient;
+        const { id, name, unitMeasure } = ingredient;
         const quantity = ingredient.ingredientQuantity.quantity * recipeQuantity;
+        const prodId = ingredient.peapodIngredient ? ingredient.peapodIngredient.prodId : null;
+        const size = ingredient.peapodIngredient ? ingredient.peapodIngredient.size : null;
         ingredientList.push({
           name,
           id,
