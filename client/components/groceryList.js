@@ -37,20 +37,22 @@ function GroceryList({ ingredients, handleExcludedIngredient, excludedIngredient
                       floated="left"
                       width={13}
                       verticalAlign="middle"
-                      style={{ textDecoration: 'line-through' }}
                       onClick={e =>
                         handleExcludedIngredient(e, ingredient.id)}
-                      label={`${ingredient.name} ${ingredient.displayUnit} ${ingredient.displayQuantity}`}
-                    />
+                    >
+                      <label style={{ textDecoration: 'line-through' }}>${ingredient.name} ${ingredient.displayUnit} ${ingredient.displayQuantity}`</label>
+                      </Grid.Column>
                     : <Grid.Column
                       as={Checkbox}
+                      checked
                       floated="left"
                       width={13}
                       verticalAlign="middle"
                       onClick={e =>
                         handleExcludedIngredient(e, ingredient.id)}
-                      label={`${ingredient.name} ${ingredient.displayUnit} ${ingredient.displayQuantity}`}
-                    />}
+                    >
+                      <label style={{ textDecoration: 'line-through' }}>${ingredient.name} ${ingredient.displayUnit} ${ingredient.displayQuantity}`</label>
+                    </Grid.Column>}
                 </Grid>
               </Segment>
             );
@@ -81,6 +83,7 @@ function GroceryList({ ingredients, handleExcludedIngredient, excludedIngredient
                     floated="left"
                     width={13}
                     verticalAlign="middle"
+                    style={{ textDecoration: 'none' }}
                     onClick={e =>
                       handleExcludedIngredient(e, ingredient.id)}
                     label={`${ingredient.name} ${ingredient.displayUnit} ${ingredient.displayQuantity}`}

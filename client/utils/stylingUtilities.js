@@ -3,10 +3,10 @@ function strikeThrough(e) {
   if (!currSetting || currSetting === 'text-decoration: none') {
     e.target.setAttribute('style', 'text-decoration: line-through');
     return true;
-  } else {
-    e.target.setAttribute('style', 'text-decoration: none');
-    return false;
   }
+  console.log('here');
+  e.target.setAttribute('style', 'text-decoration: none');
+  return false;
 }
 
 module.exports = {
