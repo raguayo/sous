@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 import {
-  Button,
-  Container,
   Grid,
   Header,
   Image,
@@ -21,31 +19,31 @@ export default class Splash extends Component {
             <h2>Your personal recipe manager.</h2>
 
             <div className="buttons" style={styles.buttons}>
-              <Button as={Link} to="/login" primary size="large" style={styles.button}>
+              <Link to="/login" primary size="large" className="splashButton">
                 Log In
-                </Button>
-              <Button primary size="large" as={Link} to="/signup" style={styles.button}>
+                </Link>
+              <Link to="/signup" primary size="large" className="splashButton">
                 Sign Up
-                </Button>
+                </Link>
             </div>
-            <a href="#middle">Learn More</a>
+            <a href="#middle" style={{ color: '#77a95f' }} >Learn More</a>
           </div>
         </div>
 
 
         <Segment style={styles.topSegment} vertical id="middle">
-          <Grid container stackable verticalAlign='middle'>
+          <Grid container stackable verticalAlign="middle">
             <Grid.Row>
               <Grid.Column width={8}>
-                <Header as="h3" style={styles.header}>YUM YUM</Header>
+                <Header as="h3" style={styles.header}>Step 1:</Header>
                 <p style={styles.paragraph}>
-                  Get all your food in one place!
+                  Find a recipe from any website.
                 </p>
               </Grid.Column>
               <Grid.Column floated="right" width={6}>
                 <Image
                   bordered
-                  shape='rounded'
+                  shape="rounded"
                   size="large"
                   src="/assets/images/wireframe/white-image.png"
                 />
@@ -54,17 +52,15 @@ export default class Splash extends Component {
           </Grid>
         </Segment>
         <Segment style={styles.bottomSegement} vertical>
-          <Grid celled='internally' columns='equal' stackable>
-            <Grid.Row textAlign='center'>
+          <Grid celled="internally" columns="equal" stackable>
+            <Grid.Row textAlign="center">
               <Grid.Column style={styles.column}>
-                <Header as='h3' style={styles.header}>"What a Company"</Header>
-                <p style={styles.paragraph}>That is what they all say about us</p>
+                <Header as="h3" style={styles.header}>Step 2:</Header>
+                <p style={styles.paragraph}>Add to your list through our Chrome Extension "link Here" </p>
               </Grid.Column>
               <Grid.Column style={styles.column}>
-                <Header as='h3' style={styles.header}>"I like Eating!"</Header>
-                <p style={styles.paragraph}>
-                  <Image avatar src='/assets/images/avatar/large/nan.jpg' />
-                  <b>Nan</b> - some dude
+                <Header as="h3" style={styles.header}>Step 3:</Header>
+                <p style={styles.paragraph}>Shop!
                 </p>
               </Grid.Column>
             </Grid.Row>
@@ -85,6 +81,7 @@ let styles = {
   },
   header: {
     fontSize: '2em',
+    color: '#946e4f',
   },
   paragraph: {
     fontSize: '1.33em',
@@ -105,14 +102,6 @@ let styles = {
     fontFamily: 'sans-serif',
     fontSize: '3em',
     fontWeight: 'normal',
-  },
-  button: {
-    backgroundColor: '#b28b68',
-    border: 'none',
-    borderRadius: '5px',
-    padding: '0.5rem 1.5rem',
-    fontSize: '1.2rem',
-    color: 'white',
   },
   buttons: {
     marginBottom: '1rem',
