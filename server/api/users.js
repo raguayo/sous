@@ -14,8 +14,6 @@ router.get('/', (req, res, next) => {
 });
 
 router.put('/:id', (req, res, next) => {
-  console.log('req.params: ', req.params);
-  console.log('req.body: ', req.body);
   User.findById(+req.params.id)
     .then((user) => {
       if (!user) {
