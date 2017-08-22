@@ -19,11 +19,9 @@ const promisifiedSearch = function (ingredientName) {
 };
 
 module.exports = function mapToPeapod(ingObj) {
-  console.log('##########################', ingObj.name)
   return promisifiedSearch(ingObj.name)
     .then((results) => {
       const name = ingObj.name;
-      // console.log(IngArr[index])
       const peapodName = results.products[0].name;
       const prodId = results.products[0].prodId;
       let unitMeasure = results.products[0].unitMeasure;
@@ -62,14 +60,12 @@ module.exports = function mapToPeapod(ingObj) {
       // switch 'EA' with 'CT' to standardize
       if (unitMeasure === 'EA') unitMeasure = 'CT';
       // if (name === 'corn starch') name = 'cornstarch';
-      console.log('API Inputs:', name, size, unitMeasure, ingObj.unitMeasure);
       // change Peapod unit and size to match our db
       return axios.get(`https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/convert?ingredientName=${name}&sourceAmount=${size}&sourceUnit=${unitMeasure}&targetUnit=${ingObj.unitMeasure}`, {
         baseURL: 'https://spoonacular-recipe-food-nutrition-v1.p.mashape.com',
         headers: { 'X-Mashape-Key': 'YyZySSmshzmshUvFJgXCNd0oeM57p11ZPWNjsns9qV945YLMWs' },
       }).then(res => res.data)
         .then((conversion) => {
-          console.log('Conversion obj: ', conversion)
           return PeapodIngredient.findOrCreate({
             where: {
               prodId,

@@ -4,8 +4,6 @@ const { microformatScraper } = require('../scraper/microformat');
 const mapToPeapod = require('../../peapod/mapToPeapod');
 const Promise = require('bluebird');
 
-let count = 0;
-
 module.exports = router;
 
 router.get('/', (req, res, next) => {
@@ -78,12 +76,10 @@ router.post('/', (req, res, next) => {
                 // map to peapod
                 peapodPromise = mapToPeapod(foundIngredient);
               }
-              console.log('Peapod promise: ', peapodPromise)
               return Promise.all([foundIngredient, peapodPromise])
             })
             .then(([createdIngredient, peapodIngredient]) => {
               arrOfIngIds.push(createdIngredient.id);
-              if (peapodIngredient) console.log('After peapod ing created', peapodIngredient.dataValues)
               if (peapodIngredient) createdIngredient.setPeapodIngredient(peapodIngredient[0]);
               // if (!ingredient.quantity) ingredient.quantity = 1;
               return IngredientQuantity.create({ recipeId: newRecipe.id, ingredientId: createdIngredient.id, quantity: ingredient.amount })
