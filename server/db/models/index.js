@@ -1,10 +1,10 @@
 const User = require('./user');
 const Recipe = require('./recipe');
+const PeapodIngredient = require('./peapodIng');
 const Ingredient = require('./ingredient');
 const GroceryList = require('./groceryList');
 const IngredientQuantity = require('./ingredientQuantity');
 const SavedRecipe = require('./savedRecipe');
-const PeapodIngredient = require('./peapodIng');
 
 Recipe.belongsToMany(User, { through: 'grocerylist', as: 'groceryListUsers' });
 User.belongsToMany(Recipe, { through: 'grocerylist', as: 'groceryListRecipes' });
@@ -19,6 +19,7 @@ Ingredient.belongsToMany(User, { through: 'excludedingredient', as: 'excludedIng
 User.belongsToMany(Ingredient, { through: 'excludedingredient', as: 'excludedIngredients' });
 
 Ingredient.belongsTo(PeapodIngredient);
+// PeapodIngredient.belongsTo(Ingredient);
 
 /**
  * We'll export all of our models here, so that any time a module needs a model,

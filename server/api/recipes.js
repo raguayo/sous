@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const { Recipe, Ingredient, User, IngredientQuantity, SavedRecipe } = require('../db/models');
 const { microformatScraper } = require('../scraper/microformat');
+const mapToPeapod = require('../../peapod/mapToPeapod');
 
 module.exports = router;
 
@@ -64,6 +65,9 @@ router.post('/', (req, res, next) => {
                 // TODO: only line different from microformat branch
                 if (ingIsCreated) {
                   // map to peapod
+                  mapToPeapod(foundIngredient)
+                  .then(peapod => console.log(peapod))
+                  .catch(console.log);
                 }
                 // if (!ingredient.quantity) ingredient.quantity = 1;
                 return IngredientQuantity.create({ recipeId: newRecipe.id, ingredientId: foundIngredient.id, quantity: ingredient.amount })

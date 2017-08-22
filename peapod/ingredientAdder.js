@@ -301,8 +301,8 @@ function addIngredients(IngArr, index) {
     if (err) {
       console.log(err)
     } else {
-      // let name = IngArr[index].name;
-      // console.log(IngArr[index])
+      let name = IngArr[index].name;
+      console.log(IngArr[index])
       const peapodName = results.products[0].name;
       const prodId = results.products[0].prodId;
       let unitMeasure = results.products[0].unitMeasure;
@@ -325,14 +325,6 @@ function addIngredients(IngArr, index) {
           unitMeasure = 'count';
         }
       }
-      // change Peapod unit and size to match our db
-      axios.get( , {
-        baseURL: 'https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/convert',
-        headers:  {"X-Mashape-Key": "YyZySSmshzmshUvFJgXCNd0oeM57p11ZPWNjsns9qV945YLMWs"},
-      })
-
-
-
       // handle if there are pk and ct included in the ingredient name
       const hyphenIdx = peapodName.lastIndexOf('-');
       if (+hyphenIdx > (peapodName.length - 10)) {
@@ -348,7 +340,7 @@ function addIngredients(IngArr, index) {
       size = convertSizeToNumber(size);
       // switch 'EA' with 'CT' to standardize
       if (unitMeasure === 'EA') unitMeasure = 'CT';
-      // if (name === 'corn starch') name = 'cornstarch';
+      if (name === 'corn starch') name = 'cornstarch';
 
       PeapodIngredient.findOrCreate({
         where: {

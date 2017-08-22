@@ -18,8 +18,4 @@ const Ingredient = db.define('ingredient', {
   },
 });
 
-Ingredient.prototype.mapToPeapod = () => {
-
-}
-
 module.exports = Ingredient;
