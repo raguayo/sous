@@ -1,5 +1,6 @@
 const Sequelize = require('sequelize');
 const db = require('../db');
+const PeapodIngredient = require('./peapodIng');
 
 const Ingredient = db.define('ingredient', {
   name: {
@@ -15,6 +16,12 @@ const Ingredient = db.define('ingredient', {
   },
   prodId: {
     type: Sequelize.INTEGER,
+  },
+}, {
+  defaultScope: {
+    include: [
+      { model: PeapodIngredient },
+    ],
   },
 });
 

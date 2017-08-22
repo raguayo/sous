@@ -2,6 +2,7 @@ const router = require('express').Router();
 const { Recipe, Ingredient, User, IngredientQuantity, SavedRecipe } = require('../db/models');
 const { microformatScraper } = require('../scraper/microformat');
 const mapToPeapod = require('../../peapod/mapToPeapod');
+const Promise = require('bluebird');
 
 let count = 0;
 
@@ -53,8 +54,14 @@ router.post('/', (req, res, next) => {
 
         // TODO: consider modularizing with adding passed argument if from microformat branch
         if (isCreated) {
-          const arrIngredientPromises = arrIngredients.map((ingredient) => {
-            if (ingredient.unit === '') ingredient.unit = 'count';
+          const arrOfIngIds = [];
+          // const promise = Promise.resolve(0);
+          // const arrIngredientPromises = arrIngredients.map((ingredient) => {
+          Promise.each(arrIngredients, (ingredient) => {
+            // for (let i = 0; i < arrIngredients.length; i++) {
+            // const ingredient = arrIngredients[i];
+            if (ingredient.unit === '') ingredient.unit = 'piece';
+            // promise.then(() => {
             return Ingredient.findOrCreate({
               where: {
                 name: ingredient.name,
@@ -63,35 +70,38 @@ router.post('/', (req, res, next) => {
                 unitMeasure: ingredient.unit,
               },
             })
-              .then(([foundIngredient, ingIsCreated]) => {
-                // TODO: only line different from microformat branch
+            .then(([foundIngredient, ingIsCreated]) => {
+              // TODO: only line different from microformat branch
+              let peapodPromise;
 
-
-                if (ingIsCreated && count < 1) {
-                  // map to peapod
-                  count += 1;
-                  mapToPeapod(foundIngredient)
-                  .then(peapod => console.log('Peapod result', peapod))
-                  .catch(err => console.log('Error: ', err));
-                }
-
-
-
-                // if (!ingredient.quantity) ingredient.quantity = 1;
-                return IngredientQuantity.create({ recipeId: newRecipe.id, ingredientId: foundIngredient.id, quantity: ingredient.amount })
-                .then(() => foundIngredient)
-                .catch(next);
-              })
-              .catch(next);
-          });
-
-          // TODO: modularize - same as in microformat branch
-          return Promise.all([newRecipe, ...arrIngredientPromises])
-            .then(([recipe, ...ingredients]) => {
-              const ingArr = recipe.addIngredients(ingredients);
-              return Promise.all([newRecipe, ingArr]);
+              if (ingIsCreated) {
+                // map to peapod
+                peapodPromise = mapToPeapod(foundIngredient);
+              }
+              console.log('Peapod promise: ', peapodPromise)
+              return Promise.all([foundIngredient, peapodPromise])
             })
-            .then(([recipe, ingredientsArr]) => Recipe.findById(recipe.id))
+            .then(([createdIngredient, peapodIngredient]) => {
+              arrOfIngIds.push(createdIngredient.id);
+              if (peapodIngredient) console.log('After peapod ing created', peapodIngredient.dataValues)
+              if (peapodIngredient) createdIngredient.setPeapodIngredient(peapodIngredient[0]);
+              // if (!ingredient.quantity) ingredient.quantity = 1;
+              return IngredientQuantity.create({ recipeId: newRecipe.id, ingredientId: createdIngredient.id, quantity: ingredient.amount })
+                // .then(() => Ingredient.findById(createdIngredient.id))
+                .catch(next);
+            })
+            .catch(next);
+          })
+          // }
+          // });
+          .then(() => newRecipe.addIngredients(arrOfIngIds))
+            // TODO: modularize - same as in microformat branch
+            // return Promise.all([newRecipe, ...arrIngredientPromises])
+            // .then(([recipe, ...ingredients]) => {
+            //   const ingArr = recipe.addIngredients(ingredients);
+            //   return Promise.all([newRecipe, ingArr]);
+            // })
+            // .then(() => Recipe.findById(newRecipe.id))
             .then(() => res.sendStatus(201))
             .catch(next);
         } else {

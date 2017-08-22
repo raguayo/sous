@@ -43,7 +43,7 @@ module.exports = function mapToPeapod(ingObj) {
           unitMeasure = newUnitMatchArr[0];
           size = size.slice(0, size.indexOf(unitMeasure));
         } else {
-          unitMeasure = 'count';
+          unitMeasure = 'piece';
         }
       }
       // handle if there are pk and ct included in the ingredient name
@@ -52,7 +52,7 @@ module.exports = function mapToPeapod(ingObj) {
         const potentialAdjustmentArr = peapodName.slice(hyphenIdx + 1).split(' ');
         if (potentialAdjustmentArr.includes('ct')) {
           size = potentialAdjustmentArr.slice(0, potentialAdjustmentArr.indexOf('ct')).join();
-          unitMeasure = 'count';
+          unitMeasure = 'piece';
         } else if (potentialAdjustmentArr[1] === 'pk') {
           size *= +potentialAdjustmentArr[0];
         }

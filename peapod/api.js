@@ -131,7 +131,6 @@ Peapod.prototype.makeLoginRequest = function(cb) {
         if (err) {
             cb(err)
         } else if (res.statusCode !== 200) {
-            console.log(res)
             cb(new Error(body.msg));
         } else {
             cb(null);
