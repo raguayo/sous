@@ -67,7 +67,7 @@ export const editUserName = updatedUser => dispatch =>
     .catch(addError);
 
 export const editUserEmail = updatedUser => dispatch =>
-  axios.put(`/api/users/${updatedUser.id}`, { name: updatedUser.email })
+  axios.put(`/api/users/${updatedUser.id}`, { email: updatedUser.email })
     .then(res => res.data)
     .then((user) => {
       dispatch(updateUserEmail(user));
@@ -75,7 +75,7 @@ export const editUserEmail = updatedUser => dispatch =>
     .catch(addError);
 
 export const editUserPassword = updatedUser => dispatch =>
-  axios.put(`/api/users/${updatedUser.id}`, { name: updatedUser.password })
+  axios.put(`/api/users/${updatedUser.id}`, { password: updatedUser.password })
     .then(res => res.data)
     .then((user) => {
       dispatch(updateUserPassword(user));
