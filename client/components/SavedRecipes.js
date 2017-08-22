@@ -37,7 +37,7 @@ function SavedRecipes({ favRecipes, prevRecipes, handleDelete, handleFavorite, h
           }
         </Segment.Group>
       </Segment.Group>
-      <Header as="h2">All the recipes you&amp;ve added:</Header>
+      <Header as="h2">All the recipes you've added:</Header>
       <Segment.Group>
         <Segment>
           <p>Previous Recipes:</p>

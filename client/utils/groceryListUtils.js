@@ -9,12 +9,14 @@ export function getIngredients(groceryListRecipes) {
       } else {
         const { id, name, unitMeasure } = ingredient;
         const quantity = ingredient.ingredientQuantity.quantity * recipeQuantity;
+        const prodId = ingredient.peapodIngredient ? ingredient.peapodIngredient.prodId : null;
+        const size = ingredient.peapodIngredient ? ingredient.peapodIngredient.size : null;
         ingredientList.push({
           name,
           id,
-          prodId: ingredient.peapodIngredient.prodId,
+          prodId,
           unitMeasure,
-          size: ingredient.peapodIngredient.size,
+          size,
           quantity,
         });
       }
