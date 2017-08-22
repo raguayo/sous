@@ -46,7 +46,6 @@ function GroceryList({ ingredients, handleExcludedIngredient, excludedIngredient
                         handleExcludedIngredient(excludedIngredients, ingredient.id)}
                       label={`${ingredient.name} ${ingredient.displayUnit} ${ingredient.displayQuantity}`}
                     >
-                      <label style={{ textDecoration: 'line-through' }}>${ingredient.name} ${ingredient.displayUnit} ${ingredient.displayQuantity}`</label>
                     </Grid.Column>
                     : <Grid.Column
                       as={Checkbox}
@@ -58,7 +57,6 @@ function GroceryList({ ingredients, handleExcludedIngredient, excludedIngredient
                         handleExcludedIngredient(excludedIngredients, ingredient.id)}
                       label={`${ingredient.name} ${ingredient.displayUnit} ${ingredient.displayQuantity}`}
                     >
-                      <label style={{ textDecoration: 'line-through' }}>${ingredient.name} ${ingredient.displayUnit} ${ingredient.displayQuantity}`</label>
                     </Grid.Column>}
                 </Grid>
               </Segment>
