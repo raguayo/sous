@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import React from 'react';
 
 import { Container, Grid, Header, Segment, Checkbox, Button, Modal, Input, Form, Accordion, Message, Card, Image } from 'semantic-ui-react';
-import { postNewExcluded, deleteExcludedIngredient, addItemsToPeapodCart, deleteRecipesFromList, textGroceryList, addSuggestedRecipes } from '../store';
+import { postNewExcluded, deleteExcludedIngredient, addItemsToPeapodCart, deleteRecipesFromList, textGroceryList, addSuggestedRecipes, removeSuggestedRecipes } from '../store';
 import { strikeThrough, getIngredients, addDisplayUnits, calculateLeftovers, filterPeapodIng, getLeftoverRecipes,
   getLeftoverRecipeDetails, hasSufficientQuantities } from '../utils';
 
@@ -25,11 +25,12 @@ const styles = {
 class GroceryList extends React.Component {
 
   componentDidMount() {
+    console.log('Runing suggestion')
     this.props.generateLeftoverSuggestions(this.props.peapodIngredients);
   }
 
   render() {
-    const { ingredients, excludedIngredients, peapodIngredients, handleExcludedIngredient, handleCartPurchase, handleClearList, handleSendText, suggestedRecipes } = this.props;
+    const { ingredients, excludedIngredients, peapodIngredients, handleExcludedIngredient, handleCartPurchase, handleClearList, handleSendText, suggestedRecipes, handleRejectSuggestedRecipes } = this.props;
 
     return (
       <div style={{ position: 'relative' }}>
@@ -189,7 +190,7 @@ class GroceryList extends React.Component {
                   } />
               </Card.Content>
               <Card.Content>
-                <Button>No Thanks</Button>
+                <Button onClick={() => handleRejectSuggestedRecipes()}>No Thanks</Button>
               </Card.Content>
             </Card> : null
         }
@@ -243,6 +244,7 @@ const mapDispatch = (dispatch) => {
       .then(leftoverRecipes => getLeftoverRecipeDetails(leftoverRecipes))
       .then(results => hasSufficientQuantities(leftovers, results))
       .then((suggRecipes) => {
+        console.log('Sugg rec: ', suggRecipes)
         dispatch(addSuggestedRecipes(suggRecipes));
       })
       .catch(console.error);
@@ -256,6 +258,9 @@ const mapDispatch = (dispatch) => {
         return [ingredient.displayQuantity, ingredient.displayUnit, ingredient.name];
       });
       dispatch(textGroceryList(number, ingredientArr));
+    },
+    handleRejectSuggestedRecipes() {
+      dispatch(removeSuggestedRecipes());
     },
   };
 };
@@ -272,20 +277,5 @@ GroceryList.propTypes = {
   handleClearList: PropTypes.func.isRequired,
   generateLeftoverSuggestions: PropTypes.func.isRequired,
   handleSendText: PropTypes.func.isRequired,
+  handleRejectSuggestedRecipes: PropTypes.func.isRequired,
 };
-
-
-             {/* <Message>
-              <Message.Header>
-                I noticed you'd have some extra ingredients. Here are some recipes that would make use of those.
-              </Message.Header>
-              <Accordion
-                panels={suggestedRecipes.map(rec => {
-                  return {
-                    title: rec.title,
-                    content: `Number of Servings: ${rec.servings}`
-                  };
-                })
-                } />
-            </Message>
-            : null  */}
