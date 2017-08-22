@@ -1,5 +1,6 @@
 const User = require('./user');
 const Recipe = require('./recipe');
+const PeapodIngredient = require('./peapodIng');
 const Ingredient = require('./ingredient');
 const GroceryList = require('./groceryList');
 const IngredientQuantity = require('./ingredientQuantity');
@@ -17,10 +18,13 @@ Ingredient.belongsToMany(Recipe, { through: 'ingredientQuantity' });
 Ingredient.belongsToMany(User, { through: 'excludedingredient', as: 'excludedIngredientUsers' });
 User.belongsToMany(Ingredient, { through: 'excludedingredient', as: 'excludedIngredients' });
 
+Ingredient.belongsTo(PeapodIngredient);
+// PeapodIngredient.belongsTo(Ingredient);
+
 /**
  * We'll export all of our models here, so that any time a module needs a model,
  * we can just require it from 'db/models'
  * for example, we can say: const {User} = require('../db/models')
  * instead of: const User = require('../db/models/user')
  */
-module.exports = { User, Recipe, Ingredient, IngredientQuantity, GroceryList, SavedRecipe };
+module.exports = { User, Recipe, Ingredient, IngredientQuantity, GroceryList, SavedRecipe, PeapodIngredient };
