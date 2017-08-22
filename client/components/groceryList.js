@@ -19,7 +19,7 @@ const styles = {
 function GroceryList({ ingredients, handleExcludedIngredient, excludedIngredients, handleCartPurchase, handleClearList, handleSendText, handleLeftoverSuggestions }) {
 
   const peapodIngredients = filterPeapodIng(ingredients, excludedIngredients);
-  handleLeftoverSuggestions(peapodIngredients);
+  // handleLeftoverSuggestions(peapodIngredients);
 
   return (
     <Container style={styles.container}>
