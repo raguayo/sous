@@ -12,3 +12,16 @@ router.get('/', (req, res, next) => {
     .then(users => res.json(users))
     .catch(next);
 });
+
+router.put('/:id', (req, res, next) => {
+  User.findById(+req.params.id)
+    .then((user) => {
+      if (!user) {
+        return res.sendStatus(404);
+      } else {
+        return user.update(req.body);
+      }
+    })
+    .then(updatedUser => res.send(updatedUser))
+    .catch(next);
+});
