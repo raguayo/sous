@@ -1,9 +1,11 @@
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import React from 'react';
+
 import { Container, Grid, Header, Segment, Checkbox, Button, Modal, Input, Form } from 'semantic-ui-react';
 import { postNewExcluded, deleteExcludedIngredient, addItemsToPeapodCart, deleteRecipesFromList, textGroceryList } from '../store';
-import { strikeThrough, getIngredients, addDisplayUnits } from '../utils';
+import { strikeThrough, getIngredients, addDisplayUnits, calculateLeftovers, filterPeapodIng, getLeftoverRecipes,
+  getLeftoverRecipeDetails, hasSufficientQuantities } from '../utils';
 
 const styles = {
   container: {
@@ -14,8 +16,11 @@ const styles = {
   },
 };
 
+function GroceryList({ ingredients, handleExcludedIngredient, excludedIngredients, handleCartPurchase, handleClearList, handleSendText, handleLeftoverSuggestions }) {
 
-function GroceryList({ ingredients, handleExcludedIngredient, excludedIngredients, handleCartPurchase, handleClearList, handleSendText }) {
+  const peapodIngredients = filterPeapodIng(ingredients, excludedIngredients);
+  // handleLeftoverSuggestions(peapodIngredients);
+
   return (
     <Container style={styles.container}>
       <Header as="h2" style={styles.header}>
@@ -105,7 +110,7 @@ function GroceryList({ ingredients, handleExcludedIngredient, excludedIngredient
                   <Form
                     size="large"
                     onSubmit={e =>
-                      handleCartPurchase(ingredients, excludedIngredients, e)}
+                      handleCartPurchase(peapodIngredients, e)}
                     name={name}
                   >
                     <Segment stacked>
@@ -152,7 +157,7 @@ function GroceryList({ ingredients, handleExcludedIngredient, excludedIngredient
       </Segment.Group>
     </Container>
   );
-};
+}
 
 const mapState = (state) => {
   return {
@@ -170,20 +175,15 @@ const mapDispatch = (dispatch) => {
         dispatch(deleteExcludedIngredient(excludedId));
       }
     },
-    handleCartPurchase(ingredients, excludedIds, e) {
-      const itemArr = ingredients
-        .map((ingredientObj) => {
-          if (excludedIds.includes(ingredientObj.id) || !ingredientObj.prodId) {
-            return null;
-          }
-          return {
-            id: ingredientObj.id,
-            productId: ingredientObj.prodId,
-            coupon: null,
-            quantity: Math.ceil(ingredientObj.quantity / ingredientObj.size)
-          };
-        })
-        .filter(ing => !!ing);
+    handleCartPurchase(peapodItems, e) {
+      const itemArr = peapodItems.map((ingredientObj) => {
+        return {
+          id: ingredientObj.id,
+          productId: ingredientObj.prodId,
+          coupon: null,
+          quantity: Math.ceil(ingredientObj.quantity / ingredientObj.size),
+        };
+      });
       const peapodLoginCreds = {
         username: e.target.username.value,
         password: e.target.password.value,
@@ -192,6 +192,17 @@ const mapDispatch = (dispatch) => {
     },
     handleClearList() {
       dispatch(deleteRecipesFromList());
+    },
+    handleLeftoverSuggestions(peapodIngredients) {
+      const leftovers = calculateLeftovers(peapodIngredients);
+      console.log('Leftovers: ', leftovers)
+      getLeftoverRecipes(leftovers)
+      .then(leftoverRecipes => getLeftoverRecipeDetails(leftoverRecipes))
+      .then(results => {
+        console.log('Results: ', results)
+        hasSufficientQuantities(peapodIngredients, results)
+      })
+      .catch(console.error);
     },
     handleSendText(e, ingredients, excludedIds) {
       const number = e.target.number.value;
@@ -214,5 +225,6 @@ GroceryList.propTypes = {
   ingredients: PropTypes.array.isRequired,
   handleExcludedIngredient: PropTypes.func.isRequired,
   handleClearList: PropTypes.func.isRequired,
+  handleLeftoverSuggestions: PropTypes.func.isRequired,
   handleSendText: PropTypes.func.isRequired,
 };
