@@ -16,7 +16,6 @@ const styles = {
 };
 
 function Navbar(props) {
-  const user = props.currentUser;
   return (
     <div>
       <div className="topnav" id="myTopnav">
@@ -25,9 +24,6 @@ function Navbar(props) {
         <Link to={'/recipes'} style={styles.logo}>sous</Link>
         <Link to={'/user-profile'}>Profile</Link>
         <Link to={'/'}onClick={props.logout}>Log out</Link>
-      </div>
-      <div style={styles.logo}>
-        {user.name ? `Welcome ${user.name}` : null}
       </div>
     </div>
   );
@@ -45,7 +41,6 @@ const mapDispatch = dispatch => ({
 });
 
 Navbar.propTypes = {
-  currentUser: PropTypes.object.isRequired,
   logout: PropTypes.func.isRequired,
 };
 

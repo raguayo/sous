@@ -4,8 +4,7 @@ import React from 'react';
 
 import { Container, Grid, Header, Segment, Checkbox, Button, Modal, Input, Form, Accordion, Message, Card, Image } from 'semantic-ui-react';
 import { postNewExcluded, deleteExcludedIngredient, addItemsToPeapodCart, deleteRecipesFromList, textGroceryList, addSuggestedRecipes, removeSuggestedRecipes } from '../store';
-import { strikeThrough, getIngredients, addDisplayUnits, calculateLeftovers, filterPeapodIng, getLeftoverRecipes,
-  getLeftoverRecipeDetails, hasSufficientQuantities } from '../utils';
+import { getIngredients, addDisplayUnits, calculateLeftovers, filterPeapodIng, getLeftoverRecipes, getLeftoverRecipeDetails, hasSufficientQuantities } from '../utils';
 
 const styles = {
   container: {
@@ -19,7 +18,7 @@ const styles = {
     zIndex: 1000,
     top: '40px',
     right: '40px',
-  }
+  },
 };
 
 class GroceryList extends React.Component {
@@ -37,7 +36,7 @@ class GroceryList extends React.Component {
         <Container style={styles.container}>
           <Header as="h2" style={styles.header}>
             Grocery List
-        </Header>
+      </Header>
           <Segment.Group>
             <Segment>
               <p>Ingredients:</p>
@@ -56,18 +55,21 @@ class GroceryList extends React.Component {
                           verticalAlign="middle"
                           style={{ textDecoration: 'line-through' }}
                           onClick={e =>
-                            handleExcludedIngredient(e, ingredient.id)}
+                            handleExcludedIngredient(excludedIngredients, ingredient.id)}
                           label={`${ingredient.name} ${ingredient.displayUnit} ${ingredient.displayQuantity}`}
-                        />
+                        >
+                        </Grid.Column>
                         : <Grid.Column
                           as={Checkbox}
                           floated="left"
                           width={13}
                           verticalAlign="middle"
+                          style={{ textDecoration: 'none' }}
                           onClick={e =>
-                            handleExcludedIngredient(e, ingredient.id)}
+                            handleExcludedIngredient(excludedIngredients, ingredient.id)}
                           label={`${ingredient.name} ${ingredient.displayUnit} ${ingredient.displayQuantity}`}
-                        />}
+                        >
+                        </Grid.Column>}
                     </Grid>
                   </Segment>
                 );
@@ -90,7 +92,7 @@ class GroceryList extends React.Component {
                           verticalAlign="middle"
                           style={{ textDecoration: 'line-through' }}
                           onClick={e =>
-                            handleExcludedIngredient(e, ingredient.id)}
+                            handleExcludedIngredient(excludedIngredients, ingredient.id)}
                           label={`${ingredient.name} ${ingredient.displayUnit} ${ingredient.displayQuantity}`}
                         />
                         : <Grid.Column
@@ -98,8 +100,9 @@ class GroceryList extends React.Component {
                           floated="left"
                           width={13}
                           verticalAlign="middle"
+                          style={{ textDecoration: 'none' }}
                           onClick={e =>
-                            handleExcludedIngredient(e, ingredient.id)}
+                            handleExcludedIngredient(excludedIngredients, ingredient.id)}
                           label={`${ingredient.name} ${ingredient.displayUnit} ${ingredient.displayQuantity}`}
                         />}
                     </Grid>
@@ -167,33 +170,33 @@ class GroceryList extends React.Component {
               </Modal.Content>
             </Modal>
           </Segment.Group>
-        {
-          suggestedRecipes.length ?
-            <Card style={styles.suggestedRecipeCard}>
-              <Card.Content>
-                <Image floated='right' size='mini' src='https://d30y9cdsu7xlg0.cloudfront.net/png/50479-200.png' />
-                <Card.Header>
-                  I noticed you'd have some extra ingredients. Here are some recipes that would make use of those.
+          {
+            suggestedRecipes.length ?
+              <Card style={styles.suggestedRecipeCard}>
+                <Card.Content>
+                  <Image floated='right' size='mini' src='https://d30y9cdsu7xlg0.cloudfront.net/png/50479-200.png' />
+                  <Card.Header>
+                    I noticed you'd have some extra ingredients. Here are some recipes that would make use of those.
                 </Card.Header>
-                <Card.Meta>
-                  - Sous
+                  <Card.Meta>
+                    - Sous
                 </Card.Meta>
-              </Card.Content>
-              <Card.Content extra>
-                <Accordion
-                  panels={suggestedRecipes.map(rec => {
-                    return {
-                      title: rec.title,
-                      content: `Number of Servings: ${rec.servings}`
-                    };
-                  })
-                  } />
-              </Card.Content>
-              <Card.Content>
-                <Button onClick={() => handleRejectSuggestedRecipes()}>No Thanks</Button>
-              </Card.Content>
-            </Card> : null
-        }
+                </Card.Content>
+                <Card.Content extra>
+                  <Accordion
+                    panels={suggestedRecipes.map(rec => {
+                      return {
+                        title: rec.title,
+                        content: `Number of Servings: ${rec.servings}`
+                      };
+                    })
+                    } />
+                </Card.Content>
+                <Card.Content>
+                  <Button onClick={() => handleRejectSuggestedRecipes()}>No Thanks</Button>
+                </Card.Content>
+              </Card> : null
+          }
         </Container>
       </div>
     );
@@ -213,11 +216,11 @@ const mapState = (state) => {
 
 const mapDispatch = (dispatch) => {
   return {
-    handleExcludedIngredient(e, excludedId) {
-      if (strikeThrough(e)) {
-        dispatch(postNewExcluded(excludedId));
+    handleExcludedIngredient(excludedIngredients, ingredientId) {
+      if (excludedIngredients.indexOf(ingredientId) < 0) {
+        dispatch(postNewExcluded(ingredientId));
       } else {
-        dispatch(deleteExcludedIngredient(excludedId));
+        dispatch(deleteExcludedIngredient(ingredientId));
       }
     },
     handleCartPurchase(peapodItems, e) {
@@ -241,13 +244,13 @@ const mapDispatch = (dispatch) => {
     generateLeftoverSuggestions(peapodIngredients) {
       const leftovers = calculateLeftovers(peapodIngredients);
       getLeftoverRecipes(leftovers)
-      .then(leftoverRecipes => getLeftoverRecipeDetails(leftoverRecipes))
-      .then(results => hasSufficientQuantities(leftovers, results))
-      .then((suggRecipes) => {
-        console.log('Sugg rec: ', suggRecipes)
-        dispatch(addSuggestedRecipes(suggRecipes));
-      })
-      .catch(console.error);
+        .then(leftoverRecipes => getLeftoverRecipeDetails(leftoverRecipes))
+        .then(results => hasSufficientQuantities(leftovers, results))
+        .then((suggRecipes) => {
+          console.log('Sugg rec: ', suggRecipes)
+          dispatch(addSuggestedRecipes(suggRecipes));
+        })
+        .catch(console.error);
     },
     handleSendText(e, ingredients, excludedIds) {
       const number = e.target.number.value;
