@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import React from 'react';
 import { Container, Grid, Header, Segment, Checkbox, Button, Modal, Input, Form } from 'semantic-ui-react';
 import { postNewExcluded, deleteExcludedIngredient, addItemsToPeapodCart, deleteRecipesFromList, textGroceryList } from '../store';
-import { strikeThrough, getIngredients, addDisplayUnits } from '../utils';
+import { getIngredients, addDisplayUnits } from '../utils';
 
 const styles = {
   container: {
@@ -38,10 +38,10 @@ function GroceryList({ ingredients, handleExcludedIngredient, excludedIngredient
                       width={13}
                       verticalAlign="middle"
                       onClick={e =>
-                        handleExcludedIngredient(e, ingredient.id)}
+                        handleExcludedIngredient(excludedIngredients, ingredient.id)}
                     >
                       <label style={{ textDecoration: 'line-through' }}>${ingredient.name} ${ingredient.displayUnit} ${ingredient.displayQuantity}`</label>
-                      </Grid.Column>
+                    </Grid.Column>
                     : <Grid.Column
                       as={Checkbox}
                       checked
@@ -49,7 +49,7 @@ function GroceryList({ ingredients, handleExcludedIngredient, excludedIngredient
                       width={13}
                       verticalAlign="middle"
                       onClick={e =>
-                        handleExcludedIngredient(e, ingredient.id)}
+                        handleExcludedIngredient(excludedIngredients, ingredient.id)}
                     >
                       <label style={{ textDecoration: 'line-through' }}>${ingredient.name} ${ingredient.displayUnit} ${ingredient.displayQuantity}`</label>
                     </Grid.Column>}
@@ -62,32 +62,32 @@ function GroceryList({ ingredients, handleExcludedIngredient, excludedIngredient
           <p>Unknown Ingredients:</p>
         </Segment>
         <Segment.Group>
-          {ingredients.filter(ing => !ing.prodId).map(ingredient => {
+          {ingredients.filter(ing => !ing.prodId).map((ingredient) => {
             return (
               <Segment key={ingredient.id}>
                 <Grid>
                   {excludedIngredients.indexOf(ingredient.id) !== -1
-                ? <Grid.Column
-                  as={Checkbox}
-                  checked
-                  floated="left"
-                  width={13}
-                  verticalAlign="middle"
-                  style={{ textDecoration: 'line-through' }}
-                  onClick={e =>
-                    handleExcludedIngredient(e, ingredient.id)}
-                  label={`${ingredient.name} ${ingredient.displayUnit} ${ingredient.displayQuantity}`}
-                />
-                  : <Grid.Column
-                    as={Checkbox}
-                    floated="left"
-                    width={13}
-                    verticalAlign="middle"
-                    style={{ textDecoration: 'none' }}
-                    onClick={e =>
-                      handleExcludedIngredient(e, ingredient.id)}
-                    label={`${ingredient.name} ${ingredient.displayUnit} ${ingredient.displayQuantity}`}
-                  />}
+                    ? <Grid.Column
+                      as={Checkbox}
+                      checked
+                      floated="left"
+                      width={13}
+                      verticalAlign="middle"
+                      style={{ textDecoration: 'line-through' }}
+                      onClick={e =>
+                        handleExcludedIngredient(excludedIngredients, ingredient.id)}
+                      label={`${ingredient.name} ${ingredient.displayUnit} ${ingredient.displayQuantity}`}
+                    />
+                    : <Grid.Column
+                      as={Checkbox}
+                      floated="left"
+                      width={13}
+                      verticalAlign="middle"
+                      style={{ textDecoration: 'none' }}
+                      onClick={e =>
+                        handleExcludedIngredient(excludedIngredients, ingredient.id)}
+                      label={`${ingredient.name} ${ingredient.displayUnit} ${ingredient.displayQuantity}`}
+                    />}
                 </Grid>
               </Segment>
             );
@@ -155,7 +155,7 @@ function GroceryList({ ingredients, handleExcludedIngredient, excludedIngredient
       </Segment.Group>
     </Container>
   );
-};
+}
 
 const mapState = (state) => {
   return {
@@ -166,11 +166,11 @@ const mapState = (state) => {
 
 const mapDispatch = (dispatch) => {
   return {
-    handleExcludedIngredient(e, excludedId) {
-      if (strikeThrough(e)) {
-        dispatch(postNewExcluded(excludedId));
+    handleExcludedIngredient(excludedIngredients, ingredientId) {
+      if (excludedIngredients.indexOf(ingredientId) < 0) {
+        dispatch(postNewExcluded(ingredientId));
       } else {
-        dispatch(deleteExcludedIngredient(excludedId));
+        dispatch(deleteExcludedIngredient(ingredientId));
       }
     },
     handleCartPurchase(ingredients, excludedIds, e) {
