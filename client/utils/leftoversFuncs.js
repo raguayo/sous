@@ -1,8 +1,10 @@
 import axios from 'axios';
+import distance from 'jaro-winkler';
+import Promise from "bluebird";
 
 const config = {
   baseURL: 'https://spoonacular-recipe-food-nutrition-v1.p.mashape.com',
-  headers: { 'X-Mashape-Key': process.env.RECIPE_API_KEY },
+  headers: { 'X-Mashape-Key': 'QpiCUHgeacmsh7OCAFkHGpAnLuFjp1Oeo8ljsnR10CzIJ4x9oM' },
 };
 
 export function calculateLeftovers(arrOfPeapodIng) {
@@ -28,14 +30,14 @@ export function filterPeapodIng(ingredients, excludedIds) {
 }
 
 export function getLeftoverRecipes(leftoverArr) {
-  const ingredientCSV = leftoverArr.map((leftoverObj) =>{
+  const ingredientCSV = leftoverArr.map((leftoverObj) => {
     return leftoverObj.name.replace(' ', '+');
   }).join('%2C');
   return axios.get(
-  `/recipes/findByIngredients?fillIngredients=false&ingredients=${ingredientCSV}&limitLicense=false&number=3&ranking=1`,
-  config)
-  .then(res => res.data)
-  .catch(console.error);
+    `/recipes/findByIngredients?fillIngredients=false&ingredients=${ingredientCSV}&limitLicense=false&number=10&ranking=2`,
+    config)
+    .then(res => res.data)
+    .catch(console.error);
 }
 
 export function getLeftoverRecipeDetails(arrOfRecipes) {
@@ -51,26 +53,71 @@ export function getLeftoverRecipeDetails(arrOfRecipes) {
   }));
 }
 
-export function hasSufficientQuantity(leftoverIngredients, recipeObj) {
-  console.log('********* New RECIPE', recipeObj.title)
-  return recipeObj.extendedIngredients.every((recipeIng) => {
-    const leftoverIng = leftoverIngredients.find(ing => {
-      console.log('Inputs', recipeIng.name, ing.name)
-      return ing.name === recipeIng.name;
-      // misses garlic cloves, red onion,
+function isTheSameIngredient(name1, name2) {
+  const name1Arr = name1.split(' ');
+  const name2Arr = name2.split(' ');
+  let rating = 0;
+  name1Arr.forEach((firstIngNameWord) => {
+    let anyMatches = false;
+    name2Arr.forEach((secondIngNameWord) => {
+      const wordSimilarityScore = distance(firstIngNameWord, secondIngNameWord);
+      if (wordSimilarityScore > 0.87) {
+        rating += wordSimilarityScore;
+        anyMatches = true;
+      }
     });
-    console.log('Result:', leftoverIng)
-    if (leftoverIng) {
-      // console.log('Ing unit', leftoverIng.unitMeasure, 'Recipe unit', recipeObj.unit)
-      return leftoverIng.quantity > recipeIng.amount;
-    }
-    // might have to convert units for this
-    return true;
+    if (!anyMatches) rating -= 0.5;
   });
+  return rating > 0.5;
+}
+
+function convertRecipeUnit(recipeIng, targetUnit) {
+  const formattedIngName = recipeIng.name.replace(' ', '+');
+  return axios.get(
+    `/recipes/convert?ingredientName=${formattedIngName}&sourceAmount=${recipeIng.amount}&sourceUnit=${recipeIng.unit}&targetUnit=${targetUnit}'`,
+    config)
+    .then(res => res.data)
+    .catch(console.error);
+}
+
+export function hasSufficientQuantity(leftoverIngredients, recipeObj) {
+  // return Promise.all an array of bools and boolPromises
+  // .then(return arrOfBools.every(bool => bool))
+  // .catch(return false)
+  const arrOfBoolsAndBoolPromises = [];
+  recipeObj.extendedIngredients.forEach((recipeIng) => {
+    const leftoverIng = leftoverIngredients.find((ing) => {
+      return isTheSameIngredient(ing.name, recipeIng.name);
+    });
+    if (leftoverIng) {
+      if (leftoverIng.unit !== recipeIng.unit) {
+        const boolPromise = convertRecipeUnit(recipeIng, leftoverIng.unit)
+          .then((result) => {
+            console.log('After Conversion: LO: ', leftoverIng.leftoverAmount, leftoverIng.unit, ' REC: ', result.targetAmount, result.targetUnit);
+            if (leftoverIng.leftoverAmount < result.targetAmount) throw new Error('psuedo false result');
+            else return true;
+          })
+          .catch((err) => {
+            console.error(err)
+            throw err;
+          });
+
+        arrOfBoolsAndBoolPromises.push(boolPromise);
+      } else {
+        const bool = leftoverIng.leftoverAmount > recipeIng.amount;
+        arrOfBoolsAndBoolPromises.push(bool);
+      }
+    } else {
+      arrOfBoolsAndBoolPromises.push(true);
+    }
+  });
+  return Promise.all(arrOfBoolsAndBoolPromises)
+    .then(bools => bools.every(bool => bool))
+    .catch(() => false);
 }
 
 export function hasSufficientQuantities(leftoverIng, recipeArr) {
-  return recipeArr.filter(recipeObj => hasSufficientQuantity(leftoverIng, recipeObj));
+  return Promise.filter(recipeArr, recipeObj => hasSufficientQuantity(leftoverIng, recipeObj));
 }
 
 // calculate leftover ingredients

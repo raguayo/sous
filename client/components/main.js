@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Button, Container, Menu, Icon } from 'semantic-ui-react';
+import { Icon } from 'semantic-ui-react';
 import { withRouter } from 'react-router-dom';
 import Footer from './footer';
 import Navbar from './navbar';
@@ -34,18 +34,15 @@ const Main = (props) => {
           </div> : null
       }
       <div>
-        {/* <div>
         {isLoggedIn ?
           <Navbar /> : null}
-      </div> */}
-        <Navbar />
-        <div>
-          {children}
-        </div>
-        <div style={styles.footer}>
-          <Footer />
-        </div>
       </div>
+      <div>
+        {children}
+      </div>
+      {/* <div style={styles.footer}>
+        <Footer />
+      </div> */}
     </div>
   );
 };
