@@ -60,7 +60,7 @@ function GroceryList({ ingredients, handleExcludedIngredient, excludedIngredient
           <p>Unknown Ingredients:</p>
         </Segment>
         <Segment.Group>
-          {ingredients.filter(ing => !ing.prodId).map(ingredient => {
+          {ingredients.filter(ing => !ing.prodId).map((ingredient) => {
             return (
               <Segment key={ingredient.id}>
                 <Grid>
