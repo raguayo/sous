@@ -1,5 +1,6 @@
 var Peapod = require('./api');
-const Ingredient = require('../server/db/models/ingredient');
+const axios = require('axios');
+const PeapodIngredient = require('../server/db/models/peapodIng');
 const { convertSizeToNumber } = require('./utilityFuncs');
 
 var config = require('../secrets');
@@ -291,17 +292,17 @@ const ingredientsArr = [
   ...zuchBread,
 ];
 
-function addIngredients(index) {
-  if (index === ingredientsArr.length) {
+function addIngredients(IngArr, index) {
+  if (index === IngArr.length) {
     console.log('finished seeding');
     return;
   }
-  peapod.search(ingredientsArr[index].peapodName, function (err, results) {
+  peapod.search(IngArr[index].peapodName, function (err, results) {
     if (err) {
       console.log(err)
     } else {
-      let name = ingredientsArr[index].name;
-      console.log(ingredientsArr[index])
+      let name = IngArr[index].name;
+      console.log(IngArr[index])
       const peapodName = results.products[0].name;
       const prodId = results.products[0].prodId;
       let unitMeasure = results.products[0].unitMeasure;
@@ -321,7 +322,7 @@ function addIngredients(index) {
           unitMeasure = newUnitMatchArr[0];
           size = size.slice(0, size.indexOf(unitMeasure));
         } else {
-          unitMeasure = 'CT';
+          unitMeasure = 'count';
         }
       }
       // handle if there are pk and ct included in the ingredient name
@@ -330,7 +331,7 @@ function addIngredients(index) {
         const potentialAdjustmentArr = peapodName.slice(hyphenIdx + 1).split(' ');
         if (potentialAdjustmentArr.includes('ct')) {
           size = potentialAdjustmentArr.slice(0, potentialAdjustmentArr.indexOf('ct')).join();
-          unitMeasure = 'CT';
+          unitMeasure = 'count';
         } else if (potentialAdjustmentArr[1] === 'pk') {
           size *= +potentialAdjustmentArr[0];
         }
@@ -341,17 +342,17 @@ function addIngredients(index) {
       if (unitMeasure === 'EA') unitMeasure = 'CT';
       if (name === 'corn starch') name = 'cornstarch';
 
-      Ingredient.findOrCreate({
+      PeapodIngredient.findOrCreate({
         where: {
-          name,
+          prodId,
         },
         defaults: {
-          peapodName, prodId, unitMeasure, price, size: +size,
+          peapodName, price, size: +size,
         },
       })
         .then(ing => {
           console.log(name + ' added')
-          if (index < ingredientsArr.length) addIngredients(index + 1);
+          if (index < IngArr.length) addIngredients(IngArr, index + 1);
           else console.log('Done');
         })
         .catch(console.error);

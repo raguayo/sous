@@ -12,10 +12,25 @@ const createGroceryList = (recipe, ingredients, inGroceryList) => {
   // error handling
 };
 
-chrome.extension.onMessage.addListener((request, sender, sendResponse) => {
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.msg === 'createGroceryList') {
-    createGroceryList(request.recipe, request.dbIngredients, request.inGroceryList);
+
+    createGroceryList(request.recipe, request.recipe.extendedIngredients, request.inGroceryList);
     // send response back to popup if successful
     // error handling
+  } else if (request.msg === 'getRecipeDetails') {
+    const formattedUrl = request.recipeUrl.replace(':', '%3A').replace('/', '%2F');
+    $.ajax({
+      method: 'GET',
+      url: `https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/extract?forceExtraction=false&url=${formattedUrl}`,
+      headers: { 'X-Mashape-Key': 'YyZySSmshzmshUvFJgXCNd0oeM57p11ZPWNjsns9qV945YLMWs' },
+    })
+    .done((response) => {
+      sendResponse(response);
+    })
+    .fail((response) => {
+      sendResponse(response);
+    });
+    return true;
   }
 });
