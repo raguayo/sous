@@ -19,7 +19,7 @@ import {
 } from "../store/groceryListRecipes";
 import { postNewRecipe } from "../store/savedRecipes";
 import { EmptyList } from './';
-import RecipeCard from './RecipeCard';
+import CurrRecipeCard from './CurrRecipeCard';
 
 function CurrentRecipe({
   handleAddRecipe,
@@ -64,7 +64,7 @@ function CurrentRecipe({
             {groceryListRecipes && groceryListRecipes.map((currRecipe) => {
               return (
                 <Segment key={currRecipe.id}>
-                  <RecipeCard recipe={currRecipe} isCurrRecipe="true" />
+                  <CurrRecipeCard recipe={currRecipe} />
                 </Segment>
               );
             },
