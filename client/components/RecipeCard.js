@@ -23,18 +23,18 @@ const RecipeCard = ({
   console.log("isCurrRecipe: ", isCurrRecipe);
   return (
     <Grid>
-      <Card style={{ width: "50%" }} fluid>
+      <Card fluid>
         <Card.Content>
           <Grid>
             {isCurrRecipe
               ? <Grid.Column floated="left" width={2}>
-                  <Form>
-                    <Form.Input
-                      placeholder={recipe.grocerylist.quantity}
-                      onChange={e => handleUpdateQuantity(recipe.id, e)}
-                    />
-                  </Form>
-                </Grid.Column>
+                <Form>
+                  <Form.Input
+                    placeholder={recipe.grocerylist.quantity}
+                    onChange={e => handleUpdateQuantity(recipe.id, e)}
+                  />
+                </Form>
+              </Grid.Column>
               : null}
             <Grid.Column width={8}>
               <Image
@@ -63,36 +63,36 @@ const RecipeCard = ({
                 <Grid.Column width={16} textAlign="right">
                   {!isCurrRecipe
                     ? <div>
-                        <Popup
-                          trigger={
-                            <Icon
-                              onClick={() => handleTransfer(recipe.id)}
-                              name="add"
-                            />
-                          }
-                          on="click"
-                          content="Recipe added to your grocery list"
-                          position="top center"
+                      <Popup
+                        trigger={
+                          <Icon
+                            onClick={() => handleTransfer(recipe.id)}
+                            name="add"
+                          />
+                        }
+                        on="click"
+                        content="Recipe added to your grocery list"
+                        position="top center"
+                      />
+                      {recipe.savedrecipe.isFavorite
+                        ? <Icon
+                          onClick={() => handleFavorite(recipe.id)}
+                          name="star"
+                          color="yellow"
                         />
-                        {recipe.savedrecipe.isFavorite
-                          ? <Icon
-                              onClick={() => handleFavorite(recipe.id)}
-                              name="star"
-                              color="yellow"
-                            />
-                          : <Icon
-                              onClick={() => handleFavorite(recipe.id)}
-                              name="empty star"
-                            />}
-                        <Icon
-                          onClick={() => handleDelete(recipe.id)}
-                          name="delete"
-                        />
-                      </div>
-                    : <Icon
-                        onClick={() => handleDeleteCurr(recipe.id)}
+                        : <Icon
+                          onClick={() => handleFavorite(recipe.id)}
+                          name="empty star"
+                        />}
+                      <Icon
+                        onClick={() => handleDelete(recipe.id)}
                         name="delete"
-                      />}
+                      />
+                    </div>
+                    : <Icon
+                      onClick={() => handleDeleteCurr(recipe.id)}
+                      name="delete"
+                    />}
                 </Grid.Column>
               </Grid>
             </Grid.Column>
@@ -106,7 +106,7 @@ const RecipeCard = ({
 const mapState = (state, ownProps) => {
   return {
     recipe: ownProps.recipe,
-    isCurrRecipe: !!ownProps.isCurrRecipe
+    isCurrRecipe: !!ownProps.isCurrRecipe,
   };
 };
 
@@ -128,7 +128,7 @@ RecipeCard.propTypes = {
   handleFavorite: PropTypes.func.isRequired,
   handleTransfer: PropTypes.func.isRequired,
   handleDeleteCurr: PropTypes.func.isRequired,
-  handleUpdateQuantity: PropTypes.func.isRequired
+  handleUpdateQuantity: PropTypes.func.isRequired,
 };
 
 export default connect(mapState, mapDispatch)(RecipeCard);
