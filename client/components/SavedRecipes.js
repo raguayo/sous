@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Container, Grid, Header, Segment, Icon, Popup, Button } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { deleteSavedRecipe, transferSavedRecipe, favoriteToggle } from '../store/';
+import RecipeCard from './RecipeCard';
 
 function SavedRecipes({ favRecipes, prevRecipes, handleDelete, handleFavorite, handleTransfer }) {
   return (
@@ -17,20 +18,7 @@ function SavedRecipes({ favRecipes, prevRecipes, handleDelete, handleFavorite, h
             favRecipes.map((favRecipeObj) => {
               return (
                 <Segment key={favRecipeObj.id}>
-                  <Grid>
-                    <Grid.Column floated="left" width={10} verticalAlign="middle">
-                      <a href={favRecipeObj.recipeUrl} target="_blank" rel="noopener noreferrer" >{favRecipeObj.title}</a>
-                    </Grid.Column>
-                    <Grid.Column floated="right" width={3} textAlign="right">
-                      <Popup
-                        trigger={<Icon onClick={() => handleTransfer(favRecipeObj.id)} name="add" />}
-                        on="click"
-                        content="Recipe added to your grocery list"
-                        position="top center" />
-                      <Icon onClick={() => handleFavorite(favRecipeObj.id)} name="star" />
-                      <Icon onClick={() => handleDelete(favRecipeObj.id)} name="delete" />
-                    </Grid.Column>
-                  </Grid>
+                  <RecipeCard recipe={favRecipeObj} />
                 </Segment>
               );
             })
@@ -47,20 +35,7 @@ function SavedRecipes({ favRecipes, prevRecipes, handleDelete, handleFavorite, h
             prevRecipes.map((prevRecipeObj) => {
               return (
                 <Segment key={prevRecipeObj.id}>
-                  <Grid>
-                    <Grid.Column floated="left" width={10} verticalAlign="middle">
-                      <a href={prevRecipeObj.recipeUrl} target="_blank" rel="noopener noreferrer" >{prevRecipeObj.title}</a>
-                    </Grid.Column>
-                    <Grid.Column floated="right" width={3} textAlign="right">
-                      <Popup
-                        trigger={<Icon onClick={() => handleTransfer(prevRecipeObj.id)} name="add" />}
-                        on="click"
-                        content="Recipe added to your grocery list"
-                        position="top center" />
-                      <Icon onClick={() => handleFavorite(prevRecipeObj.id)} name="empty star" />
-                      <Icon onClick={() => handleDelete(prevRecipeObj.id)} name="delete" />
-                    </Grid.Column>
-                  </Grid>
+                  <RecipeCard recipe={prevRecipeObj} />
                 </Segment>
               );
             })
