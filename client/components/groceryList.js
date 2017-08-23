@@ -43,7 +43,7 @@ const styles = {
 class GroceryList extends React.Component {
 
   componentDidMount() {
-    console.log('Runing suggestion')
+    console.log('Running suggestion')
     this.props.generateLeftoverSuggestions(this.props.peapodIngredients);
   }
 
@@ -148,11 +148,8 @@ class GroceryList extends React.Component {
                   </Modal>
                 </Segment.Group>
                 {unknownIngredients.length ?
-                  <div>
-                    <Segment>
-                      <p style={styles.textColor}>The follwoing ingredients were not found on Peapod. You may have to buy these on your own.</p>
-                    </Segment>
                     <Segment.Group>
+                      <p style={styles.textColor}>The follwoing ingredients were not found on Peapod. You may have to buy these on your own.</p>
                       {unknownIngredients.map((ingredient) => {
                         return (
                           <Segment key={ingredient.id}>
@@ -186,7 +183,6 @@ class GroceryList extends React.Component {
                         );
                       })}
                     </Segment.Group>
-                  </div>
                   : null
                 }
                 <button className="appButton" onClick={() => handleClearList()}>Clear list</button>
