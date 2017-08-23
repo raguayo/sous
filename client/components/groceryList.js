@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import React from 'react';
 
-import { Container, Grid, Header, Segment, Checkbox, Button, Modal, Input, Form, Accordion, Card, Image } from 'semantic-ui-react';
+import { Container, Grid, Header, Segment, Checkbox, Button, Modal, Input, Form, Accordion, Card, Image, Popup, Dimmer, Loader } from 'semantic-ui-react';
 import { postNewExcluded, deleteExcludedIngredient, addItemsToPeapodCart, deleteRecipesFromList, textGroceryList, addSuggestedRecipes, removeSuggestedRecipes, dirtySuggestedRecipes } from '../store';
 import { getIngredients, addDisplayUnits, calculateLeftovers, filterPeapodIng, getLeftoverRecipes, getLeftoverRecipeDetails, hasSufficientQuantities } from '../utils';
 import { EmptyList } from './';
@@ -40,15 +40,26 @@ const styles = {
   }
 };
 
+
 class GroceryList extends React.Component {
+  constructor() {
+    super()
+    this.state = {
+      modalOpen: false,
+    }
+  }
+
 
   componentDidMount() {
-    console.log('In did mount: ', this.props.dirty)
+    console.log('In did mount: ', this.props.dirty);
     if (!this.props.dirty) {
       console.log('Running sugg')
       this.props.generateLeftoverSuggestions(this.props.peapodIngredients);
     }
   }
+
+  handleClose = () => this.setState({ modalOpen: false })
+  handleOpen = () => this.setState({ modalOpen: true })
 
   render() {
     const { ingredients, excludedIngredients, peapodIngredients, handleExcludedIngredient, handleCartPurchase, handleClearList, handleSendText, suggestedRecipes, handleRejectSuggestedRecipes, unknownIngredients } = this.props;
@@ -102,7 +113,12 @@ class GroceryList extends React.Component {
                       </Segment>
                     );
                   })}
-                  <Modal trigger={<button className="appButton">Add to Peapod Cart</button>} basicSize="medium">
+                  <Modal
+                    trigger={<button onClick={this.handleOpen} className="appButton">Add to Peapod Cart</button>}
+                    basicSize="medium"
+                    open={this.state.modalOpen}
+                    onClose={this.handleClose}
+                  >
                     <Modal.Content>
                       <div>
                         <Grid
@@ -117,7 +133,7 @@ class GroceryList extends React.Component {
                             <Form
                               size="large"
                               onSubmit={e =>
-                                handleCartPurchase(peapodIngredients, e)}
+                                handleCartPurchase(peapodIngredients, e, this.handleClose)}
                               name={name}
                             >
                               <Segment stacked>
@@ -136,12 +152,21 @@ class GroceryList extends React.Component {
                                   placeholder="Password"
                                   type="password"
                                 />
-                                <button className="appButton" fluid size="large">
-                                  Submit
-                            </button>
-                                <button className='appButton' fluid onClick="self.close()">
+                                <Popup
+                                  on="click"
+                                  flowing
+                                  style={{height: '150px', width: '200px' }}
+                                  trigger={<button className="appButton" fluid size="large"> Submit </button>}
+                                >
+                                  <Popup.Content>
+                                    <Dimmer active inverted>
+                                      <Loader inverted>Loading</Loader>
+                                    </Dimmer>
+                                  </Popup.Content>
+                                </Popup>
+                                <button className='appButton' fluid onClick={this.handleClose}>
                                   Cancel
-                        </button>
+                              </button>
                               </Segment>
                             </Form>
                           </Grid.Column>
@@ -265,7 +290,7 @@ const mapDispatch = (dispatch) => {
         dispatch(deleteExcludedIngredient(ingredientId));
       }
     },
-    handleCartPurchase(peapodItems, e) {
+    handleCartPurchase(peapodItems, e, handleClose) {
       const itemArr = peapodItems.map((ingredientObj) => {
         return {
           id: ingredientObj.id,
@@ -278,7 +303,11 @@ const mapDispatch = (dispatch) => {
         username: e.target.username.value,
         password: e.target.password.value,
       };
-      dispatch(addItemsToPeapodCart(itemArr, peapodLoginCreds));
+      dispatch(addItemsToPeapodCart(itemArr, peapodLoginCreds))
+        .then(() => {
+          handleClose();
+        })
+        .catch(console.error);
     },
     handleClearList() {
       dispatch(deleteRecipesFromList());
