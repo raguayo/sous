@@ -23,7 +23,7 @@ chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
   </tbody>
   </table>
   <h3 style="margin: 0.857143em 0.857143em">Ingredients:</h3>
-  <table class="ui table unstackable">
+  <table class="ui table unstackable" id="ingredients-table">
     <thead>
       <tr>
         <th>Quantity</th>
@@ -57,13 +57,17 @@ chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     $('#wrapper').append(htmlString);
 
     $('#saveBtn').click(() => {
-      chrome.extension.sendMessage({ msg: 'createGroceryList', recipe, inGroceryList: false });
-      window.close();
+      chrome.extension.sendMessage({ msg: 'createGroceryList', recipe, inGroceryList: false }, (response) => {
+        if (response.status === 'Created') $('#ingredients-table').after('<div class="ui message" display="block"><h5>Your recipe was saved!</h5></div>');
+        else $('#ingredients-table').after('<div class="ui message" display="block"><h5>Well, this is embarassing. Something went wrong when trying to save your recipe!</h5></div>');
+      });
     });
 
     $('#glistBtn').click(() => {
-      chrome.extension.sendMessage({ msg: 'createGroceryList', recipe, inGroceryList: true });
-      window.close();
+      chrome.extension.sendMessage({ msg: 'createGroceryList', recipe, inGroceryList: true }, (response) => {
+        if (response.status === 'Created') $('#ingredients-table').after('<div class="ui message" display="block"><h5>Your recipe was added!</h5></div>');
+        else $('#ingredients-table').after('<div class="ui message" display="block"><h5>Well, this is embarassing. Something went wrong when trying to add your recipe!</h5></div>');
+      });
     });
     // wait to close the popup until recieves a success response
     // handle error
