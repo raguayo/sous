@@ -215,9 +215,10 @@ class GroceryList extends React.Component {
                     <Card.Content extra>
                       <Accordion
                         panels={suggestedRecipes.map((rec) => {
+
                           return {
                             title: rec.title,
-                            content: `Number of Servings: ${rec.servings}`,
+                            content: <a href={rec.sourceUrl} target="_blank" rel='noopener noreferrer'>Recipe Link</a>,
                           };
                         })
                         }
@@ -241,7 +242,7 @@ class GroceryList extends React.Component {
 const mapState = (state) => {
   const ingredients = addDisplayUnits(getIngredients(state.groceryListRecipes));
   const peapodIngredients = filterPeapodIng(ingredients, state.excludedIngredients);
-  const unknownIngredients = ingredients.filter(ing => !ing.prodId)
+  const unknownIngredients = ingredients.filter(ing => !ing.prodId);
   return {
     ingredients,
     excludedIngredients: state.excludedIngredients,
