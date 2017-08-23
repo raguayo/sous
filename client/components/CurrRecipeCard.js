@@ -7,11 +7,11 @@ import { deleteRecipeFromList, updateRecipeQuantity } from "../store/";
 const CurrRecipeCard = ({ recipe, handleDeleteCurr, handleUpdateQuantity }) => {
   return (
     <Grid>
-      <Card style={{ width: "50%" }} fluid>
+      <Card>
         <Card.Content>
           <Grid.Row style={{ paddingBottom: "8px" }}>
             <Grid.Column width={8} style={{display: "flex", justifyContent: "space-between"}}>
-              <a href={recipe.recipeUrl} style={{ fontSize: "2em", paddingTop: "8px" }}>
+              <a href={recipe.recipeUrl} style={{ fontSize: "1.5em", paddingTop: "8px" }}>
                 {recipe.title}
               </a>
                 <div style={{display: "flex"}}>
