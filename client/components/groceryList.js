@@ -149,7 +149,9 @@ class GroceryList extends React.Component {
                 </Segment.Group>
                 {unknownIngredients.length ?
                     <Segment.Group>
-                      <p style={styles.textColor}>The follwoing ingredients were not found on Peapod. You may have to buy these on your own.</p>
+                      <Segment>
+                        <p style={styles.textColor}>The follwoing ingredients were not found on Peapod. You may have to buy these on your own.</p>
+                      </Segment>
                       {unknownIngredients.map((ingredient) => {
                         return (
                           <Segment key={ingredient.id}>
