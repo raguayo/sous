@@ -165,6 +165,14 @@ button:hover {
   opacity: 0;
 }
 
+#middle {
+  text-align: center;
+}
+
+#greeting {
+  margin-bottom: 0;
+}
+
 @keyframes slide-up-fade-in {
   0% {
     opacity: 0;
