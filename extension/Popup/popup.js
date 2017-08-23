@@ -57,14 +57,26 @@ chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     $('#wrapper').append(htmlString);
 
     $('#saveBtn').click(() => {
+      $('#ingredients-table').after(`<div class="ui segment" id="submit-loader">
+              <div class="ui active inverted dimmer">
+                <div class="ui text loader">Loading</div>
+              </div>
+            </div>`);
       chrome.extension.sendMessage({ msg: 'createGroceryList', recipe, inGroceryList: false }, (response) => {
+        $('#submit-loader').hide();
         if (response.status === 'Created') $('#ingredients-table').after('<div class="ui message" display="block"><h5>Your recipe was saved!</h5></div>');
         else $('#ingredients-table').after('<div class="ui message" display="block"><h5>Well, this is embarassing. Something went wrong when trying to save your recipe!</h5></div>');
       });
     });
 
     $('#glistBtn').click(() => {
+      $('#ingredients-table').after(`<div class="ui segment" id="submit-loader">
+        <div class="ui active inverted dimmer">
+          <div class="ui text loader">Loading</div>
+        </div>
+      </div>`);
       chrome.extension.sendMessage({ msg: 'createGroceryList', recipe, inGroceryList: true }, (response) => {
+        $('#submit-loader').hide();
         if (response.status === 'Created') $('#ingredients-table').after('<div class="ui message" display="block"><h5>Your recipe was added!</h5></div>');
         else $('#ingredients-table').after('<div class="ui message" display="block"><h5>Well, this is embarassing. Something went wrong when trying to add your recipe!</h5></div>');
       });
