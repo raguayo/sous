@@ -18,8 +18,14 @@ const styles = {
   container: {
     padding: '5em 0em',
   },
+  color: {
+    color: "#84643B"
+  },
   header: {
-    fontFamily: 'Satisfy',
+    maxWidth: "450",
+    color: "#84643B",
+    fontFamily: "Oleo Script Swash Caps",
+    fontSize: "2.5rem",
   },
 };
 
@@ -32,11 +38,11 @@ function UserProfile({ user, handleNameUpdate, handleEmailUpdate, handlePassword
         style={{ height: '100%' }}
         verticalAlign="left"
       >
-        <Grid.Column style={{ width: '100%', padding: '5em 0em', margin: '0em 2em' }}>
-          <Header as="h2" color="rgb(119, 169, 95)" verticalAlign="left">
+        <Grid.Column style={{ width: '100%', padding: '5em 0em 0em 0em', margin: '0em 2em' }}>
+          <Header as="h2" style={styles.header} verticalAlign="left">
             User Details
           </Header>
-          <Form size="large">
+          <Form size="large" style={styles.color}>
             <Segment stacked>
               <Grid>
                 <Grid.Column floated="left" width={13} verticalAlign="middle">

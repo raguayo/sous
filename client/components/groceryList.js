@@ -16,7 +16,6 @@ const styles = {
     color: '#84643B',
     fontFamily: 'Oleo Script Swash Caps',
     fontSize: '4rem',
-    marginBottom: '2em',
   },
   suggestedRecipeCard: {
     position: 'absolute',
@@ -36,6 +35,9 @@ const styles = {
     textDecoration: 'none',
     fontSize: '1.1rem',
   },
+  list: {
+    marginTop: '1.5em',
+  }
 };
 
 class GroceryList extends React.Component {
@@ -59,7 +61,7 @@ class GroceryList extends React.Component {
           </Grid.Row>
           </Grid>
           {ingredients.length ?
-            <div>
+            <div style={styles.list}>
               <Segment.Group style={{ width: '75%', margin: 'auto' }}>
                 <Segment>
                   <p style={styles.textColor}>Ingredients:</p>
@@ -148,7 +150,7 @@ class GroceryList extends React.Component {
                 {unknownIngredients.length ?
                   <div>
                     <Segment>
-                      <p style={styles.textColor}>Ingredients not found on Peapod. You may have to buy these on your own.</p>
+                      <p style={styles.textColor}>The follwoing ingredients were not found on Peapod. You may have to buy these on your own.</p>
                     </Segment>
                     <Segment.Group>
                       {unknownIngredients.map((ingredient) => {
@@ -230,7 +232,9 @@ class GroceryList extends React.Component {
               }
             </div>
             :
-            <EmptyList />
+            <div style={styles.list}>
+              <EmptyList />
+            </div>
             }
         </Container>
       </div>

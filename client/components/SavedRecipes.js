@@ -10,10 +10,10 @@ function SavedRecipes({ favRecipes, prevRecipes, handleDelete, handleFavorite, h
     <Container style={styles.container}>
       <Grid>
         <Grid.Column width={8}>
-          <Header as="h2">Your favorite recipes:</Header>
+          <Header as="h2" style={styles.header}>Your favorite recipes:</Header>
           <Segment.Group>
             <Segment>
-              <p>Favorites:</p>
+              <p style={styles.color}>Favorites:</p>
             </Segment>
             <Segment.Group>
               {
@@ -29,10 +29,10 @@ function SavedRecipes({ favRecipes, prevRecipes, handleDelete, handleFavorite, h
           </Segment.Group>
         </Grid.Column>
         <Grid.Column width={8}>
-          <Header as="h2">All the recipes you've added:</Header>
+          <Header as="h2" style={styles.header}>All the recipes you've added:</Header>
           <Segment.Group>
             <Segment>
-              <p>Previous Recipes:</p>
+              <p style={styles.color}>Previous Recipes:</p>
             </Segment>
             <Segment.Group>
               {
@@ -55,6 +55,15 @@ function SavedRecipes({ favRecipes, prevRecipes, handleDelete, handleFavorite, h
 const styles = {
   container: {
     padding: '5em 0em',
+  },
+  color: {
+    color: "#84643B"
+  },
+  header: {
+    maxWidth: "450",
+    color: "#84643B",
+    fontFamily: "Oleo Script Swash Caps",
+    fontSize: "2.5rem",
   },
 };
 
