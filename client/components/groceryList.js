@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import React from 'react';
 
-import { Container, Grid, Header, Segment, Checkbox, Button, Modal, Input, Form, Accordion, Message, Card, Image } from 'semantic-ui-react';
+import { Container, Grid, Header, Segment, Checkbox, Button, Modal, Input, Form, Accordion, Card, Image } from 'semantic-ui-react';
 import { postNewExcluded, deleteExcludedIngredient, addItemsToPeapodCart, deleteRecipesFromList, textGroceryList, addSuggestedRecipes, removeSuggestedRecipes } from '../store';
 import { getIngredients, addDisplayUnits, calculateLeftovers, filterPeapodIng, getLeftoverRecipes, getLeftoverRecipeDetails, hasSufficientQuantities } from '../utils';
 import { EmptyList } from './';
@@ -12,13 +12,29 @@ const styles = {
     padding: '5em 0em',
   },
   header: {
-    fontFamily: 'Satisfy',
+    maxWidth: '450',
+    color: '#84643B',
+    fontFamily: 'Oleo Script Swash Caps',
+    fontSize: '4rem',
+    marginBottom: '2em',
   },
   suggestedRecipeCard: {
     position: 'absolute',
     zIndex: 1000,
     top: '40px',
     right: '40px',
+  },
+  textColor: {
+    color: '#84643B',
+    fontSize: '1.1rem',
+  },
+  textColorLineThrough: {
+    textDecoration: 'line-through',
+    fontSize: '1.1rem',
+  },
+  textColorNoLineThrough: {
+    textDecoration: 'none',
+    fontSize: '1.1rem',
   },
 };
 
@@ -35,14 +51,18 @@ class GroceryList extends React.Component {
     return (
       <div style={{ position: 'relative' }}>
         <Container style={styles.container}>
-          <Header as="h2" style={styles.header}>
-            Grocery List
-      </Header>
+          <Grid textAlign="center">
+          <Grid.Row>
+            <Header as="h2" style={styles.header}>
+              Grocery List
+            </Header>
+          </Grid.Row>
+          </Grid>
           {ingredients.length ?
             <div>
               <Segment.Group>
                 <Segment>
-                  <p>Ingredients:</p>
+                  <p style={styles.textColor}>Ingredients:</p>
                 </Segment>
                 <Segment.Group>
                   {ingredients.filter(ing => !!ing.prodId).map((ingredient) => {
@@ -56,10 +76,10 @@ class GroceryList extends React.Component {
                               floated="left"
                               width={13}
                               verticalAlign="middle"
-                              style={{ textDecoration: 'line-through' }}
+                              style={styles.textColorLineThrough}
                               onClick={e =>
                                 handleExcludedIngredient(excludedIngredients, ingredient.id)}
-                              label={`${ingredient.name} ${ingredient.displayUnit} ${ingredient.displayQuantity}`}
+                              label={`${ingredient.displayQuantity} ${ingredient.displayUnit} ${ingredient.name}`}
                             >
                             </Grid.Column>
                             : <Grid.Column
@@ -67,17 +87,17 @@ class GroceryList extends React.Component {
                               floated="left"
                               width={13}
                               verticalAlign="middle"
-                              style={{ textDecoration: 'none' }}
+                              style={styles.textColorNoLineThrough}
                               onClick={e =>
                                 handleExcludedIngredient(excludedIngredients, ingredient.id)}
-                              label={`${ingredient.name} ${ingredient.displayUnit} ${ingredient.displayQuantity}`}
+                              label={`${ingredient.displayQuantity} ${ingredient.displayUnit} ${ingredient.name}`}
                             >
                             </Grid.Column>}
                         </Grid>
                       </Segment>
                     );
                   })}
-                  <Modal trigger={<Button>Add to Peapod Cart</Button>} basicSize="medium">
+                  <Modal trigger={<button className="appButton">Add to Peapod Cart</button>} basicSize="medium">
                     <Modal.Content>
                       <div>
                         <Grid
@@ -91,6 +111,7 @@ class GroceryList extends React.Component {
                     </Header>
                             <Form
                               size="large"
+                              className="appButton"
                               onSubmit={e =>
                                 handleCartPurchase(peapodIngredients, e)}
                               name={name}
@@ -128,7 +149,7 @@ class GroceryList extends React.Component {
                 {unknownIngredients.length ?
                   <div>
                     <Segment>
-                      <p>Ingredients not found on Peapod. You may have to buy these on your own.</p>
+                      <p style={styles.textColor}>Ingredients not found on Peapod. You may have to buy these on your own.</p>
                     </Segment>
                     <Segment.Group>
                       {unknownIngredients.map((ingredient) => {
@@ -142,10 +163,10 @@ class GroceryList extends React.Component {
                                   floated="left"
                                   width={13}
                                   verticalAlign="middle"
-                                  style={{ textDecoration: 'line-through' }}
+                                  style={styles.textColorLineThrough}
                                   onClick={e =>
                                     handleExcludedIngredient(excludedIngredients, ingredient.id)}
-                                  label={`${ingredient.name} ${ingredient.displayUnit} ${ingredient.displayQuantity}`}
+                                  label={`${ingredient.displayQuantity} ${ingredient.displayUnit} ${ingredient.name}`}
                                 >
                                 </Grid.Column>
                                 : <Grid.Column
@@ -153,10 +174,10 @@ class GroceryList extends React.Component {
                                   floated="left"
                                   width={13}
                                   verticalAlign="middle"
-                                  style={{ textDecoration: 'none' }}
+                                  style={styles.textColorNoLineThrough}
                                   onClick={e =>
                                     handleExcludedIngredient(excludedIngredients, ingredient.id)}
-                                  label={`${ingredient.name} ${ingredient.displayUnit} ${ingredient.displayQuantity}`}
+                                  label={`${ingredient.displayQuantity} ${ingredient.displayUnit} ${ingredient.name}`}
                                 >
                                 </Grid.Column>}
                             </Grid>
@@ -167,10 +188,10 @@ class GroceryList extends React.Component {
                   </div>
                   : null
                 }
-                <Button onClick={() => handleClearList()}>Clear list</Button>
-                <Modal trigger={<Button>Text me my list</Button>} basic size='small' actions={[{ triggerClose: true }]} >
+                <button className="appButton" onClick={() => handleClearList()}>Clear list</button>
+                <Modal trigger={<button className="appButton">Text me my list</button>} basic size="small" actions={[{ triggerClose: true }]} >
                   <Modal.Content>
-                    <Form onSubmit={(e) => handleSendText(e, ingredients, excludedIngredients)}>
+                    <Form className="appButton" onSubmit={(e) => handleSendText(e, ingredients, excludedIngredients)}>
                       <Input
                         name="number"
                         action={{ color: 'teal', labelPosition: 'left', icon: 'add', content: 'Submit' }}
@@ -204,15 +225,14 @@ class GroceryList extends React.Component {
                       />
                     </Card.Content>
                     <Card.Content>
-                      <Button onClick={() => handleRejectSuggestedRecipes()}>No Thanks</Button>
+                      <button onClick={() => handleRejectSuggestedRecipes()}>No Thanks</button>
                     </Card.Content>
                   </Card> : null
               }
             </div>
-
             :
             <EmptyList />
-          }
+            }
         </Container>
       </div>
     );

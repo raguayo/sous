@@ -62,8 +62,9 @@ function CurrentRecipe({ handleAddRecipe, handleDeleteRecipe, handleDeleteRecipe
             > Clear Recipe List</a>
           </Segment>
         </Segment.Group> :
-        <div style={styles.container}>
-          <EmptyList />
+        <div>
+          <div style={styles.container} />
+          <EmptyList style={styles.topMarg}/>
         </div>
       }
     </Container>
@@ -121,4 +122,7 @@ const styles = {
   recipeInput: {
     width: '80%',
   },
+  topMarg: {
+    paddingTop: '3em',
+  }
 };
