@@ -12,7 +12,7 @@ import {
   Icon,
 } from 'semantic-ui-react';
 import { editUserName, editUserEmail, editUserPassword } from '../store';
-import { SavedRecipes, RecipeCard } from './';
+import { SavedRecipes } from './';
 
 const styles = {
   container: {
@@ -124,8 +124,6 @@ function UserProfile({ user, handleNameUpdate, handleEmailUpdate, handlePassword
       </Grid>
 
       <SavedRecipes />
-
-      <RecipeCard />
 
     </Container>
   );

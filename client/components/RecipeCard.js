@@ -1,102 +1,101 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { Container, Grid, Header, Segment, Button, Icon, Input, Form, Card, Image, Modal } from 'semantic-ui-react';
-import { Link } from 'react-router-dom';
-import moment from 'moment';
-import { textGroceryList } from '../store/groceryListRecipes';
-import { postNewRecipe } from '../store/savedRecipes';
-import { getIngredients, addDisplayUnits } from '../utils';
+import React from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { Grid, Popup, Icon, Card, Image } from "semantic-ui-react";
+import {
+  deleteSavedRecipe,
+  transferSavedRecipe,
+  favoriteToggle
+} from "../store/";
+import { getIngredients, addDisplayUnits } from "../utils";
 
-const styles = {
-  container: {
-    padding: '5em 0em',
-  },
-  recipeInput: {
-    width: '80%',
-  },
-};
-
-const RecipeCard = ({ groceryListRecipes, handleSendText, ingredients, excludedIngredients }) => {
-    console.log('RecipeCard - props.groceryListRecipes: ', groceryListRecipes);
+const RecipeCard = ({
+  recipe,
+  handleDelete,
+  handleFavorite,
+  handleTransfer
+}) => {
   return (
-    <Container style={styles.container}>
-      {
-        groceryListRecipes && groceryListRecipes.map(recipe =>
-          <Card key={recipe.id}>
-            <Image src={`https://webknox.com/recipeImages/${recipe.imageUrl}`} />
-            <Card.Content>
-              <Card.Header>
-                {recipe.title}
-              </Card.Header>
-              <Card.Description>
-                Recipe Url:&nbsp;{ recipe.recipeUrl }
-              </Card.Description>
-              <Card.Meta>
-                <span>
-                   Number of Servings:&nbsp;{recipe.numServings}
-                </span>
-                <span className="date">
-                   Updated {moment(recipe.updatedAt).format('MMMM Do YYYY, h:mm:ss a')}
-                </span>
-              </Card.Meta>
-            </Card.Content>
-            <Card.Content extra>
-              <Modal trigger={<a><Icon name="users" />Text Recipe to a Friend!</a>} basic size="small" actions={[{ triggerClose: true }]} >
-                <Modal.Content>
-                  <Form onSubmit={(e) => handleSendText(e, ingredients, excludedIngredients)}>
-                    <Input
-                      name="number"
-                      action={{ color: 'teal', labelPosition: 'left', icon: 'add', content: 'Submit' }}
-                      placeholder="input your phone number"
-                    />
-                  </Form>
-                </Modal.Content>
-              </Modal>
-            </Card.Content>
-          </Card>,
-      )
-      }
-    </Container>
+    <Grid>
+      <Card style={ { width: '50%' } } fluid>
+        <Card.Content>
+          <Grid>
+            <Grid.Column width={8}>
+              <Image
+                src={`https://webknox.com/recipeImages/${recipe.imageUrl}`}
+                floated="left"
+                width={300}
+              />
+            </Grid.Column>
+            <Grid.Column width={8}>
+              <Grid>
+                <Grid.Column width={16}>
+                  <Card.Header>
+                    <a href={recipe.recipeUrl}>
+                      {recipe.title}
+                    </a>
+                  </Card.Header>
+                  <Card.Meta>
+                    <span>
+                      <br />
+                      Serves:&nbsp;{recipe.numServings}
+                    </span>
+                  </Card.Meta>
+                </Grid.Column>
+              </Grid>
+              <Grid>
+                <Grid.Column width={16} textAlign="right">
+                  <Popup
+                    trigger={
+                      <Icon
+                        onClick={() => handleTransfer(recipe.id)}
+                        name="add"
+                      />
+                    }
+                    on="click"
+                    content="Recipe added to your grocery list"
+                    position="top center"
+                  />
+                  {recipe.savedrecipe.isFavorite
+                    ? <Icon
+                        onClick={() => handleFavorite(recipe.id)}
+                        name="star"
+                        color="yellow"
+                      />
+                    : <Icon
+                        onClick={() => handleFavorite(recipe.id)}
+                        name="empty star"
+                      />}
+                  <Icon onClick={() => handleDelete(recipe.id)} name="delete" />
+                </Grid.Column>
+              </Grid>
+            </Grid.Column>
+          </Grid>
+        </Card.Content>
+      </Card>
+    </Grid>
   );
 };
 
-const mapState = (state) => {
-  // console.log('RecipeCard - groceryListRecipes: ', state.groceryListRecipes);
+const mapState = (state, ownProps) => {
   return {
-    groceryListRecipes: state.groceryListRecipes,
-    ingredients: addDisplayUnits(getIngredients(state.groceryListRecipes)),
-    excludedIngredients: state.excludedIngredients,
+    recipe: ownProps.recipe
   };
 };
 
-const mapDispatch = (dispatch) => {
+const mapDispatch = dispatch => {
   return {
-    handleSendText(e, ingredients, excludedIds) {
-      const number = e.target.number.value;
-      let ingredientArr = ingredients.filter((ingredient) => {
-        if (!excludedIds.includes(ingredient.id)) return ingredient;
-      });
-      ingredientArr = ingredientArr.map((ingredient) => {
-        return [ingredient.displayQuantity, ingredient.displayUnit, ingredient.name];
-      });
-      dispatch(textGroceryList(number, ingredientArr));
-    },
-    handleAddRecipe: (e) => {
-      e.preventDefault();
-      dispatch(postNewRecipe(e.target.recipeUrl.value, true));
-    },
+    handleDelete: id => dispatch(deleteSavedRecipe(id)),
+    handleTransfer: id => dispatch(transferSavedRecipe(id)),
+    handleFavorite: id => dispatch(favoriteToggle(id))
   };
 };
 
 RecipeCard.propTypes = {
-  // handleAddRecipe: PropTypes.func.isRequired,
-  // handleDeleteRecipe: PropTypes.func.isRequired,
-  // handleDeleteRecipes: PropTypes.func.isRequired,
-  handleSendText: PropTypes.func.isRequired,
-  groceryListRecipes: PropTypes.array.isRequired,
-  ingredients: PropTypes.array.isRequired,
-  excludedIngredients: PropTypes.array.isRequired,
+  recipe: PropTypes.object.isRequired,
+  handleDelete: PropTypes.func.isRequired,
+  handleFavorite: PropTypes.func.isRequired,
+  handleTransfer: PropTypes.func.isRequired
 };
 
 export default connect(mapState, mapDispatch)(RecipeCard);
