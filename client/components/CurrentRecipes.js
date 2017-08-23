@@ -19,7 +19,7 @@ import {
 } from "../store/groceryListRecipes";
 import { postNewRecipe } from "../store/savedRecipes";
 import { EmptyList } from './';
-import RecipeCard from './RecipeCard';
+import CurrRecipeCard from './CurrRecipeCard';
 
 function CurrentRecipe({
   handleAddRecipe,
