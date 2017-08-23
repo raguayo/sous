@@ -5,6 +5,7 @@ import React from 'react';
 import { Container, Grid, Header, Segment, Checkbox, Button, Modal, Input, Form, Accordion, Message, Card, Image } from 'semantic-ui-react';
 import { postNewExcluded, deleteExcludedIngredient, addItemsToPeapodCart, deleteRecipesFromList, textGroceryList, addSuggestedRecipes, removeSuggestedRecipes } from '../store';
 import { getIngredients, addDisplayUnits, calculateLeftovers, filterPeapodIng, getLeftoverRecipes, getLeftoverRecipeDetails, hasSufficientQuantities } from '../utils';
+import { EmptyList } from './';
 
 const styles = {
   container: {
@@ -29,7 +30,7 @@ class GroceryList extends React.Component {
   }
 
   render() {
-    const { ingredients, excludedIngredients, peapodIngredients, handleExcludedIngredient, handleCartPurchase, handleClearList, handleSendText, suggestedRecipes, handleRejectSuggestedRecipes } = this.props;
+    const { ingredients, excludedIngredients, peapodIngredients, handleExcludedIngredient, handleCartPurchase, handleClearList, handleSendText, suggestedRecipes, handleRejectSuggestedRecipes, unknownIngredients } = this.props;
 
     return (
       <div style={{ position: 'relative' }}>
@@ -37,165 +38,180 @@ class GroceryList extends React.Component {
           <Header as="h2" style={styles.header}>
             Grocery List
       </Header>
-          <Segment.Group>
-            <Segment>
-              <p>Ingredients:</p>
-            </Segment>
-            <Segment.Group>
-              {ingredients.filter(ing => !!ing.prodId).map((ingredient) => {
-                return (
-                  <Segment key={ingredient.id}>
-                    <Grid>
-                      {excludedIngredients.indexOf(ingredient.id) !== -1
-                        ? <Grid.Column
-                          as={Checkbox}
-                          checked
-                          floated="left"
-                          width={13}
+          {ingredients.length ?
+            <div>
+              <Segment.Group>
+                <Segment>
+                  <p>Ingredients:</p>
+                </Segment>
+                <Segment.Group>
+                  {ingredients.filter(ing => !!ing.prodId).map((ingredient) => {
+                    return (
+                      <Segment key={ingredient.id}>
+                        <Grid>
+                          {excludedIngredients.indexOf(ingredient.id) !== -1
+                            ? <Grid.Column
+                              as={Checkbox}
+                              checked
+                              floated="left"
+                              width={13}
+                              verticalAlign="middle"
+                              style={{ textDecoration: 'line-through' }}
+                              onClick={e =>
+                                handleExcludedIngredient(excludedIngredients, ingredient.id)}
+                              label={`${ingredient.name} ${ingredient.displayUnit} ${ingredient.displayQuantity}`}
+                            >
+                            </Grid.Column>
+                            : <Grid.Column
+                              as={Checkbox}
+                              floated="left"
+                              width={13}
+                              verticalAlign="middle"
+                              style={{ textDecoration: 'none' }}
+                              onClick={e =>
+                                handleExcludedIngredient(excludedIngredients, ingredient.id)}
+                              label={`${ingredient.name} ${ingredient.displayUnit} ${ingredient.displayQuantity}`}
+                            >
+                            </Grid.Column>}
+                        </Grid>
+                      </Segment>
+                    );
+                  })}
+                  <Modal trigger={<Button>Add to Peapod Cart</Button>} basicSize="medium">
+                    <Modal.Content>
+                      <div>
+                        <Grid
+                          textAlign="center"
+                          style={{ height: '100%' }}
                           verticalAlign="middle"
-                          style={{ textDecoration: 'line-through' }}
-                          onClick={e =>
-                            handleExcludedIngredient(excludedIngredients, ingredient.id)}
-                          label={`${ingredient.name} ${ingredient.displayUnit} ${ingredient.displayQuantity}`}
                         >
-                        </Grid.Column>
-                        : <Grid.Column
-                          as={Checkbox}
-                          floated="left"
-                          width={13}
-                          verticalAlign="middle"
-                          style={{ textDecoration: 'none' }}
-                          onClick={e =>
-                            handleExcludedIngredient(excludedIngredients, ingredient.id)}
-                          label={`${ingredient.name} ${ingredient.displayUnit} ${ingredient.displayQuantity}`}
-                        >
-                        </Grid.Column>}
-                    </Grid>
-                  </Segment>
-                );
-              })}
-            </Segment.Group>
-            <Segment>
-              <p>Unknown Ingredients:</p>
-            </Segment>
-            <Segment.Group>
-              {ingredients.filter(ing => !ing.prodId).map((ingredient) => {
-                return (
-                  <Segment key={ingredient.id}>
-                    <Grid>
-                      {excludedIngredients.indexOf(ingredient.id) !== -1
-                        ? <Grid.Column
-                          as={Checkbox}
-                          checked
-                          floated="left"
-                          width={13}
-                          verticalAlign="middle"
-                          style={{ textDecoration: 'line-through' }}
-                          onClick={e =>
-                            handleExcludedIngredient(excludedIngredients, ingredient.id)}
-                          label={`${ingredient.name} ${ingredient.displayUnit} ${ingredient.displayQuantity}`}
-                        />
-                        : <Grid.Column
-                          as={Checkbox}
-                          floated="left"
-                          width={13}
-                          verticalAlign="middle"
-                          style={{ textDecoration: 'none' }}
-                          onClick={e =>
-                            handleExcludedIngredient(excludedIngredients, ingredient.id)}
-                          label={`${ingredient.name} ${ingredient.displayUnit} ${ingredient.displayQuantity}`}
-                        />}
-                    </Grid>
-                  </Segment>
-                );
-              })}
-            </Segment.Group>
-            <Modal trigger={<Button>Add to Peapod Cart</Button>} basicSize="medium">
-              <Modal.Content>
-                <div>
-                  <Grid
-                    textAlign="center"
-                    style={{ height: '100%' }}
-                    verticalAlign="middle"
-                  >
-                    <Grid.Column style={{ maxWidth: 450 }}>
-                      <Header as="h2" color="teal" textAlign="center">
-                        Enter Peapod Login Credentials
+                          <Grid.Column style={{ maxWidth: 450 }}>
+                            <Header as="h2" color="teal" textAlign="center">
+                              Enter Peapod Login Credentials
                     </Header>
-                      <Form
-                        size="large"
-                        onSubmit={e =>
-                          handleCartPurchase(peapodIngredients, e)}
-                        name={name}
-                      >
-                        <Segment stacked>
-                          <Form.Input
-                            name="username"
-                            fluid
-                            icon="id badge"
-                            iconPosition="left"
-                            placeholder="Name"
-                          />
-                          <Form.Input
-                            name="password"
-                            fluid
-                            icon="lock"
-                            iconPosition="left"
-                            placeholder="Password"
-                            type="password"
-                          />
-                          <Form.Button color="teal" fluid size="large">
-                            Submit
+                            <Form
+                              size="large"
+                              onSubmit={e =>
+                                handleCartPurchase(peapodIngredients, e)}
+                              name={name}
+                            >
+                              <Segment stacked>
+                                <Form.Input
+                                  name="username"
+                                  fluid
+                                  icon="id badge"
+                                  iconPosition="left"
+                                  placeholder="Name"
+                                />
+                                <Form.Input
+                                  name="password"
+                                  fluid
+                                  icon="lock"
+                                  iconPosition="left"
+                                  placeholder="Password"
+                                  type="password"
+                                />
+                                <Form.Button color="teal" fluid size="large">
+                                  Submit
                         </Form.Button>
-                          <Form.Button color="teal" fluid onClick="self.close()">
-                            Cancel
+                                <Form.Button color="teal" fluid onClick="self.close()">
+                                  Cancel
                         </Form.Button>
-                        </Segment>
-                      </Form>
-                    </Grid.Column>
-                  </Grid>
-                </div>
-              </Modal.Content>
-            </Modal>
-            <Button onClick={() => handleClearList()}>Clear list</Button>
-            <Modal trigger={<Button>Text me my list</Button>} basic size='small' actions={[{ triggerClose: true }]} >
-              <Modal.Content>
-                <Form onSubmit={(e) => handleSendText(e, ingredients, excludedIngredients)}>
-                  <Input
-                    name="number"
-                    action={{ color: 'teal', labelPosition: 'left', icon: 'add', content: 'Submit' }}
-                    placeholder="input your phone number"
-                  />
-                </Form>
-              </Modal.Content>
-            </Modal>
-          </Segment.Group>
-          {
-            suggestedRecipes.length ?
-              <Card style={styles.suggestedRecipeCard}>
-                <Card.Content>
-                  <Image floated='right' size='mini' src='https://d30y9cdsu7xlg0.cloudfront.net/png/50479-200.png' />
-                  <Card.Header>
-                    I noticed you'd have some extra ingredients. Here are some recipes that would make use of those.
-                </Card.Header>
-                  <Card.Meta>
-                    - Sous
-                </Card.Meta>
-                </Card.Content>
-                <Card.Content extra>
-                  <Accordion
-                    panels={suggestedRecipes.map(rec => {
-                      return {
-                        title: rec.title,
-                        content: `Number of Servings: ${rec.servings}`
-                      };
-                    })
-                    } />
-                </Card.Content>
-                <Card.Content>
-                  <Button onClick={() => handleRejectSuggestedRecipes()}>No Thanks</Button>
-                </Card.Content>
-              </Card> : null
+                              </Segment>
+                            </Form>
+                          </Grid.Column>
+                        </Grid>
+                      </div>
+                    </Modal.Content>
+                  </Modal>
+                </Segment.Group>
+                {unknownIngredients.length ?
+                  <div>
+                    <Segment>
+                      <p>Ingredients not found on Peapod. You may have to buy these on your own.</p>
+                    </Segment>
+                    <Segment.Group>
+                      {unknownIngredients.map((ingredient) => {
+                        return (
+                          <Segment key={ingredient.id}>
+                            <Grid>
+                              {excludedIngredients.indexOf(ingredient.id) !== -1
+                                ? <Grid.Column
+                                  as={Checkbox}
+                                  checked
+                                  floated="left"
+                                  width={13}
+                                  verticalAlign="middle"
+                                  style={{ textDecoration: 'line-through' }}
+                                  onClick={e =>
+                                    handleExcludedIngredient(excludedIngredients, ingredient.id)}
+                                  label={`${ingredient.name} ${ingredient.displayUnit} ${ingredient.displayQuantity}`}
+                                >
+                                </Grid.Column>
+                                : <Grid.Column
+                                  as={Checkbox}
+                                  floated="left"
+                                  width={13}
+                                  verticalAlign="middle"
+                                  style={{ textDecoration: 'none' }}
+                                  onClick={e =>
+                                    handleExcludedIngredient(excludedIngredients, ingredient.id)}
+                                  label={`${ingredient.name} ${ingredient.displayUnit} ${ingredient.displayQuantity}`}
+                                >
+                                </Grid.Column>}
+                            </Grid>
+                          </Segment>
+                        );
+                      })}
+                    </Segment.Group>
+                  </div>
+                  : null
+                }
+                <Button onClick={() => handleClearList()}>Clear list</Button>
+                <Modal trigger={<Button>Text me my list</Button>} basic size='small' actions={[{ triggerClose: true }]} >
+                  <Modal.Content>
+                    <Form onSubmit={(e) => handleSendText(e, ingredients, excludedIngredients)}>
+                      <Input
+                        name="number"
+                        action={{ color: 'teal', labelPosition: 'left', icon: 'add', content: 'Submit' }}
+                        placeholder="input your phone number"
+                      />
+                    </Form>
+                  </Modal.Content>
+                </Modal>
+              </Segment.Group>
+              {
+                suggestedRecipes.length ?
+                  <Card style={styles.suggestedRecipeCard}>
+                    <Card.Content>
+                      <Image floated="right" size="mini" src="https://d30y9cdsu7xlg0.cloudfront.net/png/50479-200.png" />
+                      <Card.Header>
+                        I noticed you have some extra ingredients. Here are some recipes that would make use of those.
+                      </Card.Header>
+                      <Card.Meta>
+                        - Sous
+                      </Card.Meta>
+                    </Card.Content>
+                    <Card.Content extra>
+                      <Accordion
+                        panels={suggestedRecipes.map((rec) => {
+                          return {
+                            title: rec.title,
+                            content: `Number of Servings: ${rec.servings}`,
+                          };
+                        })
+                        }
+                      />
+                    </Card.Content>
+                    <Card.Content>
+                      <Button onClick={() => handleRejectSuggestedRecipes()}>No Thanks</Button>
+                    </Card.Content>
+                  </Card> : null
+              }
+            </div>
+
+            :
+            <EmptyList />
           }
         </Container>
       </div>
@@ -206,11 +222,13 @@ class GroceryList extends React.Component {
 const mapState = (state) => {
   const ingredients = addDisplayUnits(getIngredients(state.groceryListRecipes));
   const peapodIngredients = filterPeapodIng(ingredients, state.excludedIngredients);
+  const unknownIngredients = ingredients.filter(ing => !ing.prodId)
   return {
     ingredients,
     excludedIngredients: state.excludedIngredients,
     peapodIngredients,
     suggestedRecipes: state.suggestedRecipes,
+    unknownIngredients,
   };
 };
 
@@ -281,4 +299,5 @@ GroceryList.propTypes = {
   generateLeftoverSuggestions: PropTypes.func.isRequired,
   handleSendText: PropTypes.func.isRequired,
   handleRejectSuggestedRecipes: PropTypes.func.isRequired,
+  unknownIngredients: PropTypes.func.isRequired,
 };
