@@ -7,7 +7,6 @@ import { logout } from '../store/user';
 const active = (location, pathName) => {
   console.log(location.pathname, pathName)
   if (location.pathname === pathName) {
-    console.log('In if loop')
     return 'active';
   }
   return '';
