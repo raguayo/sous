@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import { logout } from '../store/user';
 
 const active = (location, pathName) => {
-  console.log(location.pathname, pathName)
   if (location.pathname === pathName) {
     return 'active';
   }

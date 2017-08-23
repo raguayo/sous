@@ -19,6 +19,7 @@ import {
 } from "../store/groceryListRecipes";
 import { postNewRecipe } from "../store/savedRecipes";
 import { EmptyList } from './';
+import RecipeCard from './RecipeCard';
 
 function CurrentRecipe({
   handleAddRecipe,
@@ -63,17 +64,7 @@ function CurrentRecipe({
             {groceryListRecipes && groceryListRecipes.map((currRecipe) => {
               return (
                 <Segment key={currRecipe.id}>
-                  <Grid>
-                    <Grid.Column floated="left" width={2}>
-                      <Form>
-                        <Form.Input placeholder={currRecipe.grocerylist.quantity} onChange={(e) => handleUpdateQuantity(currRecipe.id, e)} />
-                      </Form>
-                    </Grid.Column>
-                    <Grid.Column floated="left" width={10} verticalAlign="middle">
-                      <a href={currRecipe.recipeUrl} target="_blank" rel="noopener noreferrer">{currRecipe.title}</a>
-                    </Grid.Column>
-                    <Grid.Column floated="right" width={3} textAlign="right"><Icon onClick={() => handleDeleteRecipe(currRecipe.id)} name="delete" /></Grid.Column>
-                  </Grid>
+                  <RecipeCard recipe={currRecipe} isCurrRecipe="true" />
                 </Segment>
               );
             },
