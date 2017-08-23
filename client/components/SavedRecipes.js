@@ -8,40 +8,46 @@ import RecipeCard from './RecipeCard';
 function SavedRecipes({ favRecipes, prevRecipes, handleDelete, handleFavorite, handleTransfer }) {
   return (
     <Container style={styles.container}>
-      <Header as="h2">Your favorite recipes:</Header>
-      <Segment.Group>
-        <Segment>
-          <p>Favorites:</p>
-        </Segment>
-        <Segment.Group>
-          {
-            favRecipes.map((favRecipeObj) => {
-              return (
-                <Segment key={favRecipeObj.id}>
-                  <RecipeCard recipe={favRecipeObj} />
-                </Segment>
-              );
-            })
-          }
-        </Segment.Group>
-      </Segment.Group>
-      <Header as="h2">All the recipes you've added:</Header>
-      <Segment.Group>
-        <Segment>
-          <p>Previous Recipes:</p>
-        </Segment>
-        <Segment.Group>
-          {
-            prevRecipes.map((prevRecipeObj) => {
-              return (
-                <Segment key={prevRecipeObj.id}>
-                  <RecipeCard recipe={prevRecipeObj} />
-                </Segment>
-              );
-            })
-          }
-        </Segment.Group>
-      </Segment.Group>
+      <Grid>
+        <Grid.Column width={8}>
+          <Header as="h2" style={styles.header}>Your favorite recipes:</Header>
+          <Segment.Group>
+            <Segment>
+              <p style={styles.color}>Favorites:</p>
+            </Segment>
+            <Segment.Group>
+              {
+                favRecipes.map((favRecipeObj) => {
+                  return (
+                    <Segment key={favRecipeObj.id}>
+                      <RecipeCard recipe={favRecipeObj} />
+                    </Segment>
+                  );
+                })
+              }
+            </Segment.Group>
+          </Segment.Group>
+        </Grid.Column>
+        <Grid.Column width={8}>
+          <Header as="h2" style={styles.header}>All the recipes you've added:</Header>
+          <Segment.Group>
+            <Segment>
+              <p style={styles.color}>Previous Recipes:</p>
+            </Segment>
+            <Segment.Group>
+              {
+                prevRecipes.map((prevRecipeObj) => {
+                  return (
+                    <Segment key={prevRecipeObj.id}>
+                      <RecipeCard recipe={prevRecipeObj} />
+                    </Segment>
+                  );
+                })
+              }
+            </Segment.Group>
+          </Segment.Group>
+        </Grid.Column>
+      </Grid>
     </Container>
   );
 }
@@ -49,6 +55,15 @@ function SavedRecipes({ favRecipes, prevRecipes, handleDelete, handleFavorite, h
 const styles = {
   container: {
     padding: '5em 0em',
+  },
+  color: {
+    color: "#84643B"
+  },
+  header: {
+    maxWidth: "450",
+    color: "#84643B",
+    fontFamily: "Oleo Script Swash Caps",
+    fontSize: "2.5rem",
   },
 };
 
