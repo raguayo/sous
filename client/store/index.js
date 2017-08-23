@@ -8,8 +8,9 @@ import savedRecipes from './savedRecipes';
 import excludedIngredients from './excludedIngredients';
 import error from './error';
 import suggestedRecipes from './suggestedRecipes';
+import suggestedRecipesDirty from './suggestedRecipeDirty';
 
-const reducer = combineReducers({ user, groceryListRecipes, savedRecipes, excludedIngredients, error, suggestedRecipes });
+const reducer = combineReducers({ user, groceryListRecipes, savedRecipes, excludedIngredients, error, suggestedRecipes, suggestedRecipesDirty });
 
 const middleware = applyMiddleware(thunkMiddleware, createLogger({ collapsed: true }));
 
@@ -23,3 +24,4 @@ export * from './groceryList';
 export * from './excludedIngredients';
 export * from './error';
 export * from './suggestedRecipes';
+export * from './suggestedRecipeDirty';
