@@ -65,6 +65,12 @@ body {
   color: #946e4f;
 }
 
+.topnav a.active:hover {
+  background-color: #F86055;
+  border-radius: 3px;
+  color: white;
+}
+
 #logo:hover {
   font-size: 3.25rem;
   background-color: white;
