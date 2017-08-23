@@ -60,7 +60,7 @@ class GroceryList extends React.Component {
           </Grid>
           {ingredients.length ?
             <div>
-              <Segment.Group>
+              <Segment.Group style={{ width: '75%', margin: 'auto' }}>
                 <Segment>
                   <p style={styles.textColor}>Ingredients:</p>
                 </Segment>
@@ -106,12 +106,11 @@ class GroceryList extends React.Component {
                           verticalAlign="middle"
                         >
                           <Grid.Column style={{ maxWidth: 450 }}>
-                            <Header as="h2" color="teal" textAlign="center">
+                            <Header as="h2" style={{ color: '#77a95f' }} textAlign="center">
                               Enter Peapod Login Credentials
                     </Header>
                             <Form
                               size="large"
-                              className="appButton"
                               onSubmit={e =>
                                 handleCartPurchase(peapodIngredients, e)}
                               name={name}
@@ -132,12 +131,12 @@ class GroceryList extends React.Component {
                                   placeholder="Password"
                                   type="password"
                                 />
-                                <Form.Button color="teal" fluid size="large">
+                                <button className="appButton" fluid size="large">
                                   Submit
-                        </Form.Button>
-                                <Form.Button color="teal" fluid onClick="self.close()">
+                            </button>
+                                <button className='appButton' fluid onClick="self.close()">
                                   Cancel
-                        </Form.Button>
+                        </button>
                               </Segment>
                             </Form>
                           </Grid.Column>
@@ -191,10 +190,10 @@ class GroceryList extends React.Component {
                 <button className="appButton" onClick={() => handleClearList()}>Clear list</button>
                 <Modal trigger={<button className="appButton">Text me my list</button>} basic size="small" actions={[{ triggerClose: true }]} >
                   <Modal.Content>
-                    <Form className="appButton" onSubmit={(e) => handleSendText(e, ingredients, excludedIngredients)}>
+                    <Form onSubmit={(e) => handleSendText(e, ingredients, excludedIngredients)}>
                       <Input
                         name="number"
-                        action={{ color: 'teal', labelPosition: 'left', icon: 'add', content: 'Submit' }}
+                        action={{ style: { backgroundColor: '#77a95f', color: 'white' }, labelPosition: 'left', icon: 'add', content: 'Submit' }}
                         placeholder="input your phone number"
                       />
                     </Form>
