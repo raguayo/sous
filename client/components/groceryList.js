@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import React from 'react';
 
 import { Container, Grid, Header, Segment, Checkbox, Button, Modal, Input, Form, Accordion, Card, Image } from 'semantic-ui-react';
-import { postNewExcluded, deleteExcludedIngredient, addItemsToPeapodCart, deleteRecipesFromList, textGroceryList, addSuggestedRecipes, removeSuggestedRecipes } from '../store';
+import { postNewExcluded, deleteExcludedIngredient, addItemsToPeapodCart, deleteRecipesFromList, textGroceryList, addSuggestedRecipes, removeSuggestedRecipes, dirtySuggestedRecipes } from '../store';
 import { getIngredients, addDisplayUnits, calculateLeftovers, filterPeapodIng, getLeftoverRecipes, getLeftoverRecipeDetails, hasSufficientQuantities } from '../utils';
 import { EmptyList } from './';
 
@@ -43,8 +43,11 @@ const styles = {
 class GroceryList extends React.Component {
 
   componentDidMount() {
-    console.log('Running suggestion')
-    this.props.generateLeftoverSuggestions(this.props.peapodIngredients);
+    console.log('In did mount: ', this.props.dirty)
+    if (!this.props.dirty) {
+      console.log('Running sugg')
+      this.props.generateLeftoverSuggestions(this.props.peapodIngredients);
+    }
   }
 
   render() {
@@ -248,6 +251,7 @@ const mapState = (state) => {
     peapodIngredients,
     suggestedRecipes: state.suggestedRecipes,
     unknownIngredients,
+    dirty: state.suggestedRecipesDirty,
   };
 };
 
@@ -301,6 +305,7 @@ const mapDispatch = (dispatch) => {
     },
     handleRejectSuggestedRecipes() {
       dispatch(removeSuggestedRecipes());
+      dispatch(dirtySuggestedRecipes());
     },
   };
 };
@@ -319,4 +324,5 @@ GroceryList.propTypes = {
   handleSendText: PropTypes.func.isRequired,
   handleRejectSuggestedRecipes: PropTypes.func.isRequired,
   unknownIngredients: PropTypes.func.isRequired,
+  dirty: PropTypes.bool.isRequired,
 };
