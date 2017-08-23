@@ -1,25 +1,3 @@
-// body {
-//   font-family: sans-serif;
-
-//   a {
-//     text-decoration: none;
-//   }
-
-//   label {
-//     display: block;
-//   }
-
-//   nav a {
-//     display: inline-block;
-//     margin: 1em;
-//   }
-
-//   form div {
-//     margin: 1em;
-//     display: inline-block;
-//   }
-// }
-
 body {
   height: 100%;
   margin: 0;
@@ -39,6 +17,15 @@ body {
   font-family: 'Roboto Slab';
   margin: 0;
 }
+
+  // logo: {
+  //   fontFamily: 'Oleo Script Swash Caps',
+  //   color: '#77a95f',
+  //   fontSize: '2rem',
+  //   margin: '0 1.75rem',
+  //   fontWeight: '200',
+  //   paddingBottom: '0.25rem',
+  // },
 
 #logo {
   font-family: 'Oleo Script Swash Caps';
@@ -78,9 +65,9 @@ body {
   color: white;
 }
 
-#logo a:hover {
-  font-size: 4rem !important;
-  background-color: white !important;
+#logo:hover {
+  font-size: 3.25rem;
+  background-color: white;
 }
 
 .header-container {

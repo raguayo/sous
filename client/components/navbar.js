@@ -21,7 +21,7 @@ function Navbar(props) {
       <div className="topnav" id="myTopnav">
         <Link to={'/recipes'} >Recipes</Link>
         <Link to={'/grocery-list'}>Grocery List</Link>
-        <Link to={'/recipes'} style={styles.logo}>sous</Link>
+        <Link to={'/recipes'} id="logo">sous</Link>
         <Link to={'/user-profile'}>Profile</Link>
         <Link to={'/'}onClick={props.logout}>Log out</Link>
       </div>
