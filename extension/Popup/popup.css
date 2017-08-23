@@ -45,3 +45,7 @@
   height: 200px;
   margin: 0.857143em 0.857143em;
 }
+
+#submit-loader {
+  height: 6em;
+}
