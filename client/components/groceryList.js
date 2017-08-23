@@ -232,9 +232,7 @@ class GroceryList extends React.Component {
               }
             </div>
             :
-            <div style={styles.list}>
-              <EmptyList />
-            </div>
+            <EmptyList />
             }
         </Container>
       </div>
