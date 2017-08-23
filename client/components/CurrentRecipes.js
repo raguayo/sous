@@ -79,10 +79,7 @@ function CurrentRecipe({
             > Clear Recipe List</a>
           </Segment>
         </Segment.Group> :
-        <div>
-          <div style={styles.container} />
           <EmptyList style={styles.topMarg}/>
-        </div>
       }
     </Container>
   );
