@@ -1,33 +1,18 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import {
-  Container,
-  Grid,
-  Header,
-  Segment,
-  Icon,
-  Input,
-  Form,
-  Card
-} from "semantic-ui-react";
+import { Container, Grid, Header, Segment, Input, Form } from "semantic-ui-react";
 import { Link } from "react-router-dom";
-import {
-  deleteRecipeFromList,
-  deleteRecipesFromList,
-  updateRecipeQuantity
-} from "../store/groceryListRecipes";
+import { deleteRecipeFromList, deleteRecipesFromList } from "../store/groceryListRecipes";
 import { postNewRecipe } from "../store/savedRecipes";
 import { EmptyList } from './';
 import CurrRecipeCard from './CurrRecipeCard';
 
 function CurrentRecipe({
   handleAddRecipe,
-  handleDeleteRecipe,
   handleDeleteRecipes,
   groceryListRecipes,
   user,
-  handleUpdateQuantity
 }) {
   return (
     <Container style={styles.container}>
@@ -64,7 +49,7 @@ function CurrentRecipe({
                 {
                   groceryListRecipes && groceryListRecipes.map((currRecipe) => {
                     return (
-                      <Grid.Column width={8} style={styles.recipeCol}>
+                      <Grid.Column width={4} style={styles.recipeCol}>
                          <CurrRecipeCard recipe={currRecipe} isCurrRecipe="true" />
                       </Grid.Column>
                     );
@@ -88,7 +73,7 @@ function CurrentRecipe({
 const mapState = state => {
   return {
     groceryListRecipes: state.groceryListRecipes,
-    user: state.user
+    user: state.user,
   };
 };
 
@@ -110,11 +95,9 @@ const mapDispatch = dispatch => {
 
 CurrentRecipe.propTypes = {
   handleAddRecipe: PropTypes.func.isRequired,
-  handleDeleteRecipe: PropTypes.func.isRequired,
   handleDeleteRecipes: PropTypes.func.isRequired,
-  handleUpdateQuantity: PropTypes.func.isRequired,
   groceryListRecipes: PropTypes.array.isRequired,
-  user: PropTypes.object.isRequired
+  user: PropTypes.object.isRequired,
 };
 
 export default connect(mapState, mapDispatch)(CurrentRecipe);
