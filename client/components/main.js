@@ -35,7 +35,7 @@ const Main = (props) => {
       }
       <div>
         {isLoggedIn ?
-          <Navbar /> : null}
+          <Navbar location={props.location}/> : null}
       </div>
       <div>
         {children}

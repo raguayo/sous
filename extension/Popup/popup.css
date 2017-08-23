@@ -23,10 +23,10 @@
 
 .topnav {
   overflow: hidden;
-  height: 10vh;
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-bottom: 0.2em;
 }
 
 #button-footer {
@@ -39,4 +39,9 @@
   border: none;
   border-radius: 5px;
   color: white;
+}
+
+#loader {
+  height: 200px;
+  margin: 0.857143em 0.857143em;
 }

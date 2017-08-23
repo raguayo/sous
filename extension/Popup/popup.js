@@ -8,10 +8,7 @@ const styles = {
 chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
   const recipeUrl = tabs[0].url;
   chrome.runtime.sendMessage({ recipeUrl, msg: 'getRecipeDetails' }, (recipe) => {
-    let htmlString = `<div class="my-container">
-    <div class="topnav" id="myTopnav">
-      <p id="logo">sous</p>
-    </div>
+    let htmlString = `
     <h3 style="margin: 0.857143em 0.857143em">Recipe Details:</h3>
     <table class="ui definition table unstackable">
     <tbody>
@@ -56,9 +53,8 @@ chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
 
     htmlString += buttonHtml;
 
-    htmlString += '</div>';
-
-    $('body').append(htmlString);
+    $('#loader').hide();
+    $('#wrapper').append(htmlString);
 
     $('#saveBtn').click(() => {
       chrome.extension.sendMessage({ msg: 'createGroceryList', recipe, inGroceryList: false });

@@ -18,6 +18,7 @@ import {
   updateRecipeQuantity
 } from "../store/groceryListRecipes";
 import { postNewRecipe } from "../store/savedRecipes";
+import { EmptyList } from './';
 
 function CurrentRecipe({
   handleAddRecipe,
@@ -31,9 +32,7 @@ function CurrentRecipe({
     <Container style={styles.container}>
       <Grid textAlign="center">
         <Grid.Row>
-          <Header as="h1" style={styles.header}>
-            Welcome {user.name}
-          </Header>
+          <Header as="h1" style={styles.header}>Welcome, {user.name}</Header>
         </Grid.Row>
         <Grid.Row>
           <Grid.Column width={12}>
@@ -55,79 +54,44 @@ function CurrentRecipe({
           </Grid.Column>
         </Grid.Row>
       </Grid>
-      <Segment.Group>
-        {groceryListRecipes.length === 0
-          ? <div>
-              <Segment>
-                <p style={styles.color}>
-                  Your list is currently empty, why not add a recipe from{" "}
-                  <Link to={"./history"}>your recipes</Link> or upload a recipe
-                  using our CHROME EXTENSION LINK!
-                </p>
-              </Segment>
-            </div>
-          : <div>
-              <Segment>
-                <p style={styles.color}>Your currently selected recipes:</p>
-              </Segment>
-              <Segment.Group>
-                {groceryListRecipes &&
-                  groceryListRecipes.map(currRecipe => {
-                    return (
-                      <Segment key={currRecipe.id}>
-                        <Grid>
-                          <Grid.Column floated="left" width={2}>
-                            <Form>
-                              <Form.Input
-                                placeholder={currRecipe.grocerylist.quantity}
-                                onChange={e =>
-                                  handleUpdateQuantity(currRecipe.id, e)}
-                              />
-                            </Form>
-                          </Grid.Column>
-                          <Grid.Column
-                            floated="left"
-                            width={10}
-                            verticalAlign="middle"
-                          >
-                            <Card.Header>
-
-                              <a href={currRecipe.recipeUrl}>
-                                {currRecipe.title}
-                              </a>
-                            </Card.Header>
-                            <Card.Meta>
-                              <span>
-                                <br />
-                                Serves:&nbsp;{currRecipe.numServings}
-                              </span>
-                            </Card.Meta>
-                          </Grid.Column>
-                          <Grid.Column
-                            floated="right"
-                            width={3}
-                            textAlign="right"
-                          >
-                            <Icon
-                              onClick={() => handleDeleteRecipe(currRecipe.id)}
-                              name="delete"
-                            />
-                          </Grid.Column>
-                        </Grid>
-                      </Segment>
-                    );
-                  })}
-              </Segment.Group>
-            </div>}
-        <Segment>
-          <Link to={"./grocery-list"} className="appButton">
-            View Your Grocery List!
-          </Link>
-          <a onClick={() => handleDeleteRecipes()} className="appButton">
-            {" "}Clear Recipe List
-          </a>
-        </Segment>
-      </Segment.Group>
+      {groceryListRecipes.length ?
+        <Segment.Group>
+          <Segment>
+            <p style={styles.color}>Your currently selected recipes:</p>
+          </Segment>
+          <Segment.Group>
+            {groceryListRecipes && groceryListRecipes.map((currRecipe) => {
+              return (
+                <Segment key={currRecipe.id}>
+                  <Grid>
+                    <Grid.Column floated="left" width={2}>
+                      <Form>
+                        <Form.Input placeholder={currRecipe.grocerylist.quantity} onChange={(e) => handleUpdateQuantity(currRecipe.id, e)} />
+                      </Form>
+                    </Grid.Column>
+                    <Grid.Column floated="left" width={10} verticalAlign="middle">
+                      <a href={currRecipe.recipeUrl} target="_blank" rel="noopener noreferrer">{currRecipe.title}</a>
+                    </Grid.Column>
+                    <Grid.Column floated="right" width={3} textAlign="right"><Icon onClick={() => handleDeleteRecipe(currRecipe.id)} name="delete" /></Grid.Column>
+                  </Grid>
+                </Segment>
+              );
+            },
+            )}
+          </Segment.Group>
+          <Segment>
+            <Link to={'./grocery-list'} className="appButton" >View Your Grocery List!</Link>
+            <a
+              onClick={() => handleDeleteRecipes()}
+              className="appButton"
+            > Clear Recipe List</a>
+          </Segment>
+        </Segment.Group> :
+        <div>
+          <div style={styles.container} />
+          <EmptyList style={styles.topMarg}/>
+        </div>
+      }
     </Container>
   );
 }
@@ -180,6 +144,9 @@ const styles = {
     color: "#84643B"
   },
   recipeInput: {
-    width: "80%"
+    width: '80%',
+  },
+  topMarg: {
+    paddingTop: '3em',
   }
 };

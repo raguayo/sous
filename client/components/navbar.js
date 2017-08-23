@@ -4,26 +4,23 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { logout } from '../store/user';
 
-const styles = {
-  logo: {
-    fontFamily: 'Oleo Script Swash Caps',
-    color: '#77a95f',
-    fontSize: '2rem',
-    margin: '0 1.75rem',
-    fontWeight: '200',
-    paddingBottom: '0.25rem',
-  },
+const active = (location, pathName) => {
+  console.log(location.pathname, pathName)
+  if (location.pathname === pathName) {
+    return 'active';
+  }
+  return '';
 };
 
 function Navbar(props) {
   return (
     <div>
       <div className="topnav" id="myTopnav">
-        <Link to={'/recipes'} >Recipes</Link>
-        <Link to={'/grocery-list'}>Grocery List</Link>
-        <Link to={'/recipes'} style={styles.logo}>sous</Link>
-        <Link to={'/user-profile'}>Profile</Link>
-        <Link to={'/'}onClick={props.logout}>Log out</Link>
+        <Link to={'/recipes'} className={active(props.location, '/recipes')}>Recipes</Link>
+        <Link to={'/grocery-list'} className={active(props.location, '/grocery-list')}>Grocery List</Link>
+        <Link to={'/recipes'} id="logo">sous</Link>
+        <Link to={'/user-profile'} className={active(props.location, '/user-profile')}>Profile</Link>
+        <Link to={'/'} onClick={props.logout}>Log out</Link>
       </div>
     </div>
   );
@@ -42,6 +39,7 @@ const mapDispatch = dispatch => ({
 
 Navbar.propTypes = {
   logout: PropTypes.func.isRequired,
+  location: PropTypes.object.isRequired,
 };
 
 export default connect(mapState, mapDispatch)(Navbar);
