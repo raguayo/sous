@@ -60,16 +60,17 @@ function CurrentRecipe({
           <Segment>
             <p style={styles.color}>Your currently selected recipes:</p>
           </Segment>
-          <Segment.Group>
-            {groceryListRecipes && groceryListRecipes.map((currRecipe) => {
-              return (
-                <Segment key={currRecipe.id}>
-                  <RecipeCard recipe={currRecipe} isCurrRecipe="true" />
-                </Segment>
-              );
-            },
-            )}
-          </Segment.Group>
+              <Grid relaxed padded>
+                {
+                  groceryListRecipes && groceryListRecipes.map((currRecipe) => {
+                    return (
+                      <Grid.Column width={8} style={styles.recipeCol}>
+                         <RecipeCard recipe={currRecipe} isCurrRecipe="true" />
+                      </Grid.Column>
+                    );
+                  },
+                  )}
+              </Grid>
           <Segment>
             <Link to={'./grocery-list'} className="appButton" >View Your Grocery List!</Link>
             <a
@@ -122,6 +123,12 @@ CurrentRecipe.propTypes = {
 export default connect(mapState, mapDispatch)(CurrentRecipe);
 
 const styles = {
+  recipeCol: {
+    padding: '2em 1.6em 2em 2em'
+  },
+  recipeList: {
+    padding: '0.5em',
+  },
   header: {
     maxWidth: "450",
     color: "#84643B",
