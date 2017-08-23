@@ -172,6 +172,7 @@ let styles = {
   header: {
     fontSize: '2em',
     color: '#946e4f',
+    fontFamily: 'Roboto Slab',
   },
   paragraph: {
     fontSize: '1.33em',
