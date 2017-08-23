@@ -70,7 +70,7 @@ export const deleteRecipesFromList = () => dispatch =>
     .catch(err => dispatch(addError(err)));
 
 export const addItemsToPeapodCart = (itemsArr, peapodLoginCreds) => (dispatch) => {
-  axios
+  return axios
     .post('/api/peapod/', {
       items: itemsArr,
       username: peapodLoginCreds.username,

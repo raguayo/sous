@@ -65,7 +65,7 @@ function CurrentRecipe({
                   groceryListRecipes && groceryListRecipes.map((currRecipe) => {
                     return (
                       <Grid.Column width={8} style={styles.recipeCol}>
-                         <RecipeCard recipe={currRecipe} isCurrRecipe="true" />
+                         <CurrRecipeCard recipe={currRecipe} isCurrRecipe="true" />
                       </Grid.Column>
                     );
                   },
