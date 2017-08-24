@@ -8,12 +8,10 @@ const Promise = require('bluebird');
 module.exports = router;
 
 router.param('url', (req, res, next, url) => {
-  console.log('In the param route')
+  if (url === 'chrome') next();
   Recipe.findOne({ where: { recipeUrl: url } })
   .then((recipe) => {
     if (!recipe) {
-      console.log('In the not found?')
-      // make api call
       const formattedUrl = url.replace(':', '%3A').replace('/', '%2F');
       return axios.get(`/recipes/extract?forceExtraction=false&url=${formattedUrl}`, {
         baseURL: 'https://spoonacular-recipe-food-nutrition-v1.p.mashape.com',

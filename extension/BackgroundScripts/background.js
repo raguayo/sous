@@ -21,7 +21,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     // send response back to popup if successful
     $.ajax({
       type: 'POST',
-      url: 'http://localhost:8080/api/recipes/',
+      url: 'http://localhost:8080/api/recipes/chrome',
       data: {
         isFromChromeExt: true,
         inGroceryList: request.inGroceryList,
