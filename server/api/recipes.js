@@ -36,13 +36,121 @@ router.get('/', (req, res, next) => {
 });
 
 router.get('/:url', (req, res, next) => {
-  console.log('hello, im inthe get route')
   res.json(req.recipe);
 });
 
-router.post('/', (req, res, next) => {
+router.post('/:url', (req, res, next) => {
   let recipePromise;
   let ingredientArr;
+  let inGroceryList = true;
+
+  if (req.body.isFromChromeExt) {
+    req.recipe = req.body.recipe;
+    inGroceryList = req.body.inGroceryList;
+  }
+
+  let recipePromise = Promise.resolve();
+
+  if (req.recipe.extendedIngredients) {
+    // it's from the API and we need to add it
+    const { title, sourceUrl, imageUrls, servings } = req.body.recipe;
+    recipePromise = Recipe.findOrCreate({
+      where: {
+        recipeUrl: sourceUrl,
+      },
+      defaults: {
+        title,
+        imageUrl: imageUrls[0],
+        numServings: servings,
+      },
+    });
+
+    ingredientArr = req.body.extendedIngredients;
+
+    recipePromise = Promise.all([recipePromise, ...ingredientArr])
+      .then(([recipeArr, ...arrIngredients]) => {
+        const newRecipe = recipeArr[0];
+        req.recipe = newRecipe;
+        const isCreated = recipeArr[1];
+
+        // TODO: consider modularizing with adding passed argument if from microformat branch
+        if (isCreated) {
+          const arrOfIngIds = [];
+          // const promise = Promise.resolve(0);
+          // const arrIngredientPromises = arrIngredients.map((ingredient) => {
+          return Promise.each(arrIngredients, (ingredient) => {
+            // for (let i = 0; i < arrIngredients.length; i++) {
+            // const ingredient = arrIngredients[i];
+            if (ingredient.unit === '') ingredient.unit = 'piece';
+            // promise.then(() => {
+            return Ingredient.findOrCreate({
+              where: {
+                name: ingredient.name,
+              },
+              defaults: {
+                unitMeasure: ingredient.unit,
+              },
+            })
+            .then(([foundIngredient, ingIsCreated]) => {
+              // TODO: only line different from microformat branch
+              let peapodPromise;
+
+              if (ingIsCreated) {
+                // map to peapod
+                peapodPromise = mapToPeapod(foundIngredient);
+              }
+              return Promise.all([foundIngredient, peapodPromise])
+            })
+            .then(([createdIngredient, peapodIngredient]) => {
+              arrOfIngIds.push(createdIngredient.id);
+              if (peapodIngredient) createdIngredient.setPeapodIngredient(peapodIngredient[0]);
+              // if (!ingredient.quantity) ingredient.quantity = 1;
+              return IngredientQuantity.create({ recipeId: newRecipe.id, ingredientId: createdIngredient.id, quantity: ingredient.amount })
+                // .then(() => Ingredient.findById(createdIngredient.id))
+                .catch(next);
+            })
+            .catch(next);
+          })
+          // }
+          // });
+          .then(() => newRecipe.addIngredients(arrOfIngIds))
+            // TODO: modularize - same as in microformat branch
+            // return Promise.all([newRecipe, ...arrIngredientPromises])
+            // .then(([recipe, ...ingredients]) => {
+            //   const ingArr = recipe.addIngredients(ingredients);
+            //   return Promise.all([newRecipe, ingArr]);
+            // })
+            // .then(() => Recipe.findById(newRecipe.id))
+            .then(() => newRecipe)
+            .catch(next);
+        } else {
+          // do something different
+          console.log('Woops! Not sure how it found a recipe that searched from the api')
+        }
+      })
+    .catch(next);
+  }
+
+  recipePromise.then(() => req.user.addSavedRecipe(req.recipe))
+  .then(() => {
+    if (inGroceryList === 'true') {
+      return req.user.addGroceryListRecipe(req.recipe);
+    }
+    return 'not sure what to put here';
+  })
+  .then(() => res.sendStatus(201))
+  .catch(next);
+  })
+
+
+
+
+
+
+
+
+
+
 
   if (req.body.isFromChromeExt) {
     const { inGroceryList } = req.body;
