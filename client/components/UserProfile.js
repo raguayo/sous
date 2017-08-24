@@ -29,7 +29,7 @@ const styles = {
   },
 };
 
-function UserProfile({ user, handleNameUpdate, handleEmailUpdate, handlePasswordUpdate }) {
+function UserProfile({ user, handleNameUpdate, handleEmailUpdate, handlePasswordUpdate, modalOpen, handleClose }) {
   // console.log('in UserProfile rendering function');
   return (
     <Container>
@@ -57,7 +57,7 @@ function UserProfile({ user, handleNameUpdate, handleEmailUpdate, handlePassword
                   />
                 </Grid.Column>
                 <Grid.Column floated="right" width={3} textAlign="left">
-                  <Modal trigger={<Icon name="edit" />} basic size="small" actions={[{ triggerClose: true }]} >
+                  <Modal trigger={<Icon name="edit" />} open={modalOpen} onClose={handleClose} basic size="small" actions={[{ triggerClose: true }]} >
                     <Modal.Content>
                       <Form onSubmit={e => handleNameUpdate(e, user)}>
                         <Input
@@ -138,12 +138,14 @@ function UserProfile({ user, handleNameUpdate, handleEmailUpdate, handlePassword
 const mapState = (state) => {
   return {
     user: state.user,
+    modalOpen: false,
   };
 };
 
-const mapDispatch = (dispatch) => {
+const mapDispatch = (dispatch, ownProps) => {
   return {
     handleNameUpdate(e, user) {
+      console.log('ownProps: ', ownProps);
       const objUser = { id: user.id, name: e.target.name.value };
       dispatch(editUserName(objUser));
     },
@@ -165,4 +167,6 @@ UserProfile.propTypes = {
   handleNameUpdate: PropTypes.func.isRequired,
   handleEmailUpdate: PropTypes.func.isRequired,
   handlePasswordUpdate: PropTypes.func.isRequired,
+  modalOpen: PropTypes.bool.isRequired,
+  handleClose: PropTypes.func.isRequired,
 };
