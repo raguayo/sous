@@ -44,7 +44,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     $.ajax({
       method: 'GET',
       url: `https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/extract?forceExtraction=false&url=${formattedUrl}`,
-      headers: { 'X-Mashape-Key': 'QnY3wyIEE2mshTD7vw06Xu8z6Hiyp1WmIv3jsnlLIfoOsilpdH' },
+      headers: { 'X-Mashape-Key': 'RZRoXGCf7DmshqgKAiza2tAHVGI6p1E78wAjsnvpfQbNox9xek' },
     })
       .done((response) => {
         sendResponse(response);
