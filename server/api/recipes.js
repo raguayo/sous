@@ -7,10 +7,12 @@ const Promise = require('bluebird');
 
 module.exports = router;
 
-router.params('url', (req, res, next, url) => {
+router.param('url', (req, res, next, url) => {
+  console.log('In the param route')
   Recipe.findOne({ where: { recipeUrl: url } })
   .then((recipe) => {
     if (!recipe) {
+      console.log('In the not found?')
       // make api call
       const formattedUrl = url.replace(':', '%3A').replace('/', '%2F');
       return axios.get(`/recipes/extract?forceExtraction=false&url=${formattedUrl}`, {
@@ -36,6 +38,7 @@ router.get('/', (req, res, next) => {
 });
 
 router.get('/:url', (req, res, next) => {
+  console.log('hello, im inthe get route')
   res.json(req.recipe);
 });
 
