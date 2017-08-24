@@ -43,10 +43,11 @@ const styles = {
 
 class GroceryList extends React.Component {
   constructor() {
-    super()
+    super();
     this.state = {
-      modalOpen: false,
-    }
+      peapodModalOpen: false,
+      sendTextModalOpen: false,
+    };
   }
 
 
@@ -58,8 +59,10 @@ class GroceryList extends React.Component {
     }
   }
 
-  handleClose = () => this.setState({ modalOpen: false })
-  handleOpen = () => this.setState({ modalOpen: true })
+  handlePeapodModalClose = () => this.setState({ peapodModalOpen: false });
+  handlePeapodModalOpen = () => this.setState({ peapodModalOpen: true });
+  handleSendTextModalClose = () => this.setState({ sendTextModalOpen: false });
+  handleSendTextModalOpen = () => this.setState({ sendTextModalOpen: true });
 
   render(props) {
     console.log('props: ', props);
@@ -115,10 +118,10 @@ class GroceryList extends React.Component {
                     );
                   })}
                   <Modal
-                    trigger={<button onClick={this.handleOpen} className="appButton">Add to Peapod Cart</button>}
+                    trigger={<button onClick={this.handlePeapodModalOpen} className="appButton">Add to Peapod Cart</button>}
                     basicSize="medium"
-                    open={this.state.modalOpen}
-                    onClose={this.handleClose}
+                    open={this.state.peapodModalOpen}
+                    onClose={this.handlePeapodModalClose}
                   >
                     <Modal.Content>
                       <div>
@@ -134,7 +137,7 @@ class GroceryList extends React.Component {
                             <Form
                               size="large"
                               onSubmit={e =>
-                                handleCartPurchase(peapodIngredients, e, this.handleClose)}
+                                handleCartPurchase(peapodIngredients, e, this.handlePeapodModalClose)}
                               name={name}
                             >
                               <Segment stacked>
@@ -165,7 +168,7 @@ class GroceryList extends React.Component {
                                     </Dimmer>
                                   </Popup.Content>
                                 </Popup>
-                                <button className='appButton' fluid onClick={this.handleClose}>
+                                <button className="appButton" fluid onClick={this.handlePeapodModalClose}>
                                   Cancel
                               </button>
                               </Segment>
@@ -217,9 +220,15 @@ class GroceryList extends React.Component {
                   : null
                 }
                 <button className="appButton" onClick={() => handleClearList()}>Clear list</button>
-                <Modal trigger={<button className="appButton">Text me my list</button>} basic size="small" actions={[{ triggerClose: true }]} >
+                <Modal
+                  trigger={<button onClick={this.handleSendTextModalOpen} className="appButton">Text me my list</button>}
+                  basic size="small"
+                  open={this.state.sendTextModalOpen}
+                  onClose={this.handleSendTextModalClose}
+                  actions={[{ triggerClose: true }]}
+                >
                   <Modal.Content>
-                    <Form onSubmit={(e) => handleSendText(e, ingredients, excludedIngredients)}>
+                    <Form onSubmit={e => handleSendText(e, ingredients, excludedIngredients, this.handleSendTextModalClose)}>
                       <Input
                         name="number"
                         action={{ style: { backgroundColor: '#77a95f', color: 'white' }, labelPosition: 'left', icon: 'add', content: 'Submit' }}
@@ -291,7 +300,7 @@ const mapDispatch = (dispatch) => {
         dispatch(deleteExcludedIngredient(ingredientId));
       }
     },
-    handleCartPurchase(peapodItems, e, handleClose) {
+    handleCartPurchase(peapodItems, e, handlePeapodModalClose) {
       const itemArr = peapodItems.map((ingredientObj) => {
         return {
           id: ingredientObj.id,
@@ -306,7 +315,7 @@ const mapDispatch = (dispatch) => {
       };
       dispatch(addItemsToPeapodCart(itemArr, peapodLoginCreds))
         .then(() => {
-          handleClose();
+          handlePeapodModalClose();
         })
         .catch(console.error);
     },
@@ -324,7 +333,7 @@ const mapDispatch = (dispatch) => {
         })
         .catch(console.error);
     },
-    handleSendText(e, ingredients, excludedIds) {
+    handleSendText(e, ingredients, excludedIds, handleSendTextClose) {
       const number = e.target.number.value;
       let ingredientArr = ingredients.filter((ingredient) => {
         if (!excludedIds.includes(ingredient.id)) return ingredient;
@@ -333,6 +342,7 @@ const mapDispatch = (dispatch) => {
         return [ingredient.displayQuantity, ingredient.displayUnit, ingredient.name];
       });
       dispatch(textGroceryList(number, ingredientArr));
+      handleSendTextClose();
     },
     handleRejectSuggestedRecipes() {
       dispatch(removeSuggestedRecipes());
