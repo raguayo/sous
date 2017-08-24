@@ -1,10 +1,33 @@
 const router = require('express').Router();
+const axios = require('axios');
 const { Recipe, Ingredient, User, IngredientQuantity, SavedRecipe } = require('../db/models');
 const { microformatScraper } = require('../scraper/microformat');
 const mapToPeapod = require('../../peapod/mapToPeapod');
 const Promise = require('bluebird');
 
 module.exports = router;
+
+router.params('url', (req, res, next, url) => {
+  Recipe.findOne({ where: { recipeUrl: url } })
+  .then((recipe) => {
+    if (!recipe) {
+      // make api call
+      const formattedUrl = url.replace(':', '%3A').replace('/', '%2F');
+      return axios.get(`/recipes/extract?forceExtraction=false&url=${formattedUrl}`, {
+        baseURL: 'https://spoonacular-recipe-food-nutrition-v1.p.mashape.com',
+        headers: { 'X-Mashape-Key': process.env.RECIPE_API_KEY },
+      })
+      .then(response => response.data)
+      .catch(next);
+    }
+    return recipe;
+  })
+  .then((recipe) => {
+    req.recipe = recipe;
+    next();
+  })
+  .catch(next);
+});
 
 router.get('/', (req, res, next) => {
   req.user.getSavedRecipes()
