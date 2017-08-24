@@ -61,7 +61,8 @@ class GroceryList extends React.Component {
   handleClose = () => this.setState({ modalOpen: false })
   handleOpen = () => this.setState({ modalOpen: true })
 
-  render() {
+  render(props) {
+    console.log('props: ', props);
     const { ingredients, excludedIngredients, peapodIngredients, handleExcludedIngredient, handleCartPurchase, handleClearList, handleSendText, suggestedRecipes, handleRejectSuggestedRecipes, unknownIngredients } = this.props;
 
     return (
