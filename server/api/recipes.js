@@ -35,11 +35,9 @@ router.get('/', (req, res, next) => {
   .catch(next);
 });
 
-// router.get('/:id', (req, res, next) => {
-//   Recipe.findById(req.params.id)
-//     .then(userRecipes => res.json(userRecipes))
-//     .catch(next);
-// });
+router.get('/:url', (req, res, next) => {
+  res.json(req.recipe);
+});
 
 router.post('/', (req, res, next) => {
   let recipePromise;
