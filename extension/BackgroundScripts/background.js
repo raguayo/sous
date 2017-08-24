@@ -40,11 +40,10 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       });
     return true;
   } else if (request.msg === 'getRecipeDetails') {
-    const formattedUrl = request.recipeUrl.replace(':', '%3A').replace('/', '%2F');
+    const formattedUrl = request.recipeUrl.replace(':', '%3A').split('/').join('%2F');
     $.ajax({
       method: 'GET',
-      url: `https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/extract?forceExtraction=false&url=${formattedUrl}`,
-      headers: { 'X-Mashape-Key': 'QnY3wyIEE2mshTD7vw06Xu8z6Hiyp1WmIv3jsnlLIfoOsilpdH' },
+      url: `http://localhost:8080/api/recipes/${formattedUrl}`,
     })
       .done((response) => {
         sendResponse(response);
