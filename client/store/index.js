@@ -16,10 +16,10 @@ const middleware = applyMiddleware(thunkMiddleware, createLogger({ collapsed: tr
 const store = createStore(reducer, middleware);
 
 export default store;
-export * from './user';
-export * from './savedRecipes';
-export * from './groceryListRecipes';
-export * from './excludedIngredients';
 export * from './error';
+export * from './excludedIngredients';
+export * from './groceryListRecipes';
+export * from './savedRecipes';
 export * from './suggestedRecipes';
 export * from './suggestedRecipeDirty';
+export * from './user';

@@ -8,7 +8,7 @@ import { Main, Login, Signup, CurrentRecipes, Splash, SavedRecipes, GroceryList,
 import { me, fetchGroceryListRecipes, fetchSavedRecipes, fetchExcludedIngredients } from './store';
 
 class Routes extends Component {
-  componentWillMount() {
+  componentDidMount() {
     this.props.loadInitialData();
   }
 

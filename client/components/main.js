@@ -63,7 +63,6 @@ export default withRouter(connect(mapState, mapDispatch)(Main));
 Main.propTypes = {
   children: PropTypes.object,
   isLoggedIn: PropTypes.bool.isRequired,
-  error: PropTypes.object.isRequired,
   handleRemoveError: PropTypes.func.isRequired,
 };
 
