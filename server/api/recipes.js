@@ -8,25 +8,27 @@ const Promise = require('bluebird');
 module.exports = router;
 
 router.param('url', (req, res, next, url) => {
-  if (url === 'chrome') next();
-  Recipe.findOne({ where: { recipeUrl: url } })
-  .then((recipe) => {
-    if (!recipe) {
-      const formattedUrl = url.replace(':', '%3A').replace('/', '%2F');
-      return axios.get(`/recipes/extract?forceExtraction=false&url=${formattedUrl}`, {
-        baseURL: 'https://spoonacular-recipe-food-nutrition-v1.p.mashape.com',
-        headers: { 'X-Mashape-Key': process.env.RECIPE_API_KEY },
-      })
-      .then(response => response.data)
-      .catch(next);
-    }
-    return recipe;
-  })
-  .then((recipe) => {
-    req.recipe = recipe;
-    next();
-  })
-  .catch(next);
+  if (url === 'chrome') next()
+  else {
+    Recipe.findOne({ where: { recipeUrl: url } })
+    .then((recipe) => {
+      if (!recipe) {
+        const formattedUrl = url.replace(':', '%3A').replace('/', '%2F');
+        return axios.get(`/recipes/extract?forceExtraction=false&url=${formattedUrl}`, {
+          baseURL: 'https://spoonacular-recipe-food-nutrition-v1.p.mashape.com',
+          headers: { 'X-Mashape-Key': process.env.RECIPE_API_KEY },
+        })
+        .then(response => response.data)
+        .catch(next);
+      }
+      return recipe;
+    })
+    .then((recipe) => {
+      req.recipe = recipe;
+      next();
+    })
+    .catch(next);
+  }
 });
 
 router.get('/', (req, res, next) => {
@@ -46,12 +48,12 @@ router.post('/:url', (req, res, next) => {
 
   if (req.body.isFromChromeExt) {
     req.recipe = req.body.recipe;
-    inGroceryList = req.body.inGroceryList;
+    inGroceryList = req.body.inGroceryList === 'true';
   }
 
   if (req.recipe.extendedIngredients) {
-    // it's from the API and we need to add it
-    const { title, sourceUrl, imageUrls, servings } = req.body.recipe;
+    // it's from the API and we need to add it to the database
+    const { title, sourceUrl, imageUrls, servings } = req.recipe;
     recipePromise = Recipe.findOrCreate({
       where: {
         recipeUrl: sourceUrl,
@@ -63,7 +65,7 @@ router.post('/:url', (req, res, next) => {
       },
     });
 
-    ingredientArr = req.body.extendedIngredients;
+    ingredientArr = req.recipe.extendedIngredients;
 
     recipePromise = Promise.all([recipePromise, ...ingredientArr])
       .then(([recipeArr, ...arrIngredients]) => {
@@ -129,166 +131,40 @@ router.post('/:url', (req, res, next) => {
       .catch(next);
   }
 
-  recipePromise.then(() => req.user.addSavedRecipe(req.recipe))
-    .then(() => {
-      if (inGroceryList === 'true') {
-        return req.user.addGroceryListRecipe(req.recipe);
+  recipePromise.then(() => {
+    let savedRecipePromise = null;
+    let groceryListRecipePromise = null;
+
+    if (req.recipe.id) {
+      savedRecipePromise = req.user.addSavedRecipe(req.recipe.id);
+      if (inGroceryList) {
+        groceryListRecipePromise = req.user.addGroceryListRecipe(req.recipe.id);
       }
-      return 'not sure what to put here';
-    })
-    .then(() => res.sendStatus(201))
-    .catch(next);
+    } else {
+      savedRecipePromise = req.user.addSavedRecipe(req.recipe);
+      if (inGroceryList) {
+        groceryListRecipePromise = req.user.addGroceryListRecipe(req.recipe);
+      }
+    }
+
+    return Promise.all([savedRecipePromise, groceryListRecipePromise]);
+  })
+  .then(([savedRecipe, groceryListRecipe]) => {
+    if (groceryListRecipe) {
+      return Promise.all([req.user.getSavedRecipes(), req.user.getGroceryListRecipes()]);
+    } else {
+      return Promise.all([req.user.getSavedRecipes(), null])
+    }
+  })
+  .then(([savedRecipe, groceryListRecipe]) => {
+    if (groceryListRecipe) {
+      res.status(201).json({ savedRecipe, groceryListRecipe });
+    } else {
+      res.status(201).json({ savedRecipe });
+    }
+  })
+  .catch(next);
 });
-
-  // if (req.body.isFromChromeExt) {
-  //   const { inGroceryList } = req.body;
-  //   const { title, sourceUrl, imageUrls, servings } = req.body.recipe;
-  //   recipePromise = Recipe.findOrCreate({
-  //     where: {
-  //       recipeUrl: sourceUrl,
-  //     },
-  //     defaults: {
-  //       title,
-  //       imageUrl: imageUrls[0],
-  //       numServings: servings,
-  //     },
-  //   });
-
-  //   ingredientArr = req.body.ingredients;
-
-  //   Promise.all([recipePromise, ...ingredientArr])
-  //     .then(([recipeArr, ...arrIngredients]) => {
-  //       const newRecipe = recipeArr[0];
-  //       const isCreated = recipeArr[1];
-
-  //       // TODO: modularize to set following two associations - pass user argument to handle both post branches
-  //       req.user.addSavedRecipe(newRecipe);
-  //       // chrome extension stringifies bool for some reason
-  //       if (inGroceryList === 'true') {
-  //         req.user.addGroceryListRecipe(newRecipe);
-  //       }
-
-  //       // TODO: consider modularizing with adding passed argument if from microformat branch
-  //       if (isCreated) {
-  //         const arrOfIngIds = [];
-  //         // const promise = Promise.resolve(0);
-  //         // const arrIngredientPromises = arrIngredients.map((ingredient) => {
-  //         Promise.each(arrIngredients, (ingredient) => {
-  //           // for (let i = 0; i < arrIngredients.length; i++) {
-  //           // const ingredient = arrIngredients[i];
-  //           if (ingredient.unit === '') ingredient.unit = 'piece';
-  //           // promise.then(() => {
-  //           return Ingredient.findOrCreate({
-  //             where: {
-  //               name: ingredient.name,
-  //             },
-  //             defaults: {
-  //               unitMeasure: ingredient.unit,
-  //             },
-  //           })
-  //           .then(([foundIngredient, ingIsCreated]) => {
-  //             // TODO: only line different from microformat branch
-  //             let peapodPromise;
-
-  //             if (ingIsCreated) {
-  //               // map to peapod
-  //               peapodPromise = mapToPeapod(foundIngredient);
-  //             }
-  //             return Promise.all([foundIngredient, peapodPromise])
-  //           })
-  //           .then(([createdIngredient, peapodIngredient]) => {
-  //             arrOfIngIds.push(createdIngredient.id);
-  //             if (peapodIngredient) createdIngredient.setPeapodIngredient(peapodIngredient[0]);
-  //             // if (!ingredient.quantity) ingredient.quantity = 1;
-  //             return IngredientQuantity.create({ recipeId: newRecipe.id, ingredientId: createdIngredient.id, quantity: ingredient.amount })
-  //               // .then(() => Ingredient.findById(createdIngredient.id))
-  //               .catch(next);
-  //           })
-  //           .catch(next);
-  //         })
-  //         // }
-  //         // });
-  //         .then(() => newRecipe.addIngredients(arrOfIngIds))
-  //           // TODO: modularize - same as in microformat branch
-  //           // return Promise.all([newRecipe, ...arrIngredientPromises])
-  //           // .then(([recipe, ...ingredients]) => {
-  //           //   const ingArr = recipe.addIngredients(ingredients);
-  //           //   return Promise.all([newRecipe, ingArr]);
-  //           // })
-  //           // .then(() => Recipe.findById(newRecipe.id))
-  //           .then(() => res.sendStatus(201))
-  //           .catch(next);
-  //       } else {
-  //         res.sendStatus(201);
-  //       }
-  //     })
-  //   .catch(next);
-  // } else {
-  //   const { url } = req.body;
-  //   microformatScraper(url)
-  //   .then((data) => {
-  //     const title = data.properties.name[0];
-  //     ingredientArr = data.properties.ingredient;
-  //     const imageUrl = data.properties.photo[0];
-  //     recipePromise = Recipe.findOrCreate({
-  //       where: {
-  //         title,
-  //         // author: req.body.author,
-  //       },
-  //       defaults: {
-  //         recipeUrl: url,
-  //         imageUrl,
-  //         // siteName: req.body.siteName,
-  //         // tags: req.body.tags,
-  //         // isFavorite: req.body.isFavorite,
-  //         // numServings: req.body.numServings,
-  //       },
-  //     });
-  //     return Promise.all([recipePromise, ...ingredientArr]);
-  //   })
-  // .then(([recipeArr, ...arrIngredients]) => {
-  //   const newRecipe = recipeArr[0];
-  //   const isCreated = recipeArr[1];
-
-  //   // TODO: modularize to set following two associations - pass user and inGroceryList(null if from chrome ext) arguments to handle both post branches
-  //   req.user.addSavedRecipe(newRecipe);
-
-  //   req.user.addGroceryListRecipe(newRecipe);
-
-  //   // TODO: consider modularizing with adding passed argument if from microformat branch
-  //   if (isCreated) {
-  //     const arrIngredientPromises = arrIngredients.map((ingredient) => {
-  //       return Ingredient.findOrCreate({
-  //         where: {
-  //           name: ingredient,
-  //         },
-  //         defaults: {
-  //           unitMeasure: ingredient.unit,
-  //         },
-  //       })
-  //       .then(([foundIngredient, ingIsCreated]) => {
-  //         return foundIngredient;
-  //       })
-  //       .catch(next);
-  //     });
-
-  //     // TODO: modularize - same as in microformat branch
-
-  //     return Promise.all([newRecipe, ...arrIngredientPromises])
-  //       .then(([recipe, ...ingredients]) => {
-  //         const ingArr = recipe.addIngredients(ingredients);
-  //         return Promise.all([newRecipe, ingArr]);
-  //       })
-  //       .then(([recipe, ingredientsArr]) => Recipe.findById(recipe.id))
-  //       .then(recipe => res.status(201).json(recipe))
-  //       .catch(next);
-  //   } else {
-  //     res.sendStatus(201);
-  //   }
-  // })
-  // .catch(next);
-  // }
-// });
 
 router.put('/:id/favorite', (req, res, next) => {
   const recipeId = req.params.id;

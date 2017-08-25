@@ -32,7 +32,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       .done((response) => {
         chrome.tabs.query({ title: 'Raww' }, function (tab) {
           console.log('Tabs: ', tab)
-          chrome.tabs.reload(tab[0].id, () => sendResponse({ status: response }));
+          chrome.tabs.reload(tab[0].id, () => sendResponse(response));
         });
       })
       .fail((response) => {
