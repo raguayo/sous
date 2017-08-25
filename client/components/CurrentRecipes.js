@@ -1,10 +1,9 @@
-import React from "react";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import { Container, Grid, Header, Segment, Input, Form } from "semantic-ui-react";
-import { Link } from "react-router-dom";
-import { deleteRecipeFromList, deleteRecipesFromList } from "../store/groceryListRecipes";
-import { postNewRecipe } from "../store/savedRecipes";
+import React from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { Container, Grid, Header, Segment, Input, Form } from 'semantic-ui-react';
+import { Link } from 'react-router-dom';
+import { deleteRecipesFromList, postNewRecipe } from '../store';
 import { EmptyList } from './';
 import CurrRecipeCard from './CurrRecipeCard';
 
@@ -28,10 +27,10 @@ function CurrentRecipe({
                   name="recipeUrl"
                   style={styles.recipeInput}
                   action={{
-                    labelPosition: "left",
-                    icon: "add",
-                    content: "Add",
-                    style: { backgroundColor: "#77a95f", color: "white" }
+                    labelPosition: 'left',
+                    icon: 'add',
+                    content: 'Add',
+                    style: { backgroundColor: '#77a95f', color: 'white' }
                   }}
                   placeholder="Recipe url..."
                 />
@@ -45,17 +44,17 @@ function CurrentRecipe({
           <Segment>
             <p style={styles.color}>Your currently selected recipes:</p>
           </Segment>
-              <Grid relaxed padded>
-                {
-                  groceryListRecipes && groceryListRecipes.map((currRecipe) => {
-                    return (
-                      <Grid.Column width={5} style={styles.recipeCol}>
-                         <CurrRecipeCard recipe={currRecipe} isCurrRecipe="true" />
-                      </Grid.Column>
-                    );
-                  },
-                  )}
-              </Grid>
+          <Grid relaxed padded>
+            {
+              groceryListRecipes && groceryListRecipes.map((currRecipe) => {
+                return (
+                  <Grid.Column width={4} style={styles.recipeCol} key={currRecipe.id}>
+                    <CurrRecipeCard recipe={currRecipe} isCurrRecipe="true" />
+                  </Grid.Column>
+                );
+              },
+              )}
+          </Grid>
           <Segment>
             <Link to={'./grocery-list'} className="appButton" >View Your Grocery List!</Link>
             <a
@@ -64,32 +63,28 @@ function CurrentRecipe({
             > Clear Recipe List</a>
           </Segment>
         </Segment.Group> :
-          <EmptyList style={styles.topMarg}/>
+        <EmptyList style={styles.topMarg} />
       }
     </Container>
   );
 }
 
-const mapState = state => {
+const mapState = (state) => {
   return {
     groceryListRecipes: state.groceryListRecipes,
     user: state.user,
   };
 };
 
-const mapDispatch = dispatch => {
+const mapDispatch = (dispatch) => {
   return {
     handleAddRecipe: e => {
       e.preventDefault();
       dispatch(postNewRecipe(e.target.recipeUrl.value, true));
     },
-    handleDeleteRecipe: id => dispatch(deleteRecipeFromList(id)),
     handleDeleteRecipes: () => {
       dispatch(deleteRecipesFromList());
     },
-    handleUpdateQuantity: (recipeId, e) => {
-      dispatch(updateRecipeQuantity(recipeId, e.target.value));
-    }
   };
 };
 
@@ -104,22 +99,21 @@ export default connect(mapState, mapDispatch)(CurrentRecipe);
 
 const styles = {
   recipeCol: {
-    padding: '2em 1.6em 2em 2em'
+    padding: '2em 1.6em 2em 2em',
   },
   recipeList: {
     padding: '0.5em',
   },
   header: {
-    maxWidth: "450",
-    color: "#84643B",
-    fontFamily: "Oleo Script Swash Caps",
-    fontSize: "4rem"
+    color: '#84643B',
+    fontFamily: 'Oleo Script Swash Caps',
+    fontSize: '4rem',
   },
   container: {
-    padding: "5em 0em"
+    padding: '5em 0em',
   },
   color: {
-    color: "#84643B"
+    color: '#84643B',
   },
   recipeInput: {
     width: '80%',

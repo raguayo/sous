@@ -1,11 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Container, Grid, Header, Segment, Icon, Popup, Button } from 'semantic-ui-react';
+import { Container, Grid, Header, Segment } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import { deleteSavedRecipe, transferSavedRecipe, favoriteToggle } from '../store/';
 import RecipeCard from './RecipeCard';
 
-function SavedRecipes({ favRecipes, prevRecipes, handleDelete, handleFavorite, handleTransfer }) {
+function SavedRecipes({ favRecipes, prevRecipes }) {
   return (
     <Container style={styles.container}>
       <Grid>
@@ -57,13 +57,13 @@ const styles = {
     padding: '5em 0em',
   },
   color: {
-    color: "#84643B"
+    color: '#84643B',
   },
   header: {
-    maxWidth: "450",
-    color: "#84643B",
-    fontFamily: "Oleo Script Swash Caps",
-    fontSize: "2.5rem",
+    maxWidth: '450',
+    color: '#84643B',
+    fontFamily: 'Oleo Script Swash Caps',
+    fontSize: '2.5rem',
   },
 };
 
@@ -89,7 +89,4 @@ export default connect(mapState, mapDispatch)(SavedRecipes);
 SavedRecipes.propTypes = {
   favRecipes: PropTypes.array.isRequired,
   prevRecipes: PropTypes.array.isRequired,
-  handleDelete: PropTypes.func.isRequired,
-  handleFavorite: PropTypes.func.isRequired,
-  handleTransfer: PropTypes.func.isRequired,
 };
