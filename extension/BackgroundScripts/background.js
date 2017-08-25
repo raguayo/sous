@@ -21,7 +21,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     // send response back to popup if successful
     $.ajax({
       type: 'POST',
-      url: 'http://localhost:8080/api/recipes/',
+      url: 'http://localhost:8080/api/recipes/chrome',
       data: {
         isFromChromeExt: true,
         inGroceryList: request.inGroceryList,
@@ -32,7 +32,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       .done((response) => {
         chrome.tabs.query({ title: 'Raww' }, function (tab) {
           console.log('Tabs: ', tab)
-          chrome.tabs.reload(tab[0].id, () => sendResponse({ status: response }));
+          chrome.tabs.reload(tab[0].id, () => sendResponse(response));
         });
       })
       .fail((response) => {
@@ -40,11 +40,10 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       });
     return true;
   } else if (request.msg === 'getRecipeDetails') {
-    const formattedUrl = request.recipeUrl.replace(':', '%3A').replace('/', '%2F');
+    const formattedUrl = request.recipeUrl.replace(':', '%3A').split('/').join('%2F');
     $.ajax({
       method: 'GET',
-      url: `https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/extract?forceExtraction=false&url=${formattedUrl}`,
-      headers: { 'X-Mashape-Key': 'RZRoXGCf7DmshqgKAiza2tAHVGI6p1E78wAjsnvpfQbNox9xek' },
+      url: `http://localhost:8080/api/recipes/${formattedUrl}`,
     })
       .done((response) => {
         sendResponse(response);

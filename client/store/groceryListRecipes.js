@@ -22,7 +22,7 @@ const defaultRecipes = [];
 /**
  * ACTION CREATORS
  */
-const getListRecipes = recipes => ({ type: GET_LIST_RECIPES, recipes });
+export const getListRecipes = recipes => ({ type: GET_LIST_RECIPES, recipes });
 export const removeRecipeFromList = recipeId => ({
   type: REMOVE_RECIPE_FROM_LIST,
   recipeId

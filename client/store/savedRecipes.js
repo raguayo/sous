@@ -1,6 +1,6 @@
 import axios from 'axios';
 import history from '../history';
-import { removeRecipeFromList } from './groceryListRecipes';
+import { removeRecipeFromList, getListRecipes } from './groceryListRecipes';
 import { addError } from './error';
 
 /**
@@ -48,13 +48,19 @@ export const deleteSavedRecipe = recipeId =>
       .catch(addError);
 
 export const postNewRecipe = (url, inGroceryList) =>
-  dispatch =>
-    axios.post('/api/recipes', { url, inGroceryList })
+  (dispatch) => {
+    const formattedUrl = url.replace(':', '%3A').split('/').join('%2F');
+    return axios.post(`/api/recipes/${formattedUrl}`, { inGroceryList })
       .then(res => res.data)
-      .then((newRecipe) => {
-        dispatch(addRecipe(newRecipe));
+      .then((recipes) => {
+        console.log('Recipes: ', recipes)
+        if (recipes.groceryListRecipe) {
+          dispatch(getListRecipes(recipes.groceryListRecipe));
+        }
+        dispatch(getSavedRecipes(recipes.savedRecipe));
       })
       .catch(addError);
+  }
 
 export const favoriteToggle = recipeId => dispatch =>
   axios.put(`/api/recipes/${recipeId}/favorite`)
