@@ -362,6 +362,6 @@ GroceryList.propTypes = {
   generateLeftoverSuggestions: PropTypes.func.isRequired,
   handleSendText: PropTypes.func.isRequired,
   handleRejectSuggestedRecipes: PropTypes.func.isRequired,
-  unknownIngredients: PropTypes.func.isRequired,
+  unknownIngredients: PropTypes.array.isRequired,
   dirty: PropTypes.bool.isRequired,
 };

@@ -3,10 +3,16 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Container, Grid, Header, Segment, Input, Form } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
-import { deleteRecipesFromList } from '../store';
-import { EmptyList, CurrRecipeCard } from './';
+import { deleteRecipesFromList, postNewRecipe } from '../store';
+import { EmptyList } from './';
+import CurrRecipeCard from './CurrRecipeCard';
 
-function CurrentRecipe({ handleDeleteRecipes, groceryListRecipes, user }) {
+function CurrentRecipe({
+  handleAddRecipe,
+  handleDeleteRecipes,
+  groceryListRecipes,
+  user,
+}) {
   return (
     <Container style={styles.container}>
       <Grid textAlign="center">
@@ -24,7 +30,7 @@ function CurrentRecipe({ handleDeleteRecipes, groceryListRecipes, user }) {
                     labelPosition: 'left',
                     icon: 'add',
                     content: 'Add',
-                    style: { backgroundColor: '#77a95f', color: 'white' },
+                    style: { backgroundColor: '#77a95f', color: 'white' }
                   }}
                   placeholder="Recipe url..."
                 />
@@ -42,7 +48,7 @@ function CurrentRecipe({ handleDeleteRecipes, groceryListRecipes, user }) {
             {
               groceryListRecipes && groceryListRecipes.map((currRecipe) => {
                 return (
-                  <Grid.Column width={4} style={styles.recipeCol}>
+                  <Grid.Column width={4} style={styles.recipeCol} key={currRecipe.id}>
                     <CurrRecipeCard recipe={currRecipe} isCurrRecipe="true" />
                   </Grid.Column>
                 );
@@ -72,6 +78,10 @@ const mapState = (state) => {
 
 const mapDispatch = (dispatch) => {
   return {
+    handleAddRecipe: e => {
+      e.preventDefault();
+      dispatch(postNewRecipe(e.target.recipeUrl.value, true));
+    },
     handleDeleteRecipes: () => {
       dispatch(deleteRecipesFromList());
     },
@@ -79,6 +89,7 @@ const mapDispatch = (dispatch) => {
 };
 
 CurrentRecipe.propTypes = {
+  handleAddRecipe: PropTypes.func.isRequired,
   handleDeleteRecipes: PropTypes.func.isRequired,
   groceryListRecipes: PropTypes.array.isRequired,
   user: PropTypes.object.isRequired,
@@ -94,7 +105,6 @@ const styles = {
     padding: '0.5em',
   },
   header: {
-    maxWidth: '450',
     color: '#84643B',
     fontFamily: 'Oleo Script Swash Caps',
     fontSize: '4rem',
@@ -110,5 +120,5 @@ const styles = {
   },
   topMarg: {
     paddingTop: '3em',
-  },
+  }
 };
