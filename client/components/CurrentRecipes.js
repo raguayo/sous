@@ -110,5 +110,5 @@ const styles = {
   },
   topMarg: {
     paddingTop: '3em',
-  }
+  },
 };

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { logout } from '../store/user';
+import { logout } from '../store';
 
 const active = (location, pathName) => {
   if (location.pathname === pathName) {
