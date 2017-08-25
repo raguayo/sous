@@ -4,7 +4,7 @@ import Promise from "bluebird";
 
 const config = {
   baseURL: 'https://spoonacular-recipe-food-nutrition-v1.p.mashape.com',
-  headers: { 'X-Mashape-Key': 'RZRoXGCf7DmshqgKAiza2tAHVGI6p1E78wAjsnvpfQbNox9xek' },
+  headers: { 'X-Mashape-Key': 'SjmxUwQ53Amshw9OrrnFyEH3LZugp1093xZjsn7ofvJdBK3dXW' },
 };
 
 export function calculateLeftovers(arrOfPeapodIng) {

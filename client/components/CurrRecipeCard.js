@@ -5,6 +5,7 @@ import { Grid, Icon, Card, Image, Form } from 'semantic-ui-react';
 import { deleteRecipeFromList, updateRecipeQuantity } from '../store';
 
 const CurrRecipeCard = ({ recipe, handleDeleteCurr, handleUpdateQuantity }) => {
+  const imageSrc = recipe.imageUrl.includes('http') ? recipe.imageUrl : `https://webknox.com/recipeImages/${recipe.imageUrl}`;
   return (
     <Grid>
       <Card>
@@ -37,7 +38,7 @@ const CurrRecipeCard = ({ recipe, handleDeleteCurr, handleUpdateQuantity }) => {
           <Grid.Row>
             <Grid.Column>
               <Image
-                src={`https://webknox.com/recipeImages/${recipe.imageUrl}`}
+                src={imageSrc}
                 floated="left"
                 width="100%"
               />
