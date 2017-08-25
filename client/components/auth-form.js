@@ -1,13 +1,10 @@
 import React from 'react';
-import { Form, Grid, Header, Image, Message, Segment } from 'semantic-ui-react';
+import { Form, Grid, Header, Message } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { auth } from '../store';
 
-// /**
-//  * COMPONENT
-//  */
 const AuthForm = ({ name, displayName, handleSubmit, error }) => (
   <div className="login-form">
     <style>{`

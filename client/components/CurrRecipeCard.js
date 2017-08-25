@@ -1,36 +1,36 @@
-import React from "react";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import { Grid, Icon, Card, Image, Form } from "semantic-ui-react";
-import { deleteRecipeFromList, updateRecipeQuantity } from "../store/";
+import React from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { Grid, Icon, Card, Image, Form } from 'semantic-ui-react';
+import { deleteRecipeFromList, updateRecipeQuantity } from '../store';
 
 const CurrRecipeCard = ({ recipe, handleDeleteCurr, handleUpdateQuantity }) => {
   return (
     <Grid>
       <Card>
         <Card.Content>
-          <Grid.Row style={{ paddingBottom: "8px" }}>
-            <Grid.Column width={8} style={{display: "flex", justifyContent: "space-between"}}>
-              <a href={recipe.recipeUrl} style={{ fontSize: "1.5em", paddingTop: "8px" }}>
+          <Grid.Row style={styles.row}>
+            <Grid.Column width={8} style={styles.column}>
+              <a href={recipe.recipeUrl} style={styles.title}>
                 {recipe.title}
               </a>
-                <div style={{display: "flex"}}>
-              <Form>
-                <Form.Input
-                  floated="left"
-                  icon="add to cart"
-                  iconPosition="left"
-                  style={{width: "5rem"}}
-                  placeholder={recipe.grocerylist.quantity}
-                  onChange={e => handleUpdateQuantity(recipe.id, e)}
+              <div style={styles.flex}>
+                <Form>
+                  <Form.Input
+                    floated="left"
+                    icon="add to cart"
+                    iconPosition="left"
+                    style={styles.quantity}
+                    placeholder={recipe.grocerylist.quantity}
+                    onChange={e => handleUpdateQuantity(recipe.id, e)}
+                  />
+                </Form>
+                <Icon
+                  floated="right"
+                  style={styles.trash}
+                  onClick={() => handleDeleteCurr(recipe.id)}
+                  name="trash outline"
                 />
-              </Form>
-              <Icon
-                floated="right"
-                style={{fontSize: "1.5em", paddingTop: "8px", marginLeft: "8px"}}
-                onClick={() => handleDeleteCurr(recipe.id)}
-                name="trash outline"
-              />
               </div>
             </Grid.Column>
           </Grid.Row>
@@ -55,22 +55,47 @@ const CurrRecipeCard = ({ recipe, handleDeleteCurr, handleUpdateQuantity }) => {
 
 const mapState = (state, ownProps) => {
   return {
-    recipe: ownProps.recipe
+    recipe: ownProps.recipe,
   };
 };
 
-const mapDispatch = dispatch => {
+const mapDispatch = (dispatch) => {
   return {
     handleDeleteCurr: id => dispatch(deleteRecipeFromList(id)),
     handleUpdateQuantity: (id, e) =>
-      dispatch(updateRecipeQuantity(id, e.target.value))
+      dispatch(updateRecipeQuantity(id, e.target.value)),
   };
 };
 
 CurrRecipeCard.propTypes = {
   recipe: PropTypes.object.isRequired,
   handleDeleteCurr: PropTypes.func.isRequired,
-  handleUpdateQuantity: PropTypes.func.isRequired
+  handleUpdateQuantity: PropTypes.func.isRequired,
 };
 
 export default connect(mapState, mapDispatch)(CurrRecipeCard);
+
+const styles = {
+  row: {
+    paddingBottom: '8px',
+  },
+  column: {
+    display: 'flex',
+    justifyContent: 'space-between',
+  },
+  title: {
+    fontSize: '1.5em',
+    paddingTop: '8px',
+  },
+  quantity: {
+    width: '5rem',
+  },
+  trash: {
+    fontSize: '1.5em',
+    paddingTop: '8px',
+    marginLeft: '8px',
+  },
+  flex: {
+    display: 'flex',
+  },
+};

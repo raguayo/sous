@@ -1,8 +1,7 @@
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import React from 'react';
-
-import { Container, Grid, Header, Segment, Checkbox, Button, Modal, Input, Form, Accordion, Card, Image, Popup, Dimmer, Loader } from 'semantic-ui-react';
+import { Container, Grid, Header, Segment, Checkbox, Modal, Input, Form, Accordion, Card, Image, Popup, Dimmer, Loader } from 'semantic-ui-react';
 import { postNewExcluded, deleteExcludedIngredient, addItemsToPeapodCart, deleteRecipesFromList, textGroceryList, addSuggestedRecipes, removeSuggestedRecipes, dirtySuggestedRecipes } from '../store';
 import { getIngredients, addDisplayUnits, calculateLeftovers, filterPeapodIng, getLeftoverRecipes, getLeftoverRecipeDetails, hasSufficientQuantities } from '../utils';
 import { EmptyList } from './';
@@ -54,7 +53,7 @@ class GroceryList extends React.Component {
   componentDidMount() {
     console.log('In did mount: ', this.props.dirty);
     if (!this.props.dirty) {
-      console.log('Running sugg')
+      console.log('Running suggestion');
       this.props.generateLeftoverSuggestions(this.props.peapodIngredients);
     }
   }
@@ -65,7 +64,6 @@ class GroceryList extends React.Component {
   handleSendTextModalOpen = () => this.setState({ sendTextModalOpen: true });
 
   render(props) {
-    console.log('props: ', props);
     const { ingredients, excludedIngredients, peapodIngredients, handleExcludedIngredient, handleCartPurchase, handleClearList, handleSendText, suggestedRecipes, handleRejectSuggestedRecipes, unknownIngredients } = this.props;
 
     return (
@@ -364,6 +362,6 @@ GroceryList.propTypes = {
   generateLeftoverSuggestions: PropTypes.func.isRequired,
   handleSendText: PropTypes.func.isRequired,
   handleRejectSuggestedRecipes: PropTypes.func.isRequired,
-  unknownIngredients: PropTypes.func.isRequired,
+  unknownIngredients: PropTypes.array.isRequired,
   dirty: PropTypes.bool.isRequired,
 };

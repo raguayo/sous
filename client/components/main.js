@@ -3,16 +3,10 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Icon } from 'semantic-ui-react';
 import { withRouter } from 'react-router-dom';
-import Footer from './footer';
+// import Footer from './footer';
 import Navbar from './navbar';
 import { removeError } from '../store';
 
-/**
- * COMPONENT
- *  The Main component is our 'picture frame' - it displays the navbar and anything
- *  else common to our entire app. The 'picture' inside the frame is the space
- *  rendered out by the component's `children`.
- */
 const Main = (props) => {
   const { children, isLoggedIn, error, handleRemoveError } = props;
 
@@ -24,10 +18,10 @@ const Main = (props) => {
             <div>
               <div style={styles.alert_container}>
                 <div style={styles.leftGroup} >
-                  <div style={Object.assign({}, styles.alert_item, styles.warning)}><Icon name="warning sign"></Icon>Error</div>
+                  <div style={Object.assign({}, styles.alert_item, styles.warning)}><Icon name="warning sign" />Error</div>
                   <div style={styles.alert_item}>{error.message}</div>
                 </div>
-                <div style={Object.assign({}, styles.alert_item, styles.close)} onClick={() => handleRemoveError()}><Icon name="delete"></Icon>Close</div>
+                <div style={Object.assign({}, styles.alert_item, styles.close)} onClick={() => handleRemoveError()}><Icon name="delete" />Close</div>
               </div>
               <div style={styles.alert_mask} />
             </div>
@@ -47,9 +41,6 @@ const Main = (props) => {
   );
 };
 
-/**
- * CONTAINER
- */
 const mapState = (state) => {
   return {
     isLoggedIn: !!state.user.id,
@@ -69,12 +60,10 @@ const mapDispatch = (dispatch) => {
 // when the url changes
 export default withRouter(connect(mapState, mapDispatch)(Main));
 
-/**
- * PROP TYPES
- */
 Main.propTypes = {
   children: PropTypes.object,
   isLoggedIn: PropTypes.bool.isRequired,
+  handleRemoveError: PropTypes.func.isRequired,
 };
 
 const styles = {

@@ -1,16 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import {
-  Container,
-  Grid,
-  Header,
-  Segment,
-  Modal,
-  Input,
-  Form,
-  Icon,
-} from 'semantic-ui-react';
+import { Container, Grid, Header, Segment, Modal, Input, Form, Icon } from 'semantic-ui-react';
 import { editUserName, editUserEmail, editUserPassword } from '../store';
 import { SavedRecipes } from './';
 
@@ -19,13 +10,18 @@ const styles = {
     padding: '5em 0em',
   },
   color: {
-    color: '#84643B'
+    color: '#84643B',
   },
   header: {
     maxWidth: '450',
     color: '#84643B',
     fontFamily: 'Oleo Script Swash Caps',
     fontSize: '2.5rem',
+  },
+  column: {
+    width: '100%',
+    padding: '5em 0em 0em 0em',
+    margin: '0em 2em',
   },
 };
 
@@ -55,7 +51,7 @@ class UserProfile extends Component {
           style={{ height: '100%' }}
           verticalAlign="left"
         >
-          <Grid.Column style={{ width: '100%', padding: '5em 0em 0em 0em', margin: '0em 2em' }}>
+          <Grid.Column style={styles.column}>
             <Header as="h2" style={styles.header} verticalAlign="left">
               User Details
             </Header>
@@ -155,7 +151,6 @@ class UserProfile extends Component {
                           onSubmit={e => handlePasswordUpdate(e, user, this.handlePasswordModalClose)}
                           size="small"
                         >
-
                           <Input
                             label="Edit Password:"
                             name="password"
@@ -170,9 +165,7 @@ class UserProfile extends Component {
             </Form>
           </Grid.Column>
         </Grid>
-
         <SavedRecipes />
-
       </Container>
     );
   }
@@ -187,7 +180,6 @@ const mapState = (state) => {
 const mapDispatch = (dispatch) => {
   return {
     handleNameUpdate(e, user, handleNameModalClose) {
-      console.log('in handleNameUpdate mapDispatch')
       const objUser = { id: user.id, name: e.target.name.value };
       dispatch(editUserName(objUser));
       handleNameModalClose();

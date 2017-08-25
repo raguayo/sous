@@ -4,7 +4,6 @@ import thunkMiddleware from 'redux-thunk';
 import user from './user';
 import groceryListRecipes from './groceryListRecipes';
 import savedRecipes from './savedRecipes';
-// import groceryList from './groceryList';
 import excludedIngredients from './excludedIngredients';
 import error from './error';
 import suggestedRecipes from './suggestedRecipes';
@@ -17,11 +16,10 @@ const middleware = applyMiddleware(thunkMiddleware, createLogger({ collapsed: tr
 const store = createStore(reducer, middleware);
 
 export default store;
-export * from './user';
-export * from './savedRecipes';
-export * from './groceryListRecipes';
-export * from './groceryList';
-export * from './excludedIngredients';
 export * from './error';
+export * from './excludedIngredients';
+export * from './groceryListRecipes';
+export * from './savedRecipes';
 export * from './suggestedRecipes';
 export * from './suggestedRecipeDirty';
+export * from './user';
