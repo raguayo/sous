@@ -4,24 +4,11 @@ import { Router } from 'react-router';
 import { Route, Switch } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import history from './history';
-
-import {
-  Main,
-  Login,
-  Signup,
-  CurrentRecipes,
-  Splash,
-  SavedRecipes,
-  GroceryList,
-  UserProfile,
-} from './components';
-
+import { Main, Login, Signup, CurrentRecipes, Splash, SavedRecipes, GroceryList, UserProfile } from './components';
 import { me, fetchGroceryListRecipes, fetchSavedRecipes, fetchExcludedIngredients } from './store';
-/**
- * COMPONENT
- */
+
 class Routes extends Component {
-  componentDidMount() {
+  componentWillMount() {
     this.props.loadInitialData();
   }
 
@@ -32,21 +19,19 @@ class Routes extends Component {
       <Router history={history}>
         <Main>
           <Switch>
-            {/* Routes placed here are available to all visitors */}
             <Route exact path="/login" component={Login} />
             <Route exact path="/signup" component={Signup} />
             {
               isLoggedIn &&
                 <Switch>
-                  {/* Routes placed here are only available after logging in */}
                   <Route path="/recipes" component={CurrentRecipes} />
                   <Route path="/grocery-list" component={GroceryList} />
                   <Route path="/history" component={SavedRecipes} />
                   <Route path="/user-profile" component={UserProfile} />
+                  <Route path="/" component={CurrentRecipes} />
                 </Switch>
             }
-            {/* Displays our Login component as a fallback */}
-            <Route path="/" component={Splash} />
+            <Route exact path="/" component={Splash} />
           </Switch>
         </Main>
       </Router>
@@ -54,9 +39,6 @@ class Routes extends Component {
   }
 }
 
-/**
- * CONTAINER
- */
 const mapState = (state) => {
   return {
     // Being 'logged in' for our purposes will be defined has having a state.user that has a truthy id.
@@ -72,15 +54,12 @@ const mapDispatch = (dispatch) => {
       dispatch(fetchGroceryListRecipes());
       dispatch(fetchSavedRecipes());
       dispatch(fetchExcludedIngredients());
-    }
-  }
-}
+    },
+  };
+};
 
 export default connect(mapState, mapDispatch)(Routes);
 
-/**
- * PROP TYPES
- */
 Routes.propTypes = {
   loadInitialData: PropTypes.func.isRequired,
   isLoggedIn: PropTypes.bool.isRequired,
