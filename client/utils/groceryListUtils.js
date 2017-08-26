@@ -33,6 +33,10 @@ export function aisleMaker(ingredients) {
     const aisleName = ingredient.aisle;
     if (groceryStore[aisleName]) {
       groceryStore[aisleName].push(ingredient);
+    } else if (!aisleName) {
+      groceryStore.other = [];
+      ingredient.aisle = 'other';
+      groceryStore.other.push(ingredient);
     } else {
       groceryStore[aisleName] = [];
       groceryStore[aisleName].push(ingredient);

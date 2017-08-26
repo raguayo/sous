@@ -4,7 +4,7 @@ import React from 'react';
 import { Container, Grid, Header, Segment, Modal, Input, Form, Accordion, Card, Image } from 'semantic-ui-react';
 import { deleteRecipesFromList, textGroceryList, addSuggestedRecipes, removeSuggestedRecipes, dirtySuggestedRecipes } from '../../store';
 import { getIngredients, addDisplayUnits, calculateLeftovers, filterPeapodIng, getLeftoverRecipes, getLeftoverRecipeDetails, hasSufficientQuantities, aisleMaker } from '../../utils';
-import { List, PeapodModal } from './';
+import { List, PeapodModal, Aisle } from './';
 import { EmptyList } from '../';
 
 const styles = {
@@ -54,8 +54,8 @@ class GroceryList extends React.Component {
   handleSendTextModalOpen = () => this.setState({ sendTextModalOpen: true });
 
   render(props) {
-    const { excludedIngredients, peapodIngredients, handleClearList, handleSendText, suggestedRecipes, handleRejectSuggestedRecipes, unknownIngredients, peapodAisles, offLineAisles } = this.props;
-    console.log('excluded', excludedIngredients, 'peapod', peapodIngredients, 'unknown', unknownIngredients, 'Aisle1', peapodAisles, 'aisle2', offLineAisles);
+    const { excludedIngredients, peapodIngredients, handleClearList, handleSendText, suggestedRecipes, handleRejectSuggestedRecipes, unknownIngredients, peapodAisles, offLineAisles, ingredients } = this.props;
+    console.log( 'Aisle1', peapodAisles);
 
     return (
       <div style={{ position: 'relative' }}>
@@ -73,28 +73,12 @@ class GroceryList extends React.Component {
                 <Segment>
                   <p style={styles.textColor}>Ingredients:</p>
                 </Segment>
-                <Segment.Group>
-                  {peapodIngredients.map((ingredient) => {
-                    return (
-                      <Segment key={ingredient.id}>
-                        <List ingredient={ingredient} />
-                      </Segment>
-                    );
-                  })}
-                </Segment.Group>
+                <Aisle aisles={peapodAisles} />
                 <PeapodModal peapodIngredients={peapodIngredients} />
                 {unknownIngredients.length ?
                   <Segment>
                       <p style={styles.textColor}>The following ingredients were not found on Peapod. You may have to buy these on your own.</p>
-                    <Segment.Group style={{margin: '1rem, 1rem' }}>
-                      {unknownIngredients.map((ingredient) => {
-                        return (
-                          <Segment key={ingredient.id}>
-                            <List ingredient={ingredient} />
-                          </Segment>
-                        );
-                      })}
-                    </Segment.Group>
+                      <Aisle aisles={offLineAisles} />
                   </Segment>
                   : null
                 }
@@ -160,9 +144,10 @@ const mapState = (state) => {
   const ingredients = addDisplayUnits(getIngredients(state.groceryListRecipes));
   const peapodIngredients = filterPeapodIng(ingredients, state.excludedIngredients);
   const unknownIngredients = ingredients.filter(ing => !ing.prodId);
-  const peapodAisles = aisleMaker(peapodIngredients);
+  const peapodAisles = aisleMaker(ingredients.filter(ing => !!ing.prodId));
   const offLineAisles = aisleMaker(unknownIngredients);
   return {
+    ingredients,
     excludedIngredients: state.excludedIngredients,
     peapodIngredients,
     suggestedRecipes: state.suggestedRecipes,
