@@ -54,7 +54,8 @@ class GroceryList extends React.Component {
     console.log('In did mount: ', this.props.dirty);
     if (!this.props.dirty) {
       console.log('Running suggestion');
-      this.props.generateLeftoverSuggestions(this.props.peapodIngredients);
+      // disable to reduce database calls
+      // this.props.generateLeftoverSuggestions(this.props.peapodIngredients);
     }
   }
 
