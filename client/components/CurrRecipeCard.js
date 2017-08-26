@@ -4,16 +4,58 @@ import { connect } from 'react-redux';
 import { Grid, Icon, Card, Image, Form } from 'semantic-ui-react';
 import { deleteRecipeFromList, updateRecipeQuantity } from '../store';
 
+const styles = {
+  row: {
+    paddingBottom: '8px',
+  },
+  column: {
+    display: 'table',
+    justifyxContent: 'space-between',
+  },
+  title: {
+    fontSize: '1.5em',
+    paddingTop: '4px',
+  },
+  quantity: {
+    width: '5rem',
+  },
+  trash: {
+    fontSize: '1.5em',
+    paddingTop: '8px',
+    marginLeft: '8px',
+  },
+  flex: {
+    display: 'flex',
+  },
+};
+
 const CurrRecipeCard = ({ recipe, handleDeleteCurr, handleUpdateQuantity }) => {
   return (
     <Grid>
       <Card>
-        <Card.Content>
+        <Card.Content style={{ height: '345px' }}>
           <Grid.Row style={styles.row}>
             <Grid.Column width={8} style={styles.column}>
               <a href={recipe.recipeUrl} style={styles.title}>
                 {recipe.title}
               </a>
+            </Grid.Column>
+          </Grid.Row>
+          <Grid.Row>
+            <Grid.Column>
+              <Image
+                src={`https://webknox.com/recipeImages/${recipe.imageUrl}`}
+                floated="left"
+                width="100%"
+                style={{ 'box-sizing': 'border-box',
+                  display: 'table',
+                  height: '200px',
+                  width: '352px' }}
+              />
+            </Grid.Column>
+          </Grid.Row>
+          <Grid.Row>
+            <Grid.Column floated="right" style={{ paddingTop: '10px' }}>
               <div style={styles.flex}>
                 <Form>
                   <Form.Input
@@ -26,26 +68,12 @@ const CurrRecipeCard = ({ recipe, handleDeleteCurr, handleUpdateQuantity }) => {
                   />
                 </Form>
                 <Icon
-                  floated="right"
                   style={styles.trash}
                   onClick={() => handleDeleteCurr(recipe.id)}
                   name="trash outline"
                 />
               </div>
             </Grid.Column>
-          </Grid.Row>
-          <Grid.Row>
-            <Grid.Column>
-              <Image
-                src={`https://webknox.com/recipeImages/${recipe.imageUrl}`}
-                floated="left"
-                width="100%"
-              />
-            </Grid.Column>
-          </Grid.Row>
-          <Grid.Row>
-            <Grid.Column />
-            <Grid.Column floated="right" />
           </Grid.Row>
         </Card.Content>
       </Card>
@@ -74,28 +102,3 @@ CurrRecipeCard.propTypes = {
 };
 
 export default connect(mapState, mapDispatch)(CurrRecipeCard);
-
-const styles = {
-  row: {
-    paddingBottom: '8px',
-  },
-  column: {
-    display: 'flex',
-    justifyContent: 'space-between',
-  },
-  title: {
-    fontSize: '1.5em',
-    paddingTop: '8px',
-  },
-  quantity: {
-    width: '5rem',
-  },
-  trash: {
-    fontSize: '1.5em',
-    paddingTop: '8px',
-    marginLeft: '8px',
-  },
-  flex: {
-    display: 'flex',
-  },
-};
