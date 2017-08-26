@@ -7,29 +7,28 @@ import { List } from './';
 const styles = {
   textColor: {
     color: '#84643B',
-    fontSize: '1.1rem',
+    fontSize: '1.2rem',
     textAlign: 'center',
-    fontWeight: '200',
+    fontWeight: '300',
+    margin: 'auto',
   },
-}
+};
 
 const Aisle = ({ aisles, aisleNames }) => {
   return (
     <Segment>
       {aisleNames.map((name) => {
         return (
-          <Segment>
+          <Segment.Group >
             <p style={styles.textColor}>{name}</p>
-            <Segment.Group>
-              {aisles[name].map((ingredient) => {
-                return (
-                  <Segment key={ingredient.id}>
-                    <List ingredient={ingredient} />
-                  </Segment>
-                );
-              })}
-            </Segment.Group>
-          </Segment>
+            {aisles[name].map((ingredient) => {
+              return (
+                <Segment key={ingredient.id}>
+                  <List ingredient={ingredient} />
+                </Segment>
+              );
+            })}
+          </Segment.Group>
         );
       })
       }

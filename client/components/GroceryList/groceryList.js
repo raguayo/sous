@@ -4,7 +4,7 @@ import React from 'react';
 import { Container, Grid, Header, Segment, Modal, Input, Form, Accordion, Card, Image } from 'semantic-ui-react';
 import { deleteRecipesFromList, textGroceryList, addSuggestedRecipes, removeSuggestedRecipes, dirtySuggestedRecipes } from '../../store';
 import { getIngredients, addDisplayUnits, calculateLeftovers, filterPeapodIng, getLeftoverRecipes, getLeftoverRecipeDetails, hasSufficientQuantities, aisleMaker } from '../../utils';
-import { List, PeapodModal, Aisle } from './';
+import { PeapodModal, Aisle } from './';
 import { EmptyList } from '../';
 
 const styles = {
@@ -55,7 +55,6 @@ class GroceryList extends React.Component {
 
   render(props) {
     const { excludedIngredients, peapodIngredients, handleClearList, handleSendText, suggestedRecipes, handleRejectSuggestedRecipes, unknownIngredients, peapodAisles, offLineAisles, ingredients } = this.props;
-    console.log( 'Aisle1', peapodAisles);
 
     return (
       <div style={{ position: 'relative' }}>
@@ -77,8 +76,8 @@ class GroceryList extends React.Component {
                 <PeapodModal peapodIngredients={peapodIngredients} />
                 {unknownIngredients.length ?
                   <Segment>
-                      <p style={styles.textColor}>The following ingredients were not found on Peapod. You may have to buy these on your own.</p>
-                      <Aisle aisles={offLineAisles} />
+                    <p style={styles.textColor}>The following ingredients were not found on Peapod. You may have to buy these on your own.</p>
+                    <Aisle aisles={offLineAisles} />
                   </Segment>
                   : null
                 }

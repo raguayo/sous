@@ -1,4 +1,4 @@
-export { default as GroceryList } from './groceryList';
+export { default as GroceryList } from './GroceryList';
 export { default as List } from './List';
-export { default as PeapodModal } from './purchaseModal';
-export { default as Aisle } from './aisle';
+export { default as PeapodModal } from './PurchaseModal';
+export { default as Aisle } from './Aisle';

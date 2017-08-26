@@ -30,12 +30,20 @@ export function getIngredients(groceryListRecipes) {
 export function aisleMaker(ingredients) {
   const groceryStore = {};
   ingredients.forEach((ingredient) => {
-    const aisleName = ingredient.aisle;
+    let aisleName;
+    if (!ingredient.aisle) {
+      ingredient.aisle = 'Other';
+    } else if (ingredient.aisle.includes(';')) {
+      aisleName = ingredient.aisle.replace(';', ' ');
+    } else if (ingredient.aisle === '?') {
+      aisleName = 'Other';
+    } else {
+      aisleName = ingredient.aisle;
+    }
     if (groceryStore[aisleName]) {
       groceryStore[aisleName].push(ingredient);
     } else if (!aisleName) {
       groceryStore.other = [];
-      ingredient.aisle = 'other';
       groceryStore.other.push(ingredient);
     } else {
       groceryStore[aisleName] = [];
