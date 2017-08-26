@@ -1,10 +1,11 @@
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import React from 'react';
-import { Container, Grid, Header, Segment, Checkbox, Modal, Input, Form, Accordion, Card, Image, Popup, Dimmer, Loader } from 'semantic-ui-react';
-import { postNewExcluded, deleteExcludedIngredient, addItemsToPeapodCart, deleteRecipesFromList, textGroceryList, addSuggestedRecipes, removeSuggestedRecipes, dirtySuggestedRecipes } from '../store';
-import { getIngredients, addDisplayUnits, calculateLeftovers, filterPeapodIng, getLeftoverRecipes, getLeftoverRecipeDetails, hasSufficientQuantities } from '../utils';
-import { EmptyList } from './';
+import { Container, Grid, Header, Segment, Modal, Input, Form, Accordion, Card, Image, Popup, Dimmer, Loader } from 'semantic-ui-react';
+import { addItemsToPeapodCart, deleteRecipesFromList, textGroceryList, addSuggestedRecipes, removeSuggestedRecipes, dirtySuggestedRecipes } from '../../store';
+import { getIngredients, addDisplayUnits, calculateLeftovers, filterPeapodIng, getLeftoverRecipes, getLeftoverRecipeDetails, hasSufficientQuantities, aisleMaker } from '../../utils';
+import { List } from './';
+import { EmptyList } from '../';
 
 const styles = {
   container: {
@@ -36,7 +37,7 @@ const styles = {
   },
   list: {
     marginTop: '1.5em',
-  }
+  },
 };
 
 
@@ -50,13 +51,13 @@ class GroceryList extends React.Component {
   }
 
 
-  componentDidMount() {
-    console.log('In did mount: ', this.props.dirty);
-    if (!this.props.dirty) {
-      console.log('Running suggestion');
-      this.props.generateLeftoverSuggestions(this.props.peapodIngredients);
-    }
-  }
+  // componentDidMount() {
+  //   console.log('In did mount: ', this.props.dirty);
+  //   if (!this.props.dirty) {
+  //     console.log('Running suggestion');
+  //     this.props.generateLeftoverSuggestions(this.props.peapodIngredients);
+  //   }
+  // }
 
   handlePeapodModalClose = () => this.setState({ peapodModalOpen: false });
   handlePeapodModalOpen = () => this.setState({ peapodModalOpen: true });
@@ -64,7 +65,8 @@ class GroceryList extends React.Component {
   handleSendTextModalOpen = () => this.setState({ sendTextModalOpen: true });
 
   render(props) {
-    const { ingredients, excludedIngredients, peapodIngredients, handleExcludedIngredient, handleCartPurchase, handleClearList, handleSendText, suggestedRecipes, handleRejectSuggestedRecipes, unknownIngredients } = this.props;
+    const { excludedIngredients, peapodIngredients, handleCartPurchase, handleClearList, handleSendText, suggestedRecipes, handleRejectSuggestedRecipes, unknownIngredients, peapodAisles, offLineAisles } = this.props;
+    console.log('excluded', excludedIngredients, 'peapod', peapodIngredients, 'unknown', unknownIngredients, 'Aisle1', peapodAisles, 'aisle2', offLineAisles);
 
     return (
       <div style={{ position: 'relative' }}>
@@ -76,45 +78,20 @@ class GroceryList extends React.Component {
             </Header>
           </Grid.Row>
           </Grid>
-          {ingredients.length ?
+          {peapodIngredients.length || excludedIngredients.length ?
             <div style={styles.list}>
               <Segment.Group style={{ width: '75%', margin: 'auto' }}>
                 <Segment>
                   <p style={styles.textColor}>Ingredients:</p>
                 </Segment>
                 <Segment.Group>
-                  {ingredients.filter(ing => !!ing.prodId).map((ingredient) => {
+                  {/* {ingredients.filter(ing => !!ing.prodId).map((ingredient) => {
                     return (
                       <Segment key={ingredient.id}>
-                        <Grid>
-                          {excludedIngredients.indexOf(ingredient.id) !== -1
-                            ? <Grid.Column
-                              as={Checkbox}
-                              checked
-                              floated="left"
-                              width={13}
-                              verticalAlign="middle"
-                              style={styles.textColorLineThrough}
-                              onClick={e =>
-                                handleExcludedIngredient(excludedIngredients, ingredient.id)}
-                              label={`${ingredient.displayQuantity} ${ingredient.displayUnit} ${ingredient.name}`}
-                            >
-                            </Grid.Column>
-                            : <Grid.Column
-                              as={Checkbox}
-                              floated="left"
-                              width={13}
-                              verticalAlign="middle"
-                              style={styles.textColorNoLineThrough}
-                              onClick={e =>
-                                handleExcludedIngredient(excludedIngredients, ingredient.id)}
-                              label={`${ingredient.displayQuantity} ${ingredient.displayUnit} ${ingredient.name}`}
-                            >
-                            </Grid.Column>}
-                        </Grid>
+                        <List ingredient={ingredient} />
                       </Segment>
                     );
-                  })}
+                  })} */}
                   <Modal
                     trigger={<button onClick={this.handlePeapodModalOpen} className="appButton">Add to Peapod Cart</button>}
                     basicSize="medium"
@@ -180,37 +157,12 @@ class GroceryList extends React.Component {
                 {unknownIngredients.length ?
                     <Segment.Group>
                       <Segment>
-                        <p style={styles.textColor}>The follwoing ingredients were not found on Peapod. You may have to buy these on your own.</p>
+                        <p style={styles.textColor}>The following ingredients were not found on Peapod. You may have to buy these on your own.</p>
                       </Segment>
                       {unknownIngredients.map((ingredient) => {
                         return (
                           <Segment key={ingredient.id}>
-                            <Grid>
-                              {excludedIngredients.indexOf(ingredient.id) !== -1
-                                ? <Grid.Column
-                                  as={Checkbox}
-                                  checked
-                                  floated="left"
-                                  width={13}
-                                  verticalAlign="middle"
-                                  style={styles.textColorLineThrough}
-                                  onClick={e =>
-                                    handleExcludedIngredient(excludedIngredients, ingredient.id)}
-                                  label={`${ingredient.displayQuantity} ${ingredient.displayUnit} ${ingredient.name}`}
-                                >
-                                </Grid.Column>
-                                : <Grid.Column
-                                  as={Checkbox}
-                                  floated="left"
-                                  width={13}
-                                  verticalAlign="middle"
-                                  style={styles.textColorNoLineThrough}
-                                  onClick={e =>
-                                    handleExcludedIngredient(excludedIngredients, ingredient.id)}
-                                  label={`${ingredient.displayQuantity} ${ingredient.displayUnit} ${ingredient.name}`}
-                                >
-                                </Grid.Column>}
-                            </Grid>
+                            <List ingredient={ingredient} />
                           </Segment>
                         );
                       })}
@@ -279,25 +231,21 @@ const mapState = (state) => {
   const ingredients = addDisplayUnits(getIngredients(state.groceryListRecipes));
   const peapodIngredients = filterPeapodIng(ingredients, state.excludedIngredients);
   const unknownIngredients = ingredients.filter(ing => !ing.prodId);
+  const peapodAisles = aisleMaker(peapodIngredients);
+  const offLineAisles = aisleMaker(unknownIngredients);
   return {
-    ingredients,
     excludedIngredients: state.excludedIngredients,
     peapodIngredients,
     suggestedRecipes: state.suggestedRecipes,
     unknownIngredients,
     dirty: state.suggestedRecipesDirty,
+    peapodAisles,
+    offLineAisles,
   };
 };
 
 const mapDispatch = (dispatch) => {
   return {
-    handleExcludedIngredient(excludedIngredients, ingredientId) {
-      if (excludedIngredients.indexOf(ingredientId) < 0) {
-        dispatch(postNewExcluded(ingredientId));
-      } else {
-        dispatch(deleteExcludedIngredient(ingredientId));
-      }
-    },
     handleCartPurchase(peapodItems, e, handlePeapodModalClose) {
       const itemArr = peapodItems.map((ingredientObj) => {
         return {
@@ -326,7 +274,7 @@ const mapDispatch = (dispatch) => {
         .then(leftoverRecipes => getLeftoverRecipeDetails(leftoverRecipes))
         .then(results => hasSufficientQuantities(leftovers, results))
         .then((suggRecipes) => {
-          console.log('Sugg rec: ', suggRecipes)
+          console.log('Sugg rec: ', suggRecipes);
           dispatch(addSuggestedRecipes(suggRecipes));
         })
         .catch(console.error);
@@ -357,11 +305,12 @@ GroceryList.propTypes = {
   ingredients: PropTypes.array.isRequired,
   suggestedRecipes: PropTypes.array.isRequired,
   peapodIngredients: PropTypes.array.isRequired,
-  handleExcludedIngredient: PropTypes.func.isRequired,
   handleClearList: PropTypes.func.isRequired,
   generateLeftoverSuggestions: PropTypes.func.isRequired,
   handleSendText: PropTypes.func.isRequired,
   handleRejectSuggestedRecipes: PropTypes.func.isRequired,
   unknownIngredients: PropTypes.array.isRequired,
   dirty: PropTypes.bool.isRequired,
+  peapodAisles: PropTypes.object.isRequired,
+  offLineAisles: PropTypes.object.isRequired,
 };

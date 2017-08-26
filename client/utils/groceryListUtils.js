@@ -3,7 +3,7 @@ export function getIngredients(groceryListRecipes) {
   groceryListRecipes.forEach((recipe) => {
     const recipeQuantity = recipe.grocerylist.quantity;
     recipe.ingredients.forEach((ingredient) => {
-      const foundIng = ingredientList.find(obj => obj.id === ingredient.id)
+      const foundIng = ingredientList.find(obj => obj.id === ingredient.id);
       if (foundIng) {
         foundIng.quantity += ingredient.ingredientQuantity.quantity * recipeQuantity;
       } else {
@@ -11,8 +11,10 @@ export function getIngredients(groceryListRecipes) {
         const quantity = ingredient.ingredientQuantity.quantity * recipeQuantity;
         const prodId = ingredient.peapodIngredient ? ingredient.peapodIngredient.prodId : null;
         const size = ingredient.peapodIngredient ? ingredient.peapodIngredient.size : null;
+        const aisle = ingredient.aisle ? ingredient.aisle : null;
         ingredientList.push({
           name,
+          aisle,
           id,
           prodId,
           unitMeasure,
@@ -25,3 +27,16 @@ export function getIngredients(groceryListRecipes) {
   return ingredientList;
 }
 
+export function aisleMaker(ingredients) {
+  const groceryStore = {};
+  ingredients.forEach((ingredient) => {
+    const aisleName = ingredient.aisle;
+    if (groceryStore[aisleName]) {
+      groceryStore[aisleName].push(ingredient);
+    } else {
+      groceryStore[aisleName] = [];
+      groceryStore[aisleName].push(ingredient);
+    }
+  });
+  return groceryStore;
+}
