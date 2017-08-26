@@ -2,7 +2,7 @@ export { Login, Signup } from './auth-form';
 export { default as CurrentRecipes } from './CurrentRecipes';
 export { default as CurrRecipeCard } from './CurrRecipeCard';
 export { default as EmptyList } from './emptyList';
-export { default as GroceryList } from './groceryList';
+export * from './GroceryList';
 export { default as Main } from './main';
 export { default as Navbar } from './navbar';
 export { default as RecipeCard } from './RecipeCard';

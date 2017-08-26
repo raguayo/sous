@@ -89,6 +89,7 @@ router.post('/:url', (req, res, next) => {
               },
               defaults: {
                 unitMeasure: ingredient.unit,
+                aisle: ingredient.aisle,
               },
             })
               .then(([foundIngredient, ingIsCreated]) => {
