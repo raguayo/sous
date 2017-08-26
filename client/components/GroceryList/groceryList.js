@@ -27,14 +27,6 @@ const styles = {
     color: '#84643B',
     fontSize: '1.1rem',
   },
-  textColorLineThrough: {
-    textDecoration: 'line-through',
-    fontSize: '1.1rem',
-  },
-  textColorNoLineThrough: {
-    textDecoration: 'none',
-    fontSize: '1.1rem',
-  },
   list: {
     marginTop: '1.5em',
   },
@@ -69,11 +61,11 @@ class GroceryList extends React.Component {
       <div style={{ position: 'relative' }}>
         <Container style={styles.container}>
           <Grid textAlign="center">
-          <Grid.Row>
-            <Header as="h2" style={styles.header}>
-              Grocery List
+            <Grid.Row>
+              <Header as="h2" style={styles.header}>
+                Grocery List
             </Header>
-          </Grid.Row>
+            </Grid.Row>
           </Grid>
           {peapodIngredients.length || excludedIngredients.length ?
             <div style={styles.list}>
@@ -90,13 +82,11 @@ class GroceryList extends React.Component {
                     );
                   })}
                 </Segment.Group>
-                  <PeapodModal peapodIngredients={peapodIngredients} />
-                  {unknownIngredients.length ?
-                    <span>
-                      <Segment>
-                        <p style={styles.textColor}>The following ingredients were not found on Peapod. You may have to buy these on your own.</p>
-                      </Segment>
-                    <Segment.Group>
+                <PeapodModal peapodIngredients={peapodIngredients} />
+                {unknownIngredients.length ?
+                  <Segment>
+                      <p style={styles.textColor}>The following ingredients were not found on Peapod. You may have to buy these on your own.</p>
+                    <Segment.Group style={{margin: '1rem, 1rem' }}>
                       {unknownIngredients.map((ingredient) => {
                         return (
                           <Segment key={ingredient.id}>
@@ -105,7 +95,7 @@ class GroceryList extends React.Component {
                         );
                       })}
                     </Segment.Group>
-                  </span>
+                  </Segment>
                   : null
                 }
                 <button className="appButton" onClick={() => handleClearList()}>Clear list</button>
@@ -159,7 +149,7 @@ class GroceryList extends React.Component {
             </div>
             :
             <EmptyList />
-            }
+          }
         </Container>
       </div>
     );
