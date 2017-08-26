@@ -30,6 +30,7 @@ const styles = {
 };
 
 const CurrRecipeCard = ({ recipe, handleDeleteCurr, handleUpdateQuantity }) => {
+  const imageSrc = recipe.imageUrl.includes('http') ? recipe.imageUrl : `https://webknox.com/recipeImages/${recipe.imageUrl}`;
   return (
     <Card style={{ padding: '1em 1em 1em 1em' }}>
       <Image

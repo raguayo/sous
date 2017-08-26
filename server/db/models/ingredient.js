@@ -11,6 +11,9 @@ const Ingredient = db.define('ingredient', {
   size: {
     type: Sequelize.FLOAT,
   },
+  aisle: {
+    type: Sequelize.STRING,
+  },
   unitMeasure: {
     type: Sequelize.STRING,
   },

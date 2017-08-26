@@ -8,7 +8,7 @@ import { Main, Login, Signup, CurrentRecipes, Splash, SavedRecipes, GroceryList,
 import { me, fetchGroceryListRecipes, fetchSavedRecipes, fetchExcludedIngredients } from './store';
 
 class Routes extends Component {
-  componentDidMount() {
+  componentWillMount() {
     this.props.loadInitialData();
   }
 
@@ -31,7 +31,7 @@ class Routes extends Component {
                   <Route path="/" component={CurrentRecipes} />
                 </Switch>
             }
-            <Route exact path="/" component={Splash} />
+            <Route path="/" component={Splash} />
           </Switch>
         </Main>
       </Router>
