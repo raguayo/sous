@@ -11,6 +11,7 @@ const RecipeCard = ({
   handleFavorite,
   handleTransfer,
 }) => {
+  const imageSrc = recipe.imageUrl.includes('http') ? recipe.imageUrl : `https://webknox.com/recipeImages/${recipe.imageUrl}`;
   return (
     <Grid>
       <Card fluid>
@@ -18,7 +19,7 @@ const RecipeCard = ({
           <Grid>
             <Grid.Column width={8}>
               <Image
-                src={`https://webknox.com/recipeImages/${recipe.imageUrl}`}
+                src={imageSrc}
                 floated="left"
                 width={300}
               />

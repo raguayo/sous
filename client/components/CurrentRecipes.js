@@ -48,7 +48,7 @@ function CurrentRecipe({
             {
               groceryListRecipes && groceryListRecipes.map((currRecipe) => {
                 return (
-                  <Grid.Column width={4} style={styles.recipeCol} key={currRecipe.id}>
+                  <Grid.Column width={5} style={styles.recipeCol} key={currRecipe.id}>
                     <CurrRecipeCard recipe={currRecipe} isCurrRecipe="true" />
                   </Grid.Column>
                 );

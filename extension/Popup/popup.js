@@ -8,37 +8,72 @@ const styles = {
 chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
   const recipeUrl = tabs[0].url;
   chrome.runtime.sendMessage({ recipeUrl, msg: 'getRecipeDetails' }, (recipe) => {
-    let htmlString = `
-    <h3 style="margin: 0.857143em 0.857143em">Recipe Details:</h3>
-    <table class="ui definition table unstackable">
-    <tbody>
-      <tr>
-        <td class="four wide">Title:</td>
-        <td>${recipe.title}</td>
-      </tr>
-      <tr>
-        <td class="four wide">Servings:</td>
-        <td>${recipe.servings}</td>
-      </tr>
-  </tbody>
-  </table>
-  <h3 style="margin: 0.857143em 0.857143em">Ingredients:</h3>
-  <table class="ui table unstackable" id="ingredients-table">
-    <thead>
-      <tr>
-        <th>Quantity</th>
-        <th class="eight wide">Name</th>
-      </tr>
-    </thead>
-    <tbody>`;
+    let htmlString = '';
+    if (recipe.extendedIngredients) {
+      htmlString = `
+      <h3 style="margin: 0.857143em 0.857143em">Recipe Details:</h3>
+      <table class="ui definition table unstackable">
+      <tbody>
+        <tr>
+          <td class="four wide">Title:</td>
+          <td>${recipe.title}</td>
+        </tr>
+        <tr>
+          <td class="four wide">Servings:</td>
+          <td>${recipe.servings}</td>
+        </tr>
+    </tbody>
+    </table>
+    <h3 style="margin: 0.857143em 0.857143em">Ingredients:</h3>
+    <table class="ui table unstackable" id="ingredients-table">
+      <thead>
+        <tr>
+          <th>Quantity</th>
+          <th class="eight wide">Name</th>
+        </tr>
+      </thead>
+      <tbody>`;
 
-    recipe.extendedIngredients.forEach((ingObj) => {
-      const ingHTML = `<tr>
-        <td class="two wide">${ingObj.amount} ${ingObj.unit}</td>
-        <td>${ingObj.name}</td>
-      </tr>`;
-      htmlString += ingHTML;
-    });
+      recipe.extendedIngredients.forEach((ingObj) => {
+        const ingHTML = `<tr>
+          <td class="two wide">${ingObj.amount} ${ingObj.unit}</td>
+          <td>${ingObj.name}</td>
+        </tr>`;
+        htmlString += ingHTML;
+      });
+    } else {
+      htmlString = `
+      <h3 style="margin: 0.857143em 0.857143em">Recipe Details:</h3>
+      <table class="ui definition table unstackable">
+      <tbody>
+        <tr>
+          <td class="four wide">Title:</td>
+          <td>${recipe.title}</td>
+        </tr>
+        <tr>
+          <td class="four wide">Servings:</td>
+          <td>${recipe.numServings}</td>
+        </tr>
+    </tbody>
+    </table>
+    <h3 style="margin: 0.857143em 0.857143em">Ingredients:</h3>
+    <table class="ui table unstackable" id="ingredients-table">
+      <thead>
+        <tr>
+          <th>Quantity</th>
+          <th class="eight wide">Name</th>
+        </tr>
+      </thead>
+      <tbody>`;
+
+      recipe.ingredients.forEach((ingObj) => {
+        const ingHTML = `<tr>
+          <td class="two wide">${ingObj.ingredientQuantity.quantity} ${ingObj.unitMeasure}</td>
+          <td>${ingObj.name}</td>
+        </tr>`;
+        htmlString += ingHTML;
+      });
+    }
 
     htmlString += '</tbody></table>';
 
@@ -63,8 +98,9 @@ chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
               </div>
             </div>`);
       chrome.extension.sendMessage({ msg: 'createGroceryList', recipe, inGroceryList: false }, (response) => {
+        console.log(response);
         $('#submit-loader').hide();
-        if (response.status === 'Created') $('#ingredients-table').after('<div class="ui message" display="block"><h5>Your recipe was saved!</h5></div>');
+        if (response.savedRecipe) $('#ingredients-table').after('<div class="ui message" display="block"><h5>Your recipe was saved!</h5></div>');
         else $('#ingredients-table').after('<div class="ui message" display="block"><h5>Well, this is embarassing. Something went wrong when trying to save your recipe!</h5></div>');
       });
     });
@@ -76,8 +112,9 @@ chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
         </div>
       </div>`);
       chrome.extension.sendMessage({ msg: 'createGroceryList', recipe, inGroceryList: true }, (response) => {
+        console.log(response);
         $('#submit-loader').hide();
-        if (response.status === 'Created') $('#ingredients-table').after('<div class="ui message" display="block"><h5>Your recipe was added!</h5></div>');
+        if (response.groceryListRecipe) $('#ingredients-table').after('<div class="ui message" display="block"><h5>Your recipe was added!</h5></div>');
         else $('#ingredients-table').after('<div class="ui message" display="block"><h5>Well, this is embarassing. Something went wrong when trying to add your recipe!</h5></div>');
       });
     });
