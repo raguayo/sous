@@ -31,53 +31,49 @@ const styles = {
 
 const CurrRecipeCard = ({ recipe, handleDeleteCurr, handleUpdateQuantity }) => {
   return (
-    <Grid>
-      <Card>
-        <Card.Content style={{ height: '345px' }}>
-          <Grid.Row style={styles.row}>
-            <Grid.Column width={8} style={styles.column}>
-              <a href={recipe.recipeUrl} style={styles.title}>
-                {recipe.title}
-              </a>
-            </Grid.Column>
-          </Grid.Row>
-          <Grid.Row>
-            <Grid.Column>
-              <Image
-                src={`https://webknox.com/recipeImages/${recipe.imageUrl}`}
+    <Card style={{ padding: '1em 1em 1em 1em' }}>
+      <Image
+        src={`https://webknox.com/recipeImages/${recipe.imageUrl}`}
+        width="300px"
+        height="200px"
+        style={{ overflow: 'auto' }}
+      />
+      <Card.Content style={{ paddingBottom: '40px' }}>
+        <Card.Header>
+          <a href={recipe.recipeUrl} style={styles.title}>
+            {recipe.title}
+          </a>
+        </Card.Header>
+        <div />
+        <Card.Description>
+          <div
+            style={{
+              float: 'right',
+              display: 'flex',
+              position: 'absolute',
+              bottom: '8px',
+              right: '8px',
+            }}
+          >
+            <Form>
+              <Form.Input
                 floated="left"
-                width="100%"
-                style={{ 'box-sizing': 'border-box',
-                  display: 'table',
-                  height: '200px',
-                  width: '352px' }}
+                icon="add to cart"
+                iconPosition="left"
+                style={styles.quantity}
+                placeholder={recipe.grocerylist.quantity}
+                onChange={e => handleUpdateQuantity(recipe.id, e)}
               />
-            </Grid.Column>
-          </Grid.Row>
-          <Grid.Row>
-            <Grid.Column floated="right" style={{ paddingTop: '10px' }}>
-              <div style={styles.flex}>
-                <Form>
-                  <Form.Input
-                    floated="left"
-                    icon="add to cart"
-                    iconPosition="left"
-                    style={styles.quantity}
-                    placeholder={recipe.grocerylist.quantity}
-                    onChange={e => handleUpdateQuantity(recipe.id, e)}
-                  />
-                </Form>
-                <Icon
-                  style={styles.trash}
-                  onClick={() => handleDeleteCurr(recipe.id)}
-                  name="trash outline"
-                />
-              </div>
-            </Grid.Column>
-          </Grid.Row>
-        </Card.Content>
-      </Card>
-    </Grid>
+            </Form>
+            <Icon
+              style={styles.trash}
+              onClick={() => handleDeleteCurr(recipe.id)}
+              name="trash outline"
+            />
+          </div>
+        </Card.Description>
+      </Card.Content>
+    </Card>
   );
 };
 
