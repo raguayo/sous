@@ -7,6 +7,33 @@ import { deleteRecipesFromList, postNewRecipe } from '../store';
 import { EmptyList } from './';
 import CurrRecipeCard from './CurrRecipeCard';
 
+const styles = {
+  recipeCol: {
+    padding: '1em 1em 1em 1em',
+    display: 'flex',
+  },
+  recipeList: {
+    padding: '0.5em',
+  },
+  header: {
+    color: '#84643B',
+    fontFamily: 'Oleo Script Swash Caps',
+    fontSize: '4rem',
+  },
+  container: {
+    padding: '5em 0em',
+  },
+  color: {
+    color: '#84643B',
+  },
+  recipeInput: {
+    width: '80%',
+  },
+  topMarg: {
+    paddingTop: '3em',
+  }
+};
+
 function CurrentRecipe({
   handleAddRecipe,
   handleDeleteRecipes,
@@ -44,19 +71,19 @@ function CurrentRecipe({
           <Segment>
             <p style={styles.color}>Your currently selected recipes:</p>
           </Segment>
-          <Grid relaxed padded>
+          <Grid relaxed padded stretched>
             {
               groceryListRecipes && groceryListRecipes.map((currRecipe) => {
                 return (
                   <Grid.Column width={5} style={styles.recipeCol} key={currRecipe.id}>
-                    <CurrRecipeCard recipe={currRecipe} isCurrRecipe="true" />
+                    <CurrRecipeCard recipe={currRecipe} />
                   </Grid.Column>
                 );
               },
               )}
           </Grid>
           <Segment>
-            <Link to={'./grocery-list'} className="appButton" >View Your Grocery List!</Link>
+            <Link to={'./grocery-list'} className="appButton">View Your Grocery List!</Link>
             <a
               onClick={() => handleDeleteRecipes()}
               className="appButton"
@@ -96,29 +123,3 @@ CurrentRecipe.propTypes = {
 };
 
 export default connect(mapState, mapDispatch)(CurrentRecipe);
-
-const styles = {
-  recipeCol: {
-    padding: '2em 1.6em 2em 2em',
-  },
-  recipeList: {
-    padding: '0.5em',
-  },
-  header: {
-    color: '#84643B',
-    fontFamily: 'Oleo Script Swash Caps',
-    fontSize: '4rem',
-  },
-  container: {
-    padding: '5em 0em',
-  },
-  color: {
-    color: '#84643B',
-  },
-  recipeInput: {
-    width: '80%',
-  },
-  topMarg: {
-    paddingTop: '3em',
-  }
-};
