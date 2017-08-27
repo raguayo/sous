@@ -71,7 +71,7 @@ function CurrentRecipe({
           <Segment>
             <p style={styles.color}>Your currently selected recipes:</p>
           </Segment>
-          <Grid relaxed padded centered stretched>
+          <Grid relaxed padded stretched>
             {
               groceryListRecipes && groceryListRecipes.map((currRecipe) => {
                 return (

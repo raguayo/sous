@@ -34,7 +34,7 @@ const CurrRecipeCard = ({ recipe, handleDeleteCurr, handleUpdateQuantity }) => {
   return (
     <Card style={{ padding: '1em 1em 1em 1em' }}>
       <Image
-        src={`https://webknox.com/recipeImages/${recipe.imageUrl}`}
+        src={imageSrc}
         width="300px"
         height="200px"
         style={{ overflow: 'auto' }}
