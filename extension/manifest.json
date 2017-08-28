@@ -1,6 +1,6 @@
 {
   "name": "Sous",
-  "version": "1.1",
+  "version": "1.2",
   "description": "Your personal grocery shopping assistant",
   "permissions": [
     "tabs",
