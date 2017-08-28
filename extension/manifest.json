@@ -7,7 +7,7 @@
     "storage",
     "http://*/*",
     "https://*/*",
-    "localhost:*",
+    "drsous.herokuapp.com/*",
     "cookies"
   ],
   "browser_action": {
