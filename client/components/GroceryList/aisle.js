@@ -17,7 +17,7 @@ const styles = {
 const Aisle = ({ aisles, aisleNames }) => {
   return (
     <Segment>
-      {aisleNames.map((name) => {
+      {aisleNames.sort().map((name) => {
         return (
           <Segment.Group >
             <p style={styles.textColor}>{name}</p>

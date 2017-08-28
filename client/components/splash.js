@@ -8,7 +8,7 @@ const Splash = () => {
       <div className="header-container">
         <div className="header-content slide-up-fade-in">
           <h1 id="greeting">meet sous,</h1>
-          <h2>Your personal recipe assistant.</h2>
+          <h2>Your personal grocery shopping assistant.</h2>
 
           <div className="buttons" style={styles.buttons}>
             <Link to="/login" primary size="large" className="splashButton">
