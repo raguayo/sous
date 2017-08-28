@@ -66,7 +66,7 @@ class GroceryList extends React.Component {
             </Header>
             </Grid.Row>
           </Grid>
-          {peapodIngredients.length || excludedIngredients.length ?
+          {peapodIngredients.length || unknownIngredients.length ?
             <div style={styles.list}>
               <Segment.Group style={{ width: '75%', margin: 'auto' }}>
                 <Segment>
