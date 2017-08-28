@@ -1,7 +1,7 @@
 {
   "name": "Sous",
-  "version": "0.2",
-  "description": "Your personal recipe assistant",
+  "version": "0.3",
+  "description": "Your personal grocery shopping assistant",
   "permissions": [
     "tabs",
     "storage",
