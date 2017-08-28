@@ -21,7 +21,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     // send response back to popup if successful
     $.ajax({
       type: 'POST',
-      url: 'http://localhost:8080/api/recipes/chrome',
+      url: 'drsous.herokuapp.com/api/recipes/chrome',
       data: {
         isFromChromeExt: true,
         inGroceryList: request.inGroceryList,
@@ -43,7 +43,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     const formattedUrl = request.recipeUrl.replace(':', '%3A').split('/').join('%2F');
     $.ajax({
       method: 'GET',
-      url: `http://localhost:8080/api/recipes/${formattedUrl}`,
+      url: `drsous.herokuapp.com/api/recipes/${formattedUrl}`,
     })
       .done((response) => {
         sendResponse(response);
