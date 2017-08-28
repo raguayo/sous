@@ -19,9 +19,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.msg === 'createGroceryList') {
     // const message = createGroceryList(request.recipe, request.recipe.extendedIngredients, request.inGroceryList);
     // send response back to popup if successful
-    $.ajax({
+    $.ajax('https://drsous.herokuapp.com/api/recipes/chrome', {
       type: 'POST',
-      url: 'drsous.herokuapp.com/api/recipes/chrome',
       data: {
         isFromChromeExt: true,
         inGroceryList: request.inGroceryList,
@@ -41,9 +40,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     return true;
   } else if (request.msg === 'getRecipeDetails') {
     const formattedUrl = request.recipeUrl.replace(':', '%3A').split('/').join('%2F');
-    $.ajax({
+    $.ajax(`https://drsous.herokuapp.com/api/recipes/${formattedUrl}`, {
       method: 'GET',
-      url: `drsous.herokuapp.com/api/recipes/${formattedUrl}`,
     })
       .done((response) => {
         sendResponse(response);
