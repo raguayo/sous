@@ -120,6 +120,6 @@ export function findRecipeSuggestions(peapodIngredients) {
   const leftovers = calculateLeftovers(peapodIngredients);
   getLeftoverRecipes(leftovers)
     .then(leftoverRecipes => getLeftoverRecipeDetails(leftoverRecipes))
-    .then(results => hasSufficientQuantities(leftovers, results))
-    .catch(console.error);
+    .then(results => hasSufficientQuantities(leftovers, results));
+    // catch error when called by GList Component
 }

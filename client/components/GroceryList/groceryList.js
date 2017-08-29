@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import React from 'react';
 import { Container, Grid, Header, Segment, Modal, Input, Form, Accordion, Card, Image } from 'semantic-ui-react';
 import { deleteRecipesFromList, textGroceryList, addSuggestedRecipes, removeSuggestedRecipes, dirtySuggestedRecipes } from '../../store';
-import { getIngredients, addDisplayUnits, calculateLeftovers, filterPeapodIng, getLeftoverRecipes, getLeftoverRecipeDetails, hasSufficientQuantities, aisleMaker } from '../../utils';
+import { getIngredients, addDisplayUnits, filterPeapodIng, aisleMaker, findRecipeSuggestions } from '../../utils';
 import { PeapodModal, Aisle } from './';
 import { EmptyList } from '../';
 
@@ -163,10 +163,7 @@ const mapDispatch = (dispatch) => {
       dispatch(deleteRecipesFromList());
     },
     generateLeftoverSuggestions(peapodIngredients) {
-      const leftovers = calculateLeftovers(peapodIngredients);
-      getLeftoverRecipes(leftovers)
-        .then(leftoverRecipes => getLeftoverRecipeDetails(leftoverRecipes))
-        .then(results => hasSufficientQuantities(leftovers, results))
+      findRecipeSuggestions(peapodIngredients)
         .then((suggRecipes) => {
           console.log('Sugg rec: ', suggRecipes);
           dispatch(addSuggestedRecipes(suggRecipes));
