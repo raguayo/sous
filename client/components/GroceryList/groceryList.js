@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import React from 'react';
 import { Container, Grid, Header, Segment, Modal, Input, Form, Accordion, Card, Image } from 'semantic-ui-react';
-import { deleteRecipesFromList, textGroceryList, addSuggestedRecipes, removeSuggestedRecipes, dirtySuggestedRecipes } from '../../store';
+import { deleteRecipesFromList, textGroceryList, addSuggestedRecipes, removeSuggestedRecipes, dirtySuggestedRecipes, fetchRecipeSuggestions } from '../../store';
 import { getIngredients, addDisplayUnits, filterPeapodIng, aisleMaker, findRecipeSuggestions } from '../../utils';
 import { PeapodModal, Aisle } from './';
 import { EmptyList } from '../';
@@ -165,12 +165,7 @@ const mapDispatch = (dispatch) => {
       dispatch(deleteRecipesFromList());
     },
     generateLeftoverSuggestions(peapodIngredients) {
-      findRecipeSuggestions(peapodIngredients)
-        .then((suggRecipes) => {
-          console.log('Sugg rec: ', suggRecipes);
-          dispatch(addSuggestedRecipes(suggRecipes));
-        })
-        .catch(console.error);
+      dispatch(fetchRecipeSuggestions(peapodIngredients));
     },
     handleSendText(e, ingredients, excludedIds, handleSendTextClose) {
       const number = e.target.number.value;

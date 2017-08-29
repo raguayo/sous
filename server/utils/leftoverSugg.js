@@ -2,13 +2,6 @@ import axios from 'axios';
 import distance from 'jaro-winkler';
 import Promise from 'bluebird';
 
-export function filterPeapodIng(ingredients, excludedIds) {
-  return ingredients.map((ingredientObj) => {
-    if (excludedIds.includes(ingredientObj.id) || !ingredientObj.prodId) return null;
-    return ingredientObj;
-  }).filter(ing => !!ing);
-}
-
 const config = {
   baseURL: 'https://spoonacular-recipe-food-nutrition-v1.p.mashape.com',
   headers: { 'X-Mashape-Key': process.env.RECIPE_API_KEY },
@@ -119,10 +112,10 @@ function hasSufficientQuantities(leftoverIng, recipeArr) {
   return Promise.filter(recipeArr, recipeObj => hasSufficientQuantity(leftoverIng, recipeObj));
 }
 
-export function findRecipeSuggestions(peapodIngredients) {
+module.exports = function findRecipeSuggestions(peapodIngredients) {
   const leftovers = calculateLeftovers(peapodIngredients);
   getLeftoverRecipes(leftovers)
     .then(leftoverRecipes => getLeftoverRecipeDetails(leftoverRecipes))
     .then(results => hasSufficientQuantities(leftovers, results));
     // catch error when called by GList Component
-}
+};

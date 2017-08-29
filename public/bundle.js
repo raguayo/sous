@@ -35060,12 +35060,7 @@ var mapDispatch = function mapDispatch(dispatch) {
       dispatch((0, _store.deleteRecipesFromList)());
     },
     generateLeftoverSuggestions: function generateLeftoverSuggestions(peapodIngredients) {
-      var leftovers = (0, _utils.calculateLeftovers)(peapodIngredients);
-      (0, _utils.getLeftoverRecipes)(leftovers).then(function (leftoverRecipes) {
-        return (0, _utils.getLeftoverRecipeDetails)(leftoverRecipes);
-      }).then(function (results) {
-        return (0, _utils.hasSufficientQuantities)(leftovers, results);
-      }).then(function (suggRecipes) {
+      (0, _utils.findRecipeSuggestions)(peapodIngredients).then(function (suggRecipes) {
         console.log('Sugg rec: ', suggRecipes);
         dispatch((0, _store.addSuggestedRecipes)(suggRecipes));
       }).catch(console.error);
@@ -36751,6 +36746,7 @@ var dirtySuggestedRecipes = exports.dirtySuggestedRecipes = function dirtySugges
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.fetchRecipeSuggestions = exports.removeSuggestedRecipes = exports.addSuggestedRecipes = undefined;
 
 exports.default = function () {
   var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : defaultSuggestedRecipes;
@@ -36765,6 +36761,12 @@ exports.default = function () {
       return state;
   }
 };
+
+var _axios = __webpack_require__(87);
+
+var _axios2 = _interopRequireDefault(_axios);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
  * ACTION TYPES
@@ -36789,6 +36791,15 @@ var removeSuggestedRecipes = exports.removeSuggestedRecipes = function removeSug
 /**
  * THUNK CREATORS
  */
+var fetchRecipeSuggestions = exports.fetchRecipeSuggestions = function fetchRecipeSuggestions() {
+  return function (dispatch) {
+    return _axios2.default.get('/api/grocery-list/suggestions').then(function (res) {
+      return res.data;
+    }).then(function (suggRecipes) {
+      return dispatch(addSuggestedRecipes(suggRecipes));
+    }).catch(addError);
+  };
+};
 
 /**
  * REDUCER
@@ -37075,17 +37086,13 @@ Object.keys(_leftoversFuncs).forEach(function (key) {
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-
+/* WEBPACK VAR INJECTION */(function(process) {
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.calculateLeftovers = calculateLeftovers;
 exports.filterPeapodIng = filterPeapodIng;
-exports.getLeftoverRecipes = getLeftoverRecipes;
-exports.getLeftoverRecipeDetails = getLeftoverRecipeDetails;
-exports.hasSufficientQuantity = hasSufficientQuantity;
-exports.hasSufficientQuantities = hasSufficientQuantities;
+exports.findRecipeSuggestions = findRecipeSuggestions;
 
 var _axios = __webpack_require__(87);
 
@@ -37101,10 +37108,26 @@ var _bluebird2 = _interopRequireDefault(_bluebird);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function filterPeapodIng(ingredients, excludedIds) {
+  return ingredients.map(function (ingredientObj) {
+    if (excludedIds.includes(ingredientObj.id) || !ingredientObj.prodId) return null;
+    return ingredientObj;
+  }).filter(function (ing) {
+    return !!ing;
+  });
+}
+
 var config = {
   baseURL: 'https://spoonacular-recipe-food-nutrition-v1.p.mashape.com',
-  headers: { 'X-Mashape-Key': '1CV8hB4s1Zmsh9TqeBJM8U2oucn5p1HhSt5jsneqtOOJ3BrAvE' }
+  headers: { 'X-Mashape-Key': process.env.RECIPE_API_KEY }
 };
+
+function convertRecipeUnit(recipeIng, targetUnit) {
+  var formattedIngName = recipeIng.name.replace(' ', '+');
+  return _axios2.default.get('/recipes/convert?ingredientName=' + formattedIngName + '&sourceAmount=' + recipeIng.amount + '&sourceUnit=' + recipeIng.unit + '&targetUnit=' + targetUnit + '\'', config).then(function (res) {
+    return res.data;
+  }).catch(console.error);
+}
 
 function calculateLeftovers(arrOfPeapodIng) {
   var extraIngArr = [];
@@ -37121,20 +37144,12 @@ function calculateLeftovers(arrOfPeapodIng) {
   return extraIngArr;
 }
 
-function filterPeapodIng(ingredients, excludedIds) {
-  return ingredients.map(function (ingredientObj) {
-    if (excludedIds.includes(ingredientObj.id) || !ingredientObj.prodId) return null;
-    return ingredientObj;
-  }).filter(function (ing) {
-    return !!ing;
-  });
-}
-
 function getLeftoverRecipes(leftoverArr) {
   var ingredientCSV = leftoverArr.map(function (leftoverObj) {
     return leftoverObj.name.replace(' ', '+');
   }).join('%2C');
-  return _axios2.default.get('/recipes/findByIngredients?fillIngredients=false&ingredients=' + ingredientCSV + '&limitLicense=false&number=10&ranking=2', config).then(function (res) {
+  return _axios2.default.get('/recipes/findByIngredients?fillIngredients=false&ingredients=' + ingredientCSV + '&limitLicense=false&number=2&ranking=2', config).then(function (res) {
+    console.log('API calls remaining: ', res.data);
     return res.data;
   }).catch(console.error);
 }
@@ -37169,17 +37184,7 @@ function isTheSameIngredient(name1, name2) {
   return rating > 0.5;
 }
 
-function convertRecipeUnit(recipeIng, targetUnit) {
-  var formattedIngName = recipeIng.name.replace(' ', '+');
-  return _axios2.default.get('/recipes/convert?ingredientName=' + formattedIngName + '&sourceAmount=' + recipeIng.amount + '&sourceUnit=' + recipeIng.unit + '&targetUnit=' + targetUnit + '\'', config).then(function (res) {
-    return res.data;
-  }).catch(console.error);
-}
-
 function hasSufficientQuantity(leftoverIngredients, recipeObj) {
-  // return Promise.all an array of bools and boolPromises
-  // .then(return arrOfBools.every(bool => bool))
-  // .catch(return false)
   var arrOfBoolsAndBoolPromises = [];
   recipeObj.extendedIngredients.forEach(function (recipeIng) {
     var leftoverIng = leftoverIngredients.find(function (ing) {
@@ -37188,7 +37193,6 @@ function hasSufficientQuantity(leftoverIngredients, recipeObj) {
     if (leftoverIng) {
       if (leftoverIng.unit !== recipeIng.unit) {
         var boolPromise = convertRecipeUnit(recipeIng, leftoverIng.unit).then(function (result) {
-          console.log('After Conversion: LO: ', leftoverIng.leftoverAmount, leftoverIng.unit, ' REC: ', result.targetAmount, result.targetUnit);
           if (leftoverIng.leftoverAmount < result.targetAmount) throw new Error('psuedo false result');else return true;
         }).catch(function (err) {
           console.error(err);
@@ -37219,11 +37223,16 @@ function hasSufficientQuantities(leftoverIng, recipeArr) {
   });
 }
 
-// calculate leftover ingredients
-// make query to api
-// get results back
-// filter to make sure user has enough of each ingredient
-// return recipes filtered by number of favorites
+function findRecipeSuggestions(peapodIngredients) {
+  var leftovers = calculateLeftovers(peapodIngredients);
+  getLeftoverRecipes(leftovers).then(function (leftoverRecipes) {
+    return getLeftoverRecipeDetails(leftoverRecipes);
+  }).then(function (results) {
+    return hasSufficientQuantities(leftovers, results);
+  });
+  // catch error when called by GList Component
+}
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
 /* 529 */
