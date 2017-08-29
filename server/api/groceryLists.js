@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const { GroceryList, SavedRecipe } = require('../db/models');
+const findRecipeSuggestions = require('../utils/leftoverSugg');
 
 module.exports = router;
 
@@ -91,3 +92,11 @@ router.delete('/excluded', (req, res, next) => {
     .catch(next);
 });
 
+router.post('/suggestions', (req, res, next) => {
+  const { peapodIngredients } = req.body;
+  findRecipeSuggestions(peapodIngredients)
+    .then((suggRecipes) => {
+      res.json(suggRecipes);
+    })
+    .catch(next);
+});
