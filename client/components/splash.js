@@ -85,7 +85,7 @@ const Splash = () => {
                   <List.Item>
                     <Image src="https://maxcdn.icons8.com/Share/icon/win10/User_Interface//add1600.png" size='mini' />
                     <List.Content verticalAlign='center'>
-                      Click the chrome extension icon to add it to your profile
+                      Click the <a href="https://chrome.google.com/webstore/detail/sous/ldjfidlbdfdheleohdigdmknpmgbcjgd/related?hl=en-US&gl=US" target="_blank" rel="noopener noreferrer" style={styles.href}>chrome extension</a> icon to add it to your profile
                       </List.Content>
                   </List.Item>
                   <List.Item>
@@ -192,5 +192,8 @@ let styles = {
     color: '#77a95f',
     position: 'relative',
     right: '7px',
+  },
+  href: {
+    color: '#77a95f',
   },
 };
