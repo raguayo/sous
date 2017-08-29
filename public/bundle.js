@@ -34893,7 +34893,6 @@ var GroceryList = function (_React$Component) {
           excludedIngredients = _props.excludedIngredients,
           peapodIngredients = _props.peapodIngredients,
           handleClearList = _props.handleClearList,
-          handleSendText = _props.handleSendText,
           suggestedRecipes = _props.suggestedRecipes,
           handleRejectSuggestedRecipes = _props.handleRejectSuggestedRecipes,
           unknownIngredients = _props.unknownIngredients,
@@ -34955,7 +34954,7 @@ var GroceryList = function (_React$Component) {
                   } },
                 'Clear list'
               ),
-              _react2.default.createElement(_.TextModal, null)
+              _react2.default.createElement(_.TextModal, { ingredients: ingredients, excludedIngredients: excludedIngredients })
             ),
             suggestedRecipes.length ? _react2.default.createElement(
               _semanticUiReact.Card,
@@ -35051,17 +35050,6 @@ var mapDispatch = function mapDispatch(dispatch) {
         dispatch((0, _store.addSuggestedRecipes)(suggRecipes));
       }).catch(console.error);
     },
-    handleSendText: function handleSendText(e, ingredients, excludedIds, handleSendTextClose) {
-      var number = e.target.number.value;
-      var ingredientArr = ingredients.filter(function (ingredient) {
-        if (!excludedIds.includes(ingredient.id)) return ingredient;
-      });
-      ingredientArr = ingredientArr.map(function (ingredient) {
-        return [ingredient.displayQuantity, ingredient.displayUnit, ingredient.name];
-      });
-      dispatch((0, _store.textGroceryList)(number, ingredientArr));
-      handleSendTextClose();
-    },
     handleRejectSuggestedRecipes: function handleRejectSuggestedRecipes() {
       dispatch((0, _store.removeSuggestedRecipes)());
       dispatch((0, _store.dirtySuggestedRecipes)());
@@ -35079,7 +35067,6 @@ GroceryList.propTypes = {
   peapodIngredients: _propTypes2.default.array.isRequired,
   handleClearList: _propTypes2.default.func.isRequired,
   generateLeftoverSuggestions: _propTypes2.default.func.isRequired,
-  handleSendText: _propTypes2.default.func.isRequired,
   handleRejectSuggestedRecipes: _propTypes2.default.func.isRequired,
   unknownIngredients: _propTypes2.default.array.isRequired,
   dirty: _propTypes2.default.bool.isRequired,
@@ -35494,10 +35481,10 @@ var TextModal = function (_React$Component) {
   return TextModal;
 }(_react2.default.Component);
 
-var mapState = function mapState(state) {
+var mapState = function mapState(state, ownProps) {
   return {
-    ingredients: state.ingredients,
-    excludedIngredients: state.excludedIngredients
+    ingredients: ownProps.ingredients,
+    excludedIngredients: ownProps.excludedIngredients
   };
 };
 
@@ -35505,14 +35492,23 @@ var mapDispatch = function mapDispatch(dispatch) {
   return {
     handleSendText: function handleSendText(e, ingredients, excludedIds, handleClose) {
       var number = e.target.number.value;
+      number = number.toString();
       var ingredientArr = ingredients.filter(function (ingredient) {
         if (!excludedIds.includes(ingredient.id)) return ingredient;
       });
       ingredientArr = ingredientArr.map(function (ingredient) {
         return [ingredient.displayQuantity, ingredient.displayUnit, ingredient.name];
       });
-      dispatch((0, _store.textGroceryList)(number, ingredientArr));
-      handleClose();
+      if (number.length === 10) {
+        dispatch((0, _store.textGroceryList)(+number, ingredientArr));
+        handleClose();
+      } else if (number.length === 9) {
+        '1'.concat(number);
+        dispatch((0, _store.textGroceryList)(+number, ingredientArr));
+        handleClose();
+      } else {
+        console.log('invalid number');
+      }
     }
   };
 };

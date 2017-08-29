@@ -39,25 +39,34 @@ class TextModal extends React.Component {
   }
 }
 
-const mapState = (state) => {
+const mapState = (state, ownProps) => {
   return {
-    ingredients: state.ingredients,
-    excludedIngredients: state.excludedIngredients,
+    ingredients: ownProps.ingredients,
+    excludedIngredients: ownProps.excludedIngredients,
   }
 }
 
 const mapDispatch = (dispatch) => {
   return {
     handleSendText(e, ingredients, excludedIds, handleClose) {
-      const number = e.target.number.value;
+      let number = e.target.number.value;
+      number = number.toString();
       let ingredientArr = ingredients.filter((ingredient) => {
         if (!excludedIds.includes(ingredient.id)) return ingredient;
       });
       ingredientArr = ingredientArr.map((ingredient) => {
         return [ingredient.displayQuantity, ingredient.displayUnit, ingredient.name];
       });
-      dispatch(textGroceryList(number, ingredientArr));
-      handleClose();
+      if (number.length === 10) {
+        dispatch(textGroceryList(+number, ingredientArr));
+        handleClose();
+      } else if (number.length === 9) {
+        '1'.concat(number)
+        dispatch(textGroceryList(+number, ingredientArr));
+        handleClose();
+      } else {
+        console.log('invalid number');
+      }
     },
   };
 };
