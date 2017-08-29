@@ -77,7 +77,6 @@ export const addItemsToPeapodCart = (itemsArr, peapodLoginCreds) => (dispatch) =
       password: peapodLoginCreds.password,
     })
     .then(() => {
-      console.log('here')
       const newTab = window.open('https://www.peapod.com', '_blank');
       newTab.focus();
       // loop through every item in itemsArr and make excluded if not already

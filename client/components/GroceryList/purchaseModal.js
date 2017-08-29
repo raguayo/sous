@@ -93,7 +93,6 @@ const mapDispatch = (dispatch) => {
   return {
     handleCartPurchase(peapodItems, e, handlePeapodModalClose) {
       const itemArr = peapodItems.map((ingredientObj) => {
-        console.log(ingredientObj);
         return {
           id: ingredientObj.id,
           productId: ingredientObj.prodId,

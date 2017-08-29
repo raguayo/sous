@@ -8,11 +8,10 @@ const config = { username: process.env.INIT_PEAPOD_USERNAME, password: process.e
 const peapod = new Peapod(config);
 
 const promisifiedSearch = function (ingredientName) {
-  console.log('ingredName', ingredientName)
   return new Promise((success, reject) => {
     peapod.search(ingredientName, (err, result) => {
       if (err) {
-        console.log('error', err);
+        console.log('error in map to peapod', err.message);
         return reject(err.message);
       }
       success(result);
