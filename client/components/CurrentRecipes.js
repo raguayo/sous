@@ -80,11 +80,11 @@ class CurrentRecipe extends React.Component {
         </Grid>
         {
           this.state.displayLoader ? <Segment style={styles.loader}>
-              <Dimmer active inverted>
-            <Loader size='mini'>
+            <Dimmer active inverted>
+              <Loader size='mini'>
                 Loading
-            </Loader>
-              </Dimmer>
+              </Loader>
+            </Dimmer>
           </Segment> : null
         }
         {groceryListRecipes.length ?
