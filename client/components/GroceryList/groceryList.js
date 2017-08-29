@@ -4,7 +4,7 @@ import React from 'react';
 import { Container, Grid, Header, Segment, Modal, Input, Form, Accordion, Card, Image } from 'semantic-ui-react';
 import { deleteRecipesFromList, textGroceryList, addSuggestedRecipes, removeSuggestedRecipes, dirtySuggestedRecipes } from '../../store';
 import { getIngredients, addDisplayUnits, calculateLeftovers, filterPeapodIng, getLeftoverRecipes, getLeftoverRecipeDetails, hasSufficientQuantities, aisleMaker } from '../../utils';
-import { PeapodModal, Aisle } from './';
+import { PeapodModal, Aisle, TextModal } from './';
 import { EmptyList } from '../';
 
 const styles = {
@@ -82,23 +82,7 @@ class GroceryList extends React.Component {
                   : null
                 }
                 <button className="appButton" onClick={() => handleClearList()}>Clear list</button>
-                <Modal
-                  trigger={<button onClick={this.handleSendTextModalOpen} className="appButton">Text me my list</button>}
-                  basic size="small"
-                  open={this.state.sendTextModalOpen}
-                  onClose={this.handleSendTextModalClose}
-                  actions={[{ triggerClose: true }]}
-                >
-                  <Modal.Content>
-                    <Form onSubmit={e => handleSendText(e, ingredients, excludedIngredients, this.handleSendTextModalClose)}>
-                      <Input
-                        name="number"
-                        action={{ style: { backgroundColor: '#77a95f', color: 'white' }, labelPosition: 'left', icon: 'add', content: 'Submit' }}
-                        placeholder="input your phone number"
-                      />
-                    </Form>
-                  </Modal.Content>
-                </Modal>
+                <TextModal />
               </Segment.Group>
               {
                 suggestedRecipes.length ?

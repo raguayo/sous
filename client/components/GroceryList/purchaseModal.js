@@ -21,7 +21,7 @@ class PurchaseModal extends React.Component {
       <Modal
         trigger={<button onClick={this.handlePeapodModalOpen} className="appButton">Add to Peapod Cart</button>}
         basicSize="medium"
-        open={this.state.peapodModalOpen}
+        open={this.state.modalOpen}
         onClose={this.handlePeapodModalClose}
       >
         <Modal.Content>
@@ -93,6 +93,7 @@ const mapDispatch = (dispatch) => {
   return {
     handleCartPurchase(peapodItems, e, handlePeapodModalClose) {
       const itemArr = peapodItems.map((ingredientObj) => {
+        console.log(ingredientObj);
         return {
           id: ingredientObj.id,
           productId: ingredientObj.prodId,
@@ -119,3 +120,5 @@ PurchaseModal.propTypes = {
   peapodIngredients: PropTypes.array.isRequired,
   handleCartPurchase: PropTypes.func.isRequired,
 };
+
+

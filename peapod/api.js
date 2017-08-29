@@ -128,6 +128,7 @@ Peapod.prototype.makeLoginRequest = function(cb) {
     };
 
     request(options, function (err, res, body) {
+        console.log('RESSSS', res)
         if (err) {
             cb(err)
         } else if (res.statusCode !== 200) {
@@ -191,6 +192,7 @@ Peapod.prototype.addToCart = function (items, callback) {
     };
 
     this.request('PUT', 'v3.0/user/cart', params, function (err, body, response) {
+        console.log('Inside peapod API');
         if (err) {
             callback(err, null);
         } else {

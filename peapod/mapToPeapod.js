@@ -8,9 +8,11 @@ const config = require('../secrets');
 const peapod = new Peapod(config);
 
 const promisifiedSearch = function (ingredientName) {
+  console.log('ingredName', ingredientName)
   return new Promise((success, reject) => {
     peapod.search(ingredientName, (err, result) => {
       if (err) {
+        console.log('error', err);
         return reject(err.message);
       }
       success(result);
@@ -66,14 +68,18 @@ module.exports = function mapToPeapod(ingObj) {
         headers: { 'X-Mashape-Key': process.env.RECIPE_API_KEY },
       }).then(res => res.data)
         .then((conversion) => {
-          return PeapodIngredient.findOrCreate({
-            where: {
-              prodId,
-            },
-            defaults: {
-              name: peapodName, price, size: conversion.targetAmount,
-            },
-          });
+          if (conversion.targetAmount) {
+            console.log('here');
+            return PeapodIngredient.findOrCreate({
+              where: {
+                prodId,
+              },
+              defaults: {
+                name: peapodName, price, size: conversion.targetAmount,
+              },
+            });
+          }
+          return undefined;
         })
         .catch(console.error);
       // do something better here
