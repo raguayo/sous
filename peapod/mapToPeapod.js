@@ -3,7 +3,7 @@ const axios = require('axios');
 const PeapodIngredient = require('../server/db/models/peapodIng');
 const { convertSizeToNumber } = require('./utilityFuncs');
 
-const config = require('../secrets');
+const config = { username: process.env.INIT_PEAPOD_USERNAME, password: process.env.INIT_PEAPOD_PASSWORD };
 
 const peapod = new Peapod(config);
 
