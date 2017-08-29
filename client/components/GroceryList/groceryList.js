@@ -66,14 +66,16 @@ class GroceryList extends React.Component {
             </Header>
             </Grid.Row>
           </Grid>
-          {peapodIngredients.length || excludedIngredients.length ?
+          {peapodIngredients.length || unknownIngredients.length ?
             <div style={styles.list}>
               <Segment.Group style={{ width: '75%', margin: 'auto' }}>
                 <Segment>
                   <p style={styles.textColor}>Ingredients:</p>
                 </Segment>
                 <Aisle aisles={peapodAisles} />
-                <PeapodModal peapodIngredients={peapodIngredients} />
+                {peapodIngredients.length ?
+                  <PeapodModal peapodIngredients={peapodIngredients} /> : null
+                }
                 {unknownIngredients.length ?
                   <Segment>
                     <p style={styles.textColor}>The following ingredients were not found on Peapod. You may have to buy these on your own.</p>
