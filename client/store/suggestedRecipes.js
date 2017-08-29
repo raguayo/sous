@@ -21,9 +21,9 @@ export const removeSuggestedRecipes = () => ({ type: REMOVE_SUGGESTED_RECIPES })
 /**
  * THUNK CREATORS
  */
-export const fetchRecipeSuggestions = () =>
+export const fetchRecipeSuggestions = peapodIngredients =>
   dispatch =>
-    axios.get('/api/grocery-list/suggestions')
+    axios.post('/api/grocery-list/suggestions', { peapodIngredients })
     .then(res => res.data)
     .then(suggRecipes => dispatch(addSuggestedRecipes(suggRecipes)))
     .catch(addError);

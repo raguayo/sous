@@ -92,7 +92,7 @@ router.delete('/excluded', (req, res, next) => {
     .catch(next);
 });
 
-router.get('/suggestions', (req, res, next) => {
+router.post('/suggestions', (req, res, next) => {
   const { peapodIngredients } = req.body;
   findRecipeSuggestions(peapodIngredients)
     .then((suggRecipes) => {

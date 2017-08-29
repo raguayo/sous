@@ -43,7 +43,6 @@ class GroceryList extends React.Component {
 
 
   componentDidMount() {
-    console.log('In did mount: ', this.props.dirty);
     if (!this.props.dirty) {
       console.log('Running suggestion');
       this.props.generateLeftoverSuggestions(this.props.peapodIngredients);
@@ -55,7 +54,6 @@ class GroceryList extends React.Component {
 
   render(props) {
     const { excludedIngredients, peapodIngredients, handleClearList, handleSendText, suggestedRecipes, handleRejectSuggestedRecipes, unknownIngredients, peapodAisles, offLineAisles, ingredients } = this.props;
-
     return (
       <div style={{ position: 'relative' }}>
         <Container style={styles.container}>

@@ -1,6 +1,6 @@
-import axios from 'axios';
-import distance from 'jaro-winkler';
-import Promise from 'bluebird';
+const axios = require('axios');
+const distance = require('jaro-winkler');
+const Promise = require('bluebird');
 
 const config = {
   baseURL: 'https://spoonacular-recipe-food-nutrition-v1.p.mashape.com',
@@ -36,10 +36,10 @@ function getLeftoverRecipes(leftoverArr) {
     return leftoverObj.name.replace(' ', '+');
   }).join('%2C');
   return axios.get(
-    `/recipes/findByIngredients?fillIngredients=false&ingredients=${ingredientCSV}&limitLicense=false&number=2&ranking=2`,
+    `/recipes/findByIngredients?fillIngredients=false&ingredients=${ingredientCSV}&limitLicense=false&number=10&ranking=2`,
     config)
     .then((res) => {
-      console.log('API calls remaining: ', res.data)
+      console.log('API calls remaining: ', res.headers['x-ratelimit-requests-remaining'])
       return res.data
     })
     .catch(console.error);
@@ -114,7 +114,7 @@ function hasSufficientQuantities(leftoverIng, recipeArr) {
 
 module.exports = function findRecipeSuggestions(peapodIngredients) {
   const leftovers = calculateLeftovers(peapodIngredients);
-  getLeftoverRecipes(leftovers)
+  return getLeftoverRecipes(leftovers)
     .then(leftoverRecipes => getLeftoverRecipeDetails(leftoverRecipes))
     .then(results => hasSufficientQuantities(leftovers, results));
     // catch error when called by GList Component
