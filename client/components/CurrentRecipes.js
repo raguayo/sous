@@ -46,10 +46,7 @@ class CurrentRecipe extends React.Component {
     };
   }
 
-  displayLoader = () => {
-    console.log('In display loader')
-    this.setState({ displayLoader: true })
-  }
+  displayLoader = () => this.setState({ displayLoader: true })
   hideLoader = () => this.setState({ displayLoader: false })
 
   render() {
