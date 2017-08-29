@@ -1,3 +1,6 @@
+import axios from 'axios';
+import { addError } from './error';
+
 /**
  * ACTION TYPES
  */
@@ -14,9 +17,16 @@ const defaultSuggestedRecipes = [];
  */
 export const addSuggestedRecipes = suggestedRecipes => ({ type: ADD_SUGGESTED_RECIPES, suggestedRecipes });
 export const removeSuggestedRecipes = () => ({ type: REMOVE_SUGGESTED_RECIPES });
+
 /**
  * THUNK CREATORS
  */
+export const fetchRecipeSuggestions = peapodIngredients =>
+  dispatch =>
+    axios.post('/api/grocery-list/suggestions', { peapodIngredients })
+    .then(res => res.data)
+    .then(suggRecipes => dispatch(addSuggestedRecipes(suggRecipes)))
+    .catch(addError);
 
 /**
  * REDUCER
