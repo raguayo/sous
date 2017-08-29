@@ -1,13 +1,29 @@
 import axios from 'axios';
 import distance from 'jaro-winkler';
-import Promise from "bluebird";
+import Promise from 'bluebird';
+
+export function filterPeapodIng(ingredients, excludedIds) {
+  return ingredients.map((ingredientObj) => {
+    if (excludedIds.includes(ingredientObj.id) || !ingredientObj.prodId) return null;
+    return ingredientObj;
+  }).filter(ing => !!ing);
+}
 
 const config = {
   baseURL: 'https://spoonacular-recipe-food-nutrition-v1.p.mashape.com',
-  headers: { 'X-Mashape-Key': '1CV8hB4s1Zmsh9TqeBJM8U2oucn5p1HhSt5jsneqtOOJ3BrAvE' },
+  headers: { 'X-Mashape-Key': process.env.RECIPE_API_KEY },
 };
 
-export function calculateLeftovers(arrOfPeapodIng) {
+function convertRecipeUnit(recipeIng, targetUnit) {
+  const formattedIngName = recipeIng.name.replace(' ', '+');
+  return axios.get(
+    `/recipes/convert?ingredientName=${formattedIngName}&sourceAmount=${recipeIng.amount}&sourceUnit=${recipeIng.unit}&targetUnit=${targetUnit}'`,
+    config)
+    .then(res => res.data)
+    .catch(console.error);
+}
+
+function calculateLeftovers(arrOfPeapodIng) {
   const extraIngArr = [];
   arrOfPeapodIng.forEach((ingObj) => {
     if (ingObj.size > ingObj.quantity) {
@@ -22,14 +38,7 @@ export function calculateLeftovers(arrOfPeapodIng) {
   return extraIngArr;
 }
 
-export function filterPeapodIng(ingredients, excludedIds) {
-  return ingredients.map((ingredientObj) => {
-    if (excludedIds.includes(ingredientObj.id) || !ingredientObj.prodId) return null;
-    return ingredientObj;
-  }).filter(ing => !!ing);
-}
-
-export function getLeftoverRecipes(leftoverArr) {
+function getLeftoverRecipes(leftoverArr) {
   const ingredientCSV = leftoverArr.map((leftoverObj) => {
     return leftoverObj.name.replace(' ', '+');
   }).join('%2C');
@@ -40,7 +49,7 @@ export function getLeftoverRecipes(leftoverArr) {
     .catch(console.error);
 }
 
-export function getLeftoverRecipeDetails(arrOfRecipes) {
+function getLeftoverRecipeDetails(arrOfRecipes) {
   return Promise.all(arrOfRecipes.map((recipeObj) => {
     return axios.get(`/recipes/${recipeObj.id}/information`, config)
     .then(res => res.data)
@@ -71,19 +80,7 @@ function isTheSameIngredient(name1, name2) {
   return rating > 0.5;
 }
 
-function convertRecipeUnit(recipeIng, targetUnit) {
-  const formattedIngName = recipeIng.name.replace(' ', '+');
-  return axios.get(
-    `/recipes/convert?ingredientName=${formattedIngName}&sourceAmount=${recipeIng.amount}&sourceUnit=${recipeIng.unit}&targetUnit=${targetUnit}'`,
-    config)
-    .then(res => res.data)
-    .catch(console.error);
-}
-
-export function hasSufficientQuantity(leftoverIngredients, recipeObj) {
-  // return Promise.all an array of bools and boolPromises
-  // .then(return arrOfBools.every(bool => bool))
-  // .catch(return false)
+function hasSufficientQuantity(leftoverIngredients, recipeObj) {
   const arrOfBoolsAndBoolPromises = [];
   recipeObj.extendedIngredients.forEach((recipeIng) => {
     const leftoverIng = leftoverIngredients.find((ing) => {
@@ -93,7 +90,6 @@ export function hasSufficientQuantity(leftoverIngredients, recipeObj) {
       if (leftoverIng.unit !== recipeIng.unit) {
         const boolPromise = convertRecipeUnit(recipeIng, leftoverIng.unit)
           .then((result) => {
-            console.log('After Conversion: LO: ', leftoverIng.leftoverAmount, leftoverIng.unit, ' REC: ', result.targetAmount, result.targetUnit);
             if (leftoverIng.leftoverAmount < result.targetAmount) throw new Error('psuedo false result');
             else return true;
           })
@@ -116,12 +112,14 @@ export function hasSufficientQuantity(leftoverIngredients, recipeObj) {
     .catch(() => false);
 }
 
-export function hasSufficientQuantities(leftoverIng, recipeArr) {
+function hasSufficientQuantities(leftoverIng, recipeArr) {
   return Promise.filter(recipeArr, recipeObj => hasSufficientQuantity(leftoverIng, recipeObj));
 }
 
-// calculate leftover ingredients
-// make query to api
-// get results back
-// filter to make sure user has enough of each ingredient
-// return recipes filtered by number of favorites
+export function findRecipeSuggestions(peapodIngredients) {
+  const leftovers = calculateLeftovers(peapodIngredients);
+  getLeftoverRecipes(leftovers)
+    .then(leftoverRecipes => getLeftoverRecipeDetails(leftoverRecipes))
+    .then(results => hasSufficientQuantities(leftovers, results))
+    .catch(console.error);
+}
