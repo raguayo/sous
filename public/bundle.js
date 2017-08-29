@@ -35325,7 +35325,106 @@ var styles = {
 exports.default = (0, _reactRedux.connect)(null, null)(EmptyList);
 
 /***/ }),
-/* 514 */,
+/* 514 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _react = __webpack_require__(1);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _semanticUiReact = __webpack_require__(39);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var styles = {
+  logo: {
+    fontFamily: 'Oleo Script Swash Caps',
+    color: '#77a95f',
+    fontSize: '3rem',
+    margin: '0 3rem',
+    fontWeight: '300',
+    paddingBottom: '2.5rem'
+  }
+};
+
+var Footer = function Footer() {
+  return _react2.default.createElement(
+    _semanticUiReact.Segment,
+    { inverted: true, vertical: true },
+    _react2.default.createElement(
+      _semanticUiReact.Container,
+      null,
+      _react2.default.createElement(
+        _semanticUiReact.Grid,
+        { inverted: true, stackable: true },
+        _react2.default.createElement(
+          _semanticUiReact.Grid.Row,
+          null,
+          _react2.default.createElement(
+            _semanticUiReact.Grid.Column,
+            { width: 3, style: { paddingTop: '1.25rem' } },
+            _react2.default.createElement(
+              'a',
+              { href: 'http://drsous.herokuapp.com/recipes' },
+              _react2.default.createElement(
+                'div',
+                { style: styles.logo },
+                _react2.default.createElement(_semanticUiReact.Image, { src: '/images/chefHatNoBackground.jpeg', size: 'small', shape: 'circular', centered: true }),
+                'sous'
+              )
+            ),
+            _react2.default.createElement(
+              'a',
+              { href: 'https://github.com/raguayo/raww' },
+              _react2.default.createElement(_semanticUiReact.Image, { src: '/images/blueGithub.png', size: 'mini', shape: 'circular', centered: true })
+            )
+          ),
+          _react2.default.createElement(
+            _semanticUiReact.Grid.Column,
+            { width: 4 },
+            _react2.default.createElement(
+              'a',
+              { href: 'https://www.linkedin.com/in/william-raedy-13a161147/' },
+              _react2.default.createElement(_semanticUiReact.Image, { src: '/images/WillyRaedy.jpeg', size: 'small', shape: 'circular', centered: true }),
+              _react2.default.createElement(_semanticUiReact.Header, { inverted: true, as: 'h4', content: 'Willy Raedy', textAlign: 'center' })
+            )
+          ),
+          _react2.default.createElement(
+            _semanticUiReact.Grid.Column,
+            { width: 4 },
+            _react2.default.createElement(
+              'a',
+              { href: 'https://www.linkedin.com/in/alexander-j-stauter-7239ba93/' },
+              _react2.default.createElement(_semanticUiReact.Image, { src: '/images/AlexStauter.jpeg', size: 'small', shape: 'circular', centered: true }),
+              _react2.default.createElement(_semanticUiReact.Header, { inverted: true, as: 'h4', content: 'Alex Stauter', textAlign: 'center' })
+            )
+          ),
+          _react2.default.createElement(
+            _semanticUiReact.Grid.Column,
+            { width: 4 },
+            _react2.default.createElement(
+              'a',
+              { href: 'https://www.linkedin.com/in/rick-aguayo/' },
+              _react2.default.createElement(_semanticUiReact.Image, { src: '/images/RickAguayo.jpeg', size: 'small', shape: 'circular', centered: true }),
+              _react2.default.createElement(_semanticUiReact.Header, { inverted: true, as: 'h4', content: 'Rick Aguayo', textAlign: 'center' })
+            )
+          )
+        )
+      )
+    )
+  );
+};
+
+exports.default = Footer;
+
+/***/ }),
 /* 515 */,
 /* 516 */
 /***/ (function(module, exports, __webpack_require__) {
@@ -35351,6 +35450,10 @@ var _semanticUiReact = __webpack_require__(39);
 
 var _reactRouterDom = __webpack_require__(83);
 
+var _footer = __webpack_require__(514);
+
+var _footer2 = _interopRequireDefault(_footer);
+
 var _navbar = __webpack_require__(517);
 
 var _navbar2 = _interopRequireDefault(_navbar);
@@ -35359,7 +35462,52 @@ var _store = __webpack_require__(44);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-// import Footer from './footer';
+var styles = {
+  leftGroup: {
+    display: 'flex'
+  },
+  close: {
+    borderLeft: '0.1rem solid'
+  },
+  warning: {
+    borderRight: '0.1rem solid'
+  },
+  alert_item: {
+    padding: '1rem',
+    display: 'flex'
+  },
+  alert_container: {
+    width: '100%',
+    zIndex: 2002,
+    backgroundColor: 'white',
+    position: 'fixed',
+    boxShadow: '0 1px 2px 0 rgba(34,36,38,.15)',
+    borderRadius: '.28571429rem',
+    minHeight: '4.15714286em',
+    display: 'flex',
+    fontWeight: 400,
+    justifyContent: 'space-between',
+    alignItems: 'center'
+  },
+  alert: {},
+  alert_mask: {
+    position: 'fixed',
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    zIndex: 1001,
+    width: '100%',
+    height: '100%'
+  },
+  container: {
+    display: 'flex',
+    flexDirection: 'column',
+    height: '100%'
+  },
+  footer: {
+    height: '3em',
+    marginTop: 'auto'
+  }
+};
+
 var Main = function Main(props) {
   var children = props.children,
       isLoggedIn = props.isLoggedIn,
@@ -35415,6 +35563,11 @@ var Main = function Main(props) {
       'div',
       null,
       children
+    ),
+    _react2.default.createElement(
+      'div',
+      { style: styles.footer },
+      _react2.default.createElement(_footer2.default, null)
     )
   );
 };
@@ -35442,53 +35595,9 @@ exports.default = (0, _reactRouterDom.withRouter)((0, _reactRedux.connect)(mapSt
 Main.propTypes = {
   children: _propTypes2.default.object,
   isLoggedIn: _propTypes2.default.bool.isRequired,
+  error: _propTypes2.default.object,
+  location: _propTypes2.default.string,
   handleRemoveError: _propTypes2.default.func.isRequired
-};
-
-var styles = {
-  leftGroup: {
-    display: 'flex'
-  },
-  close: {
-    borderLeft: '0.1rem solid'
-  },
-  warning: {
-    borderRight: '0.1rem solid'
-  },
-  alert_item: {
-    padding: '1rem',
-    display: 'flex'
-  },
-  alert_container: {
-    width: '100%',
-    zIndex: 2002,
-    backgroundColor: 'white',
-    position: 'fixed',
-    boxShadow: '0 1px 2px 0 rgba(34,36,38,.15)',
-    borderRadius: '.28571429rem',
-    minHeight: '4.15714286em',
-    display: 'flex',
-    fontWeight: 400,
-    justifyContent: 'space-between',
-    alignItems: 'center'
-  },
-  alert: {},
-  alert_mask: {
-    position: 'fixed',
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    zIndex: 1001,
-    width: '100%',
-    height: '100%'
-  },
-  container: {
-    display: 'flex',
-    flexDirection: 'column',
-    height: '100%'
-  },
-  footer: {
-    height: '3em',
-    marginTop: 'auto'
-  }
 };
 
 /***/ }),
