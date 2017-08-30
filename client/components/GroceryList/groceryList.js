@@ -2,8 +2,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import React from 'react';
 import { Container, Grid, Header, Segment, Modal, Input, Form, Accordion, Card, Image } from 'semantic-ui-react';
-import { deleteRecipesFromList, textGroceryList, addSuggestedRecipes, removeSuggestedRecipes, dirtySuggestedRecipes } from '../../store';
-import { getIngredients, addDisplayUnits, calculateLeftovers, filterPeapodIng, getLeftoverRecipes, getLeftoverRecipeDetails, hasSufficientQuantities, aisleMaker } from '../../utils';
+import { deleteRecipesFromList, textGroceryList, addSuggestedRecipes, removeSuggestedRecipes, dirtySuggestedRecipes, fetchRecipeSuggestions } from '../../store';
+import { getIngredients, addDisplayUnits, filterPeapodIng, aisleMaker, findRecipeSuggestions } from '../../utils';
 import { PeapodModal, Aisle } from './';
 import { EmptyList } from '../';
 
@@ -43,7 +43,6 @@ class GroceryList extends React.Component {
 
 
   componentDidMount() {
-    console.log('In did mount: ', this.props.dirty);
     if (!this.props.dirty) {
       console.log('Running suggestion');
       this.props.generateLeftoverSuggestions(this.props.peapodIngredients);
@@ -55,7 +54,6 @@ class GroceryList extends React.Component {
 
   render(props) {
     const { excludedIngredients, peapodIngredients, handleClearList, handleSendText, suggestedRecipes, handleRejectSuggestedRecipes, unknownIngredients, peapodAisles, offLineAisles, ingredients } = this.props;
-
     return (
       <div style={{ position: 'relative' }}>
         <Container style={styles.container}>
@@ -165,15 +163,7 @@ const mapDispatch = (dispatch) => {
       dispatch(deleteRecipesFromList());
     },
     generateLeftoverSuggestions(peapodIngredients) {
-      const leftovers = calculateLeftovers(peapodIngredients);
-      getLeftoverRecipes(leftovers)
-        .then(leftoverRecipes => getLeftoverRecipeDetails(leftoverRecipes))
-        .then(results => hasSufficientQuantities(leftovers, results))
-        .then((suggRecipes) => {
-          console.log('Sugg rec: ', suggRecipes);
-          dispatch(addSuggestedRecipes(suggRecipes));
-        })
-        .catch(console.error);
+      dispatch(fetchRecipeSuggestions(peapodIngredients));
     },
     handleSendText(e, ingredients, excludedIds, handleSendTextClose) {
       const number = e.target.number.value;

@@ -1,13 +1,14 @@
 {
   "name": "Sous",
-  "version": "0.1",
-  "description": "Your personal recipe assistant",
+  "version": "1.2",
+  "description": "Your personal grocery shopping assistant",
   "permissions": [
     "tabs",
     "storage",
     "http://*/*",
     "https://*/*",
-    "localhost:*",
+    "http://drsous.herokuapp.com/*",
+    "https://drsous.herokuapp.com/*",
     "cookies"
   ],
   "browser_action": {

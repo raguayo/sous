@@ -27,6 +27,7 @@
     "express-session": "^1.15.1",
     "history": "^4.6.3",
     "jaro-winkler": "^0.2.8",
+    "lodash": "^4.17.4",
     "microformat-node": "^2.0.1",
     "morgan": "^1.8.1",
     "passport": "^0.3.2",
