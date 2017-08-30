@@ -3,68 +3,9 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Icon } from 'semantic-ui-react';
 import { withRouter } from 'react-router-dom';
-// import Footer from './footer';
+import Footer from './footer';
 import Navbar from './navbar';
 import { removeError } from '../store';
-
-const Main = (props) => {
-  const { children, isLoggedIn, error, handleRemoveError } = props;
-
-  return (
-    <div style={styles.container}>
-      {
-        error ?
-          <div>
-            <div>
-              <div style={styles.alert_container}>
-                <div style={styles.leftGroup} >
-                  <div style={Object.assign({}, styles.alert_item, styles.warning)}><Icon name="warning sign" />Error</div>
-                  <div style={styles.alert_item}>{error.message}</div>
-                </div>
-                <div style={Object.assign({}, styles.alert_item, styles.close)} onClick={() => handleRemoveError()}><Icon name="delete" />Close</div>
-              </div>
-              <div style={styles.alert_mask} />
-            </div>
-          </div> : null
-      }
-      <div>
-        {isLoggedIn ?
-          <Navbar location={props.location}/> : null}
-      </div>
-      <div>
-        {children}
-      </div>
-      {/* <div style={styles.footer}>
-        <Footer />
-      </div> */}
-    </div>
-  );
-};
-
-const mapState = (state) => {
-  return {
-    isLoggedIn: !!state.user.id,
-    error: state.error,
-  };
-};
-
-const mapDispatch = (dispatch) => {
-  return {
-    handleRemoveError: () => {
-      dispatch(removeError());
-    },
-  };
-};
-
-// The `withRouter` wrapper makes sure that updates are not blocked
-// when the url changes
-export default withRouter(connect(mapState, mapDispatch)(Main));
-
-Main.propTypes = {
-  children: PropTypes.object,
-  isLoggedIn: PropTypes.bool.isRequired,
-  handleRemoveError: PropTypes.func.isRequired,
-};
 
 const styles = {
   leftGroup: {
@@ -112,5 +53,66 @@ const styles = {
     height: '3em',
     marginTop: 'auto',
   },
+};
+
+const Main = (props) => {
+  const { children, isLoggedIn, error, handleRemoveError } = props;
+
+  return (
+    <div style={styles.container}>
+      {
+        error ?
+          <div>
+            <div>
+              <div style={styles.alert_container}>
+                <div style={styles.leftGroup} >
+                  <div style={Object.assign({}, styles.alert_item, styles.warning)}><Icon name="warning sign" />Error</div>
+                  <div style={styles.alert_item}>{error.message}</div>
+                </div>
+                <div style={Object.assign({}, styles.alert_item, styles.close)} onClick={() => handleRemoveError()}><Icon name="delete" />Close</div>
+              </div>
+              <div style={styles.alert_mask} />
+            </div>
+          </div> : null
+      }
+      <div>
+        {isLoggedIn ?
+          <Navbar location={props.location}/> : null}
+      </div>
+      <div>
+        {children}
+      </div>
+      <div style={styles.footer}>
+        <Footer />
+      </div>
+    </div>
+  );
+};
+
+const mapState = (state) => {
+  return {
+    isLoggedIn: !!state.user.id,
+    error: state.error,
+  };
+};
+
+const mapDispatch = (dispatch) => {
+  return {
+    handleRemoveError: () => {
+      dispatch(removeError());
+    },
+  };
+};
+
+// The `withRouter` wrapper makes sure that updates are not blocked
+// when the url changes
+export default withRouter(connect(mapState, mapDispatch)(Main));
+
+Main.propTypes = {
+  children: PropTypes.object,
+  isLoggedIn: PropTypes.bool.isRequired,
+  error: PropTypes.object,
+  location: PropTypes.string,
+  handleRemoveError: PropTypes.func.isRequired,
 };
 
