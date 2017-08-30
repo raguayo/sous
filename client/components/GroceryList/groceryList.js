@@ -2,9 +2,9 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import React from 'react';
 import { Container, Grid, Header, Segment, Accordion, Card, Image } from 'semantic-ui-react';
-import { deleteRecipesFromList, addSuggestedRecipes, removeSuggestedRecipes, dirtySuggestedRecipes } from '../../store';
-import { getIngredients, addDisplayUnits, calculateLeftovers, filterPeapodIng, getLeftoverRecipes, getLeftoverRecipeDetails, hasSufficientQuantities, aisleMaker } from '../../utils';
-import { PeapodModal, Aisle, TextModal } from './';
+import { deleteRecipesFromList, removeSuggestedRecipes, dirtySuggestedRecipes, fetchRecipeSuggestions } from '../../store';
+import { getIngredients, addDisplayUnits, filterPeapodIng, aisleMaker } from '../../utils';
+import { PeapodModal, Aisle } from './';
 import { EmptyList } from '../';
 
 const styles = {
@@ -43,7 +43,6 @@ class GroceryList extends React.Component {
 
 
   componentDidMount() {
-    console.log('In did mount: ', this.props.dirty);
     if (!this.props.dirty) {
       console.log('Running suggestion');
       this.props.generateLeftoverSuggestions(this.props.peapodIngredients);
@@ -149,15 +148,7 @@ const mapDispatch = (dispatch) => {
       dispatch(deleteRecipesFromList());
     },
     generateLeftoverSuggestions(peapodIngredients) {
-      const leftovers = calculateLeftovers(peapodIngredients);
-      getLeftoverRecipes(leftovers)
-        .then(leftoverRecipes => getLeftoverRecipeDetails(leftoverRecipes))
-        .then(results => hasSufficientQuantities(leftovers, results))
-        .then((suggRecipes) => {
-          console.log('Sugg rec: ', suggRecipes);
-          dispatch(addSuggestedRecipes(suggRecipes));
-        })
-        .catch(console.error);
+      dispatch(fetchRecipeSuggestions(peapodIngredients));
     },
     handleRejectSuggestedRecipes() {
       dispatch(removeSuggestedRecipes());

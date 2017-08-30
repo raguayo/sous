@@ -30,7 +30,7 @@ module.exports = function mapToPeapod(ingObj) {
       let size = results.products[0].size;
 
       const newUnitArr = ['OZ', 'CT', 'PINT', 'LB', 'LTR', 'ML', 'BUNCH', 'GAL'];
-      const newUnitRegEx = new RegExp("\\b(" + newUnitArr.join("|") + ")\\b")
+      const newUnitRegEx = new RegExp("\\b(" + newUnitArr.join("|") + ")\\b");
       // remove APX
       if (size.slice(0, 3) === 'APX') size = size.slice(4);
       // make size just a number
