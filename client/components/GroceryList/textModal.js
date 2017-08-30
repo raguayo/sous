@@ -14,6 +14,7 @@ class TextModal extends React.Component {
 
   handleClose = () => this.setState({ modalOpen: false });
   handleOpen = () => this.setState({ modalOpen: true });
+  number = value => value && isNaN(Number(value)) ? 'Must be a number' : undefined;
 
   render(props) {
     const { ingredients, excludedIngredients, handleSendText } = this.props;
@@ -31,6 +32,7 @@ class TextModal extends React.Component {
               name="number"
               action={{ style: { backgroundColor: '#77a95f', color: 'white' }, labelPosition: 'left', icon: 'add', content: 'Submit' }}
               placeholder="input your phone number"
+              validation={this.number}
             />
           </Form>
         </Modal.Content>
