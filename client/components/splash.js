@@ -95,9 +95,6 @@ const Splash = () => {
                       </List.Content>
                   </List.Item>
                 </List>
-                <p style={styles.paragraph}>
-                  That's it! Sous will take care of the rest
-                  </p>
               </Container>
             </Grid.Column>
             <Grid.Column style={styles.column}>
@@ -111,25 +108,22 @@ const Splash = () => {
                   <List.Item>
                     <Image src="https://maxcdn.icons8.com/Share/icon/dotty/Shopping//shopping_cart1600.png" size='mini' />
                     <List.Content verticalAlign='center'>
-                      Sous will create a Peapod cart for you with the click of a button
+                      Sous will create a Peapod cart for you with a single click
                       </List.Content>
                   </List.Item>
                   <List.Item>
                     <Image src="https://d30y9cdsu7xlg0.cloudfront.net/png/371306-200.png" size='mini' />
                     <List.Content verticalAlign='center'>
-                      Prefer to browse? Sous will display your list in a collapsible sidebar
+                      Visit Peapod to purchase your cart
                       </List.Content>
                   </List.Item>
                   <List.Item>
                     <Image src="https://image.freepik.com/free-icon/hand-with-a-mobile-phone_318-38051.jpg" size='mini' />
                     <List.Content verticalAlign='center'>
-                      Headed to the store? Sous will text you your shopping list
+                      Going to the store? Sous will text you your list
                       </List.Content>
                   </List.Item>
                 </List>
-                <p style={styles.paragraph}>
-                  It's completely up to you!
-                  </p>
               </Container>
             </Grid.Column>
           </Grid.Row>
@@ -137,7 +131,7 @@ const Splash = () => {
       </Segment>
     </div>
   );
-}
+};
 
 export default Splash;
 
