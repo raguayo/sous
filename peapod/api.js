@@ -191,7 +191,6 @@ Peapod.prototype.addToCart = function (items, callback) {
     };
 
     this.request('PUT', 'v3.0/user/cart', params, function (err, body, response) {
-        console.log('Inside peapod API');
         if (err) {
             callback(err, null);
         } else {
