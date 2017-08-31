@@ -11,6 +11,7 @@ const promisifiedSearch = function (ingredientName) {
   return new Promise((success, reject) => {
     peapod.search(ingredientName, (err, result) => {
       if (err) {
+        console.log('error in map to peapod', err.message);
         return reject(err.message);
       }
       success(result);
@@ -66,14 +67,17 @@ module.exports = function mapToPeapod(ingObj) {
         headers: { 'X-Mashape-Key': process.env.RECIPE_API_KEY },
       }).then(res => res.data)
         .then((conversion) => {
-          return PeapodIngredient.findOrCreate({
-            where: {
-              prodId,
-            },
-            defaults: {
-              name: peapodName, price, size: conversion.targetAmount,
-            },
-          });
+          if (conversion.targetAmount) {
+            return PeapodIngredient.findOrCreate({
+              where: {
+                prodId,
+              },
+              defaults: {
+                name: peapodName, price, size: conversion.targetAmount,
+              },
+            });
+          }
+          return undefined;
         })
         .catch(console.error);
       // do something better here

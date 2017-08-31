@@ -1,10 +1,10 @@
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import React from 'react';
-import { Container, Grid, Header, Segment, Modal, Input, Form, Accordion, Card, Image } from 'semantic-ui-react';
-import { deleteRecipesFromList, textGroceryList, addSuggestedRecipes, removeSuggestedRecipes, dirtySuggestedRecipes, fetchRecipeSuggestions } from '../../store';
-import { getIngredients, addDisplayUnits, filterPeapodIng, aisleMaker, findRecipeSuggestions } from '../../utils';
-import { PeapodModal, Aisle } from './';
+import { Container, Grid, Header, Segment, Accordion, Card, Image } from 'semantic-ui-react';
+import { deleteRecipesFromList, removeSuggestedRecipes, dirtySuggestedRecipes, fetchRecipeSuggestions } from '../../store';
+import { getIngredients, addDisplayUnits, filterPeapodIng, aisleMaker } from '../../utils';
+import { PeapodModal, Aisle, TextModal } from './';
 import { EmptyList } from '../';
 
 const styles = {
@@ -53,7 +53,8 @@ class GroceryList extends React.Component {
   handleSendTextModalOpen = () => this.setState({ sendTextModalOpen: true });
 
   render(props) {
-    const { excludedIngredients, peapodIngredients, handleClearList, handleSendText, suggestedRecipes, handleRejectSuggestedRecipes, unknownIngredients, peapodAisles, offLineAisles, ingredients } = this.props;
+    const { excludedIngredients, peapodIngredients, handleClearList, suggestedRecipes, handleRejectSuggestedRecipes, unknownIngredients, peapodAisles, offLineAisles, ingredients } = this.props;
+
     return (
       <div style={{ position: 'relative' }}>
         <Container style={styles.container}>
@@ -82,23 +83,7 @@ class GroceryList extends React.Component {
                   : null
                 }
                 <button className="appButton" onClick={() => handleClearList()}>Clear list</button>
-                <Modal
-                  trigger={<button onClick={this.handleSendTextModalOpen} className="appButton">Text me my list</button>}
-                  basic size="small"
-                  open={this.state.sendTextModalOpen}
-                  onClose={this.handleSendTextModalClose}
-                  actions={[{ triggerClose: true }]}
-                >
-                  <Modal.Content>
-                    <Form onSubmit={e => handleSendText(e, ingredients, excludedIngredients, this.handleSendTextModalClose)}>
-                      <Input
-                        name="number"
-                        action={{ style: { backgroundColor: '#77a95f', color: 'white' }, labelPosition: 'left', icon: 'add', content: 'Submit' }}
-                        placeholder="input your phone number"
-                      />
-                    </Form>
-                  </Modal.Content>
-                </Modal>
+                <TextModal ingredients={ingredients} excludedIngredients={excludedIngredients} />
               </Segment.Group>
               {
                 suggestedRecipes.length ?
@@ -165,17 +150,6 @@ const mapDispatch = (dispatch) => {
     generateLeftoverSuggestions(peapodIngredients) {
       dispatch(fetchRecipeSuggestions(peapodIngredients));
     },
-    handleSendText(e, ingredients, excludedIds, handleSendTextClose) {
-      const number = e.target.number.value;
-      let ingredientArr = ingredients.filter((ingredient) => {
-        if (!excludedIds.includes(ingredient.id)) return ingredient;
-      });
-      ingredientArr = ingredientArr.map((ingredient) => {
-        return [ingredient.displayQuantity, ingredient.displayUnit, ingredient.name];
-      });
-      dispatch(textGroceryList(number, ingredientArr));
-      handleSendTextClose();
-    },
     handleRejectSuggestedRecipes() {
       dispatch(removeSuggestedRecipes());
       dispatch(dirtySuggestedRecipes());
@@ -192,7 +166,6 @@ GroceryList.propTypes = {
   peapodIngredients: PropTypes.array.isRequired,
   handleClearList: PropTypes.func.isRequired,
   generateLeftoverSuggestions: PropTypes.func.isRequired,
-  handleSendText: PropTypes.func.isRequired,
   handleRejectSuggestedRecipes: PropTypes.func.isRequired,
   unknownIngredients: PropTypes.array.isRequired,
   dirty: PropTypes.bool.isRequired,
