@@ -4,7 +4,7 @@ import React from 'react';
 import { Container, Grid, Header, Segment, Accordion, Card, Image } from 'semantic-ui-react';
 import { deleteRecipesFromList, removeSuggestedRecipes, dirtySuggestedRecipes, fetchRecipeSuggestions } from '../../store';
 import { getIngredients, addDisplayUnits, filterPeapodIng, aisleMaker } from '../../utils';
-import { PeapodModal, Aisle } from './';
+import { PeapodModal, Aisle, TextModal } from './';
 import { EmptyList } from '../';
 
 const styles = {

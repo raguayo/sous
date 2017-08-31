@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import React from 'react';
-import { Modal, Form, Input } from 'semantic-ui-react';
+import { Modal, Form, Input, Header, Grid } from 'semantic-ui-react';
 import { textGroceryList } from '../../store';
 
 class TextModal extends React.Component {
@@ -14,7 +14,6 @@ class TextModal extends React.Component {
 
   handleClose = () => this.setState({ modalOpen: false });
   handleOpen = () => this.setState({ modalOpen: true });
-  number = value => value && isNaN(Number(value)) ? 'Must be a number' : undefined;
 
   render(props) {
     const { ingredients, excludedIngredients, handleSendText } = this.props;
@@ -27,14 +26,21 @@ class TextModal extends React.Component {
         actions={[{ triggerClose: true }]}
       >
         <Modal.Content>
+          <Grid
+            textAlign="center"
+            style={{ height: '100%' }}
+            verticalAlign="middle"
+          >
+            <Header as="h4" style={{ color: 'white' }} textAlign="center">Because this is a student project, we are using a Twilio Guest API, this requires the user to validate their number on Twilio in order to recieve texts.
+          </Header>
           <Form onSubmit={e => handleSendText(e, ingredients, excludedIngredients, this.handleClose)}>
             <Input
               name="number"
               action={{ style: { backgroundColor: '#77a95f', color: 'white' }, labelPosition: 'left', icon: 'add', content: 'Submit' }}
               placeholder="input your phone number"
-              validation={this.number}
             />
-          </Form>
+            </Form>
+          </Grid>
         </Modal.Content>
       </Modal>
     )
