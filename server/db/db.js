@@ -5,4 +5,5 @@ const db = new Sequelize(
     logging: false,
   }
 );
+
 module.exports = db;

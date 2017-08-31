@@ -1,7 +1,6 @@
 const router = require('express').Router();
 const axios = require('axios');
-const { Recipe, Ingredient, User, IngredientQuantity, SavedRecipe } = require('../db/models');
-const { microformatScraper } = require('../scraper/microformat');
+const { Recipe, Ingredient, IngredientQuantity, SavedRecipe } = require('../db/models');
 const mapToPeapod = require('../../peapod/mapToPeapod');
 const Promise = require('bluebird');
 
@@ -52,7 +51,7 @@ router.post('/:url', (req, res, next) => {
   }
 
   if (req.recipe.extendedIngredients) {
-    // it's from the API and we need to add it to the database
+    // if it's from the API, then we need to add it to the database
     const { title, sourceUrl, imageUrls, servings } = req.recipe;
     recipePromise = Recipe.findOrCreate({
       where: {
@@ -73,16 +72,10 @@ router.post('/:url', (req, res, next) => {
         req.recipe = newRecipe;
         const isCreated = recipeArr[1];
 
-        // TODO: consider modularizing with adding passed argument if from microformat branch
         if (isCreated) {
           const arrOfIngIds = [];
-          // const promise = Promise.resolve(0);
-          // const arrIngredientPromises = arrIngredients.map((ingredient) => {
           return Promise.each(arrIngredients, (ingredient) => {
-            // for (let i = 0; i < arrIngredients.length; i++) {
-            // const ingredient = arrIngredients[i];
             if (ingredient.unit === '') ingredient.unit = 'piece';
-            // promise.then(() => {
             return Ingredient.findOrCreate({
               where: {
                 name: ingredient.name,
@@ -93,11 +86,9 @@ router.post('/:url', (req, res, next) => {
               },
             })
               .then(([foundIngredient, ingIsCreated]) => {
-                // TODO: only line different from microformat branch
                 let peapodPromise;
 
                 if (ingIsCreated) {
-                  // map to peapod
                   peapodPromise = mapToPeapod(foundIngredient);
                 }
                 return Promise.all([foundIngredient, peapodPromise])
@@ -105,28 +96,16 @@ router.post('/:url', (req, res, next) => {
               .then(([createdIngredient, peapodIngredient]) => {
                 arrOfIngIds.push(createdIngredient.id);
                 if (peapodIngredient) createdIngredient.setPeapodIngredient(peapodIngredient[0]);
-                // if (!ingredient.quantity) ingredient.quantity = 1;
                 return IngredientQuantity.create({ recipeId: newRecipe.id, ingredientId: createdIngredient.id, quantity: ingredient.amount })
-                  // .then(() => Ingredient.findById(createdIngredient.id))
                   .catch(next);
               })
               .catch(next);
           })
-            // }
-            // });
             .then(() => newRecipe.addIngredients(arrOfIngIds))
-            // TODO: modularize - same as in microformat branch
-            // return Promise.all([newRecipe, ...arrIngredientPromises])
-            // .then(([recipe, ...ingredients]) => {
-            //   const ingArr = recipe.addIngredients(ingredients);
-            //   return Promise.all([newRecipe, ingArr]);
-            // })
-            // .then(() => Recipe.findById(newRecipe.id))
             .then(() => newRecipe)
             .catch(next);
         } else {
-          // do something different
-          console.log('Woops! Not sure how it found a recipe that searched from the api')
+          console.error('Error: API was called for already existing recipe');
         }
       })
       .catch(next);
@@ -153,9 +132,8 @@ router.post('/:url', (req, res, next) => {
   .then(([savedRecipe, groceryListRecipe]) => {
     if (groceryListRecipe) {
       return Promise.all([req.user.getSavedRecipes(), req.user.getGroceryListRecipes()]);
-    } else {
-      return Promise.all([req.user.getSavedRecipes(), null])
     }
+    return Promise.all([req.user.getSavedRecipes(), null])
   })
   .then(([savedRecipe, groceryListRecipe]) => {
     if (groceryListRecipe) {

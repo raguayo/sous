@@ -1,25 +1,9 @@
-// const createGroceryList = (recipe, ingredients, inGroceryList) => {
-//   console.log('In create groc list')
-//   return $.ajax({
-//     type: 'POST',
-//     url: 'http://localhost:8080/api/recipes/',
-//     data: {
-//       isFromChromeExt: true,
-//       inGroceryList,
-//       recipe,
-//       ingredients,
-//     },
-//   })
-//   .done(res => res)
-//   .fail(console.error);
-//   // error handling
-// };
+/* global chrome $ */
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.msg === 'createGroceryList') {
-    // const message = createGroceryList(request.recipe, request.recipe.extendedIngredients, request.inGroceryList);
-    // send response back to popup if successful
-    $.ajax('https://drsous.herokuapp.com/api/recipes/chrome', {
+    // $.ajax('https://drsous.herokuapp.com/api/recipes/chrome', {
+    $.ajax('http://localhost:8080/api/recipes/chrome', {
       type: 'POST',
       data: {
         isFromChromeExt: true,
@@ -29,8 +13,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       },
     })
       .done((response) => {
-        chrome.tabs.query({ title: 'Sous' }, function (tab) {
-          console.log('Tabs: ', tab)
+        chrome.tabs.query({ title: 'Sous' }, (tab) => {
           chrome.tabs.reload(tab[0].id, () => sendResponse(response));
         });
       })
@@ -40,7 +23,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     return true;
   } else if (request.msg === 'getRecipeDetails') {
     const formattedUrl = request.recipeUrl.replace(':', '%3A').split('/').join('%2F');
-    $.ajax(`https://drsous.herokuapp.com/api/recipes/${formattedUrl}`, {
+    // $.ajax(`https://drsous.herokuapp.com/api/recipes/${formattedUrl}`, {
+    $.ajax(`http://localhost:8080/api/recipes/${formattedUrl}`, {
       method: 'GET',
     })
       .done((response) => {

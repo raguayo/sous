@@ -42,17 +42,17 @@ class GroceryList extends React.Component {
   }
 
 
-  componentDidMount() {
-    if (!this.props.dirty) {
-      console.log('Running suggestion');
-      this.props.generateLeftoverSuggestions(this.props.peapodIngredients);
-    }
-  }
+  // componentDidMount() {
+  //   if (!this.props.dirty) {
+  //     console.log('Running suggestion');
+  //     this.props.generateLeftoverSuggestions(this.props.peapodIngredients);
+  //   }
+  // }
 
   handleSendTextModalClose = () => this.setState({ sendTextModalOpen: false });
   handleSendTextModalOpen = () => this.setState({ sendTextModalOpen: true });
 
-  render(props) {
+  render() {
     const { excludedIngredients, peapodIngredients, handleClearList, suggestedRecipes, handleRejectSuggestedRecipes, unknownIngredients, peapodAisles, offLineAisles, ingredients } = this.props;
 
     return (

@@ -52,7 +52,7 @@ export const auth = (email, password, method, username) =>
 export const logout = () =>
   dispatch =>
     axios.post('/auth/logout')
-      .then((res) => {
+      .then(() => {
         dispatch(removeUser());
         history.push('/');
       })

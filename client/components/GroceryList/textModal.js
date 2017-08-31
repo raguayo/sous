@@ -15,7 +15,7 @@ class TextModal extends React.Component {
   handleClose = () => this.setState({ modalOpen: false });
   handleOpen = () => this.setState({ modalOpen: true });
 
-  render(props) {
+  render() {
     const { ingredients, excludedIngredients, handleSendText } = this.props;
     return (
       <Modal
@@ -33,17 +33,17 @@ class TextModal extends React.Component {
           >
             <Header as="h4" style={{ color: 'white' }} textAlign="center">Because this is a student project, we are using a Twilio Guest API, this requires the user to validate their number on Twilio in order to recieve texts.
           </Header>
-          <Form onSubmit={e => handleSendText(e, ingredients, excludedIngredients, this.handleClose)}>
-            <Input
-              name="number"
-              action={{ style: { backgroundColor: '#77a95f', color: 'white' }, labelPosition: 'left', icon: 'add', content: 'Submit' }}
-              placeholder="input your phone number"
-            />
+            <Form onSubmit={e => handleSendText(e, ingredients, excludedIngredients, this.handleClose)}>
+              <Input
+                name="number"
+                action={{ style: { backgroundColor: '#77a95f', color: 'white' }, labelPosition: 'left', icon: 'add', content: 'Submit' }}
+                placeholder="input your phone number"
+              />
             </Form>
           </Grid>
         </Modal.Content>
       </Modal>
-    )
+    );
   }
 }
 
@@ -51,8 +51,8 @@ const mapState = (state, ownProps) => {
   return {
     ingredients: ownProps.ingredients,
     excludedIngredients: ownProps.excludedIngredients,
-  }
-}
+  };
+};
 
 const mapDispatch = (dispatch) => {
   return {
@@ -85,4 +85,4 @@ TextModal.propTypes = {
   ingredients: PropTypes.array.isRequired,
   excludedIngredients: PropTypes.array.isRequired,
   handleSendText: PropTypes.func.isRequired,
-}
+};

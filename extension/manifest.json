@@ -25,14 +25,5 @@
     "scripts": ["./Dependencies/jquery.min.js", "./BackgroundScripts/background.js"],
     "persistent": true
   },
-  "content_scripts": [
-    {
-      "matches": ["http://allrecipes.com/*", "https://allrecipes.com/*"],
-      "js": ["./ingredientsData.js", "./Dependencies/jaro-winkler.js", "./ContentScripts/utilityFuncs.js", "./ContentScripts/cs.js"],
-      "css": ["./Dependencies/semantic.min.css", "./Dependencies/semantic.min.js"],
-      "run_at": "document_start",
-      "all_frames": true
-    }
-  ],
   "manifest_version": 2
 }
