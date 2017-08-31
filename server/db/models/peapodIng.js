@@ -19,12 +19,3 @@ const PeapodIngredient = db.define('peapodIngredient', {
 });
 
 module.exports = PeapodIngredient;
-
-// add ingredient
-// once ingredient is created
-  // search that name in peapod
-  // get the first 20 results
-  // use j-w algo to pick best one
-  // add into db
-    // map the right fields
-    // convert size to given quantity

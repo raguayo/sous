@@ -52,7 +52,7 @@ class GroceryList extends React.Component {
   handleSendTextModalClose = () => this.setState({ sendTextModalOpen: false });
   handleSendTextModalOpen = () => this.setState({ sendTextModalOpen: true });
 
-  render(props) {
+  render() {
     const { excludedIngredients, peapodIngredients, handleClearList, suggestedRecipes, handleRejectSuggestedRecipes, unknownIngredients, peapodAisles, offLineAisles, ingredients } = this.props;
 
     return (

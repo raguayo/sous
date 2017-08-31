@@ -3,18 +3,6 @@ import { Segment } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-function EmptyList() {
-  return (
-    <div style={styles.list}>
-      <Segment style={styles.block}>
-        <p style={styles.text}>Your list is currently empty, </p>
-        <p style={styles.text}>  why not add a recipe from <Link to={'./history'} style={styles.href}>your recipes</Link> </p>
-        <p style={styles.text}> or upload a recipe using our <a href="https://chrome.google.com/webstore/detail/sous/ldjfidlbdfdheleohdigdmknpmgbcjgd/related?hl=en-US&gl=US" target="_blank" rel="noopener noreferrer" style={styles.href}>chrome extension!</a></p>
-      </Segment>
-    </div>
-  );
-}
-
 const styles = {
   text: {
     color: '#84643B',
@@ -29,7 +17,19 @@ const styles = {
   },
   list: {
     marginTop: '1.5em',
-  }
+  },
 };
+
+function EmptyList() {
+  return (
+    <div style={styles.list}>
+      <Segment style={styles.block}>
+        <p style={styles.text}>Your list is currently empty, </p>
+        <p style={styles.text}>  why not add a recipe from <Link to={'./history'} style={styles.href}>your recipes</Link> </p>
+        <p style={styles.text}> or upload a recipe using our <a href="https://chrome.google.com/webstore/detail/sous/ldjfidlbdfdheleohdigdmknpmgbcjgd/related?hl=en-US&gl=US" target="_blank" rel="noopener noreferrer" style={styles.href}>chrome extension!</a></p>
+      </Segment>
+    </div>
+  );
+}
 
 export default connect(null, null)(EmptyList);

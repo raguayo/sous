@@ -111,7 +111,5 @@ chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
         else $('#ingredients-table').after('<div class="ui message" display="block"><h5>Well, this is embarassing. Something went wrong when trying to add your recipe!</h5></div>');
       });
     });
-    // wait to close the popup until recieves a success response
-    // handle error
   });
 });

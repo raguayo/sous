@@ -15,7 +15,7 @@ class PurchaseModal extends React.Component {
   handlePeapodModalClose = () => this.setState({ modalOpen: false });
   handlePeapodModalOpen = () => this.setState({ modalOpen: true });
 
-  render(props) {
+  render() {
     const { peapodIngredients, handleCartPurchase } = this.props;
     return (
       <Modal
@@ -119,5 +119,3 @@ PurchaseModal.propTypes = {
   peapodIngredients: PropTypes.array.isRequired,
   handleCartPurchase: PropTypes.func.isRequired,
 };
-
-

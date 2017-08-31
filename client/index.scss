@@ -1,3 +1,6 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto+Slab');
+@import url('https://fonts.googleapis.com/css?family=Oleo+Script+Swash+Caps');
+
 body {
   height: 100%;
   margin: 0;
@@ -8,24 +11,11 @@ body {
   margin: 0;
 }
 
-@import url('https://fonts.googleapis.com/css?family=Roboto+Slab');
-@import url('https://fonts.googleapis.com/css?family=Oleo+Script+Swash+Caps');
-/* @import url('https://fonts.googleapis.com/css?family=Amatic+SC'); */
-
 * {
   box-sizing: border-box;
   font-family: 'Roboto Slab';
   margin: 0;
 }
-
-  // logo: {
-  //   fontFamily: 'Oleo Script Swash Caps',
-  //   color: '#77a95f',
-  //   fontSize: '2rem',
-  //   margin: '0 1.75rem',
-  //   fontWeight: '200',
-  //   paddingBottom: '0.25rem',
-  // },
 
 #logo {
   font-family: 'Oleo Script Swash Caps';

@@ -1,5 +1,4 @@
 import axios from 'axios';
-import history from '../history';
 import { removeRecipeFromList, getListRecipes } from './groceryListRecipes';
 import { addError } from './error';
 
@@ -9,7 +8,6 @@ import { addError } from './error';
 const GET_SAVED_RECIPES = 'GET_SAVED_RECIPES';
 const REMOVE_SAVED_RECIPE = 'REMOVE_SAVED_RECIPE';
 const ADD_NEW_RECIPE = 'ADD_NEW_RECIPE';
-const FAVORITE_RECIPE = 'FAVORITE_RECIPE';
 const TOGGLE_FAVORITE_RECIPE = 'TOGGLE_FAVORITE_RECIPE';
 
 /**
@@ -22,7 +20,6 @@ const defaultRecipes = [];
  */
 const getSavedRecipes = recipes => ({ type: GET_SAVED_RECIPES, recipes });
 const removeSavedRecipe = recipeId => ({ type: REMOVE_SAVED_RECIPE, recipeId });
-const addRecipe = newRecipe => ({ type: ADD_NEW_RECIPE, newRecipe });
 const toggleFavoriteRecipe = recipe => ({ type: TOGGLE_FAVORITE_RECIPE, recipe });
 /**
  * THUNK CREATORS
@@ -53,14 +50,13 @@ export const postNewRecipe = (url, inGroceryList) =>
     return axios.post(`/api/recipes/${formattedUrl}`, { inGroceryList })
       .then(res => res.data)
       .then((recipes) => {
-        console.log('Recipes: ', recipes)
         if (recipes.groceryListRecipe) {
           dispatch(getListRecipes(recipes.groceryListRecipe));
         }
         dispatch(getSavedRecipes(recipes.savedRecipe));
       })
       .catch(addError);
-  }
+  };
 
 export const favoriteToggle = recipeId => dispatch =>
   axios.put(`/api/recipes/${recipeId}/favorite`)

@@ -5,6 +5,21 @@ import PropTypes from 'prop-types';
 import { deleteSavedRecipe, transferSavedRecipe, favoriteToggle } from '../store/';
 import RecipeCard from './RecipeCard';
 
+const styles = {
+  container: {
+    padding: '5em 0em',
+  },
+  color: {
+    color: '#84643B',
+  },
+  header: {
+    maxWidth: '450',
+    color: '#84643B',
+    fontFamily: 'Oleo Script Swash Caps',
+    fontSize: '2.5rem',
+  },
+};
+
 function SavedRecipes({ favRecipes, prevRecipes }) {
   return (
     <Container style={styles.container}>
@@ -51,21 +66,6 @@ function SavedRecipes({ favRecipes, prevRecipes }) {
     </Container>
   );
 }
-
-const styles = {
-  container: {
-    padding: '5em 0em',
-  },
-  color: {
-    color: '#84643B',
-  },
-  header: {
-    maxWidth: '450',
-    color: '#84643B',
-    fontFamily: 'Oleo Script Swash Caps',
-    fontSize: '2.5rem',
-  },
-};
 
 const mapState = (state) => {
   return {
