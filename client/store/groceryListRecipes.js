@@ -84,7 +84,7 @@ export const addItemsToPeapodCart = (itemsArr, peapodLoginCreds) => (dispatch) =
         itemsArr.map(item => dispatch(postNewExcluded(item.id))),
       );
     })
-    .catch((err) => console.log('catch', err));
+    .catch(addError);
 };
 
 
