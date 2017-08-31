@@ -68,7 +68,6 @@ module.exports = function mapToPeapod(ingObj) {
       }).then(res => res.data)
         .then((conversion) => {
           if (conversion.targetAmount) {
-            console.log('here');
             return PeapodIngredient.findOrCreate({
               where: {
                 prodId,
