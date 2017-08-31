@@ -28,7 +28,7 @@ module.exports = function mapToPeapod(ingObj) {
       const price = results.products[0].price;
       let size = results.products[0].size;
 
-      const newUnitArr = ['OZ', 'CT', 'PINT', 'LB', 'LTR', 'ML', 'BUNCH', 'GAL'];
+      const newUnitArr = ['OZ', 'CT', 'PINT', 'LB', 'LTR', 'ML', 'BUNCH', 'GAL', 'DOZ'];
       const newUnitRegEx = new RegExp("\\b(" + newUnitArr.join("|") + ")\\b");
       // remove APX from size
       if (size.slice(0, 3) === 'APX') size = size.slice(4);
@@ -61,25 +61,38 @@ module.exports = function mapToPeapod(ingObj) {
       if (unitMeasure === 'EA') unitMeasure = 'CT';
       // if (name === 'corn starch') name = 'cornstarch';
       // change Peapod unit and size to match our db
-      return axios.get(`https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/convert?ingredientName=${name}&sourceAmount=${size}&sourceUnit=${unitMeasure}&targetUnit=${ingObj.unitMeasure}`, {
-        baseURL: 'https://spoonacular-recipe-food-nutrition-v1.p.mashape.com',
-        headers: { 'X-Mashape-Key': process.env.RECIPE_API_KEY },
-      }).then(res => res.data)
-        .then((conversion) => {
-          if (conversion.targetAmount) {
-            return PeapodIngredient.findOrCreate({
-              where: {
-                prodId,
-              },
-              defaults: {
-                name: peapodName, price, size: conversion.targetAmount,
-              },
-            });
-          }
-          return undefined;
+      if (unitMeasure === 'DOZ') {
+        return PeapodIngredient.findOrCreate({
+          where: {
+            prodId,
+          },
+          defaults: {
+            name: peapodName, price, size: 12,
+          },
         })
-        .catch(console.error);
-      // handle the errors better
+      } else {
+        return axios.get(`https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/convert?ingredientName=${name}&sourceAmount=${size}&sourceUnit=${unitMeasure}&targetUnit=${ingObj.unitMeasure}`, {
+          baseURL: 'https://spoonacular-recipe-food-nutrition-v1.p.mashape.com',
+          headers: { 'X-Mashape-Key': process.env.RECIPE_API_KEY },
+        }).then(res => res.data)
+          .then((conversion) => {
+            if (conversion.targetAmount) {
+              return PeapodIngredient.findOrCreate({
+                where: {
+                  prodId,
+                },
+                defaults: {
+                  name: peapodName, price, size: conversion.targetAmount,
+                },
+              });
+            }
+            // if api doesn't handle the conversion correctly, dont add entry to database
+            return undefined;
+          })
+          .catch(console.error);
+        // handle the errors better
+      }
     })
-    .catch(err => console.log('Error in mtp: ', err));
+    .catch(console.error);
+  // handle the errors better
 };
