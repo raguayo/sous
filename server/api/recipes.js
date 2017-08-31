@@ -1,7 +1,6 @@
 const router = require('express').Router();
 const axios = require('axios');
-const { Recipe, Ingredient, User, IngredientQuantity, SavedRecipe } = require('../db/models');
-const { microformatScraper } = require('../scraper/microformat');
+const { Recipe, Ingredient, IngredientQuantity, SavedRecipe } = require('../db/models');
 const mapToPeapod = require('../../peapod/mapToPeapod');
 const Promise = require('bluebird');
 

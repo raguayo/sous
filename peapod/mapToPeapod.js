@@ -11,10 +11,9 @@ const promisifiedSearch = function (ingredientName) {
   return new Promise((success, reject) => {
     peapod.search(ingredientName, (err, result) => {
       if (err) {
-        console.log('error in map to peapod', err.message);
         return reject(err.message);
       }
-      success(result);
+      return success(result);
     });
   });
 };
@@ -31,12 +30,12 @@ module.exports = function mapToPeapod(ingObj) {
 
       const newUnitArr = ['OZ', 'CT', 'PINT', 'LB', 'LTR', 'ML', 'BUNCH', 'GAL'];
       const newUnitRegEx = new RegExp("\\b(" + newUnitArr.join("|") + ")\\b");
-      // remove APX
+      // remove APX from size
       if (size.slice(0, 3) === 'APX') size = size.slice(4);
-      // make size just a number
+      // separate the number and unit of the size
       if (size.indexOf(unitMeasure) !== -1) size = size.slice(0, size.indexOf(unitMeasure));
       else {
-        // handle if unit and size don't match
+        // handle if unitMeasure and size unit don't match
         const newUnitMatchArr = size.match(newUnitRegEx);
         if (newUnitMatchArr) {
           unitMeasure = newUnitMatchArr[0];
@@ -80,7 +79,7 @@ module.exports = function mapToPeapod(ingObj) {
           return undefined;
         })
         .catch(console.error);
-      // do something better here
+      // handle the errors better
     })
     .catch(err => console.log('Error in mtp: ', err));
-}
+};

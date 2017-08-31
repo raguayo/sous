@@ -1,3 +1,5 @@
+// module from npm package talisman
+
 (function (root) {
   'use strict';
 
