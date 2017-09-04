@@ -4,9 +4,9 @@ chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
   const recipeUrl = tabs[0].url;
   chrome.runtime.sendMessage({ recipeUrl, msg: 'getRecipeDetails' }, (recipe) => {
     let htmlString = '';
-    if (recipe.extendedIngredients) {
+    if (recipe && recipe.extendedIngredients && recipe.extendedIngredients.length) {
       htmlString = `
-      <h3 style="margin: 0.857143em 0.857143em">Recipe Details:</h3>
+      <h3 class="myheader">Recipe Details:</h3>
       <table class="ui definition table unstackable">
       <tbody>
         <tr>
@@ -19,7 +19,7 @@ chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
         </tr>
     </tbody>
     </table>
-    <h3 style="margin: 0.857143em 0.857143em">Ingredients:</h3>
+    <h3 class="myheader">Ingredients:</h3>
     <table class="ui table unstackable" id="ingredients-table">
       <thead>
         <tr>
@@ -36,9 +36,9 @@ chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
         </tr>`;
         htmlString += ingHTML;
       });
-    } else {
+    } else if (recipe && recipe.ingredients && recipe.ingredients.length) {
       htmlString = `
-      <h3 style="margin: 0.857143em 0.857143em">Recipe Details:</h3>
+      <h3 class="myheader">Recipe Details:</h3>
       <table class="ui definition table unstackable">
       <tbody>
         <tr>
@@ -51,7 +51,7 @@ chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
         </tr>
     </tbody>
     </table>
-    <h3 style="margin: 0.857143em 0.857143em">Ingredients:</h3>
+    <h3 class="myheader">Ingredients:</h3>
     <table class="ui table unstackable" id="ingredients-table">
       <thead>
         <tr>
@@ -68,6 +68,10 @@ chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
         </tr>`;
         htmlString += ingHTML;
       });
+    } else {
+      $('#loader').hide();
+      $('#wrapper').append('<h3 class="myheader">Woops! We couldn\'t scrape a recipe from this webpage. Please find a different recipe or re-open the popup to try again.</h3>');
+      return;
     }
 
     htmlString += '</tbody></table>';
@@ -94,8 +98,8 @@ chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
             </div>`);
       chrome.extension.sendMessage({ msg: 'createGroceryList', recipe, inGroceryList: false }, (response) => {
         $('#submit-loader').hide();
-        if (response.savedRecipe) $('#ingredients-table').after('<div class="ui message" display="block"><h5>Your recipe was saved!</h5></div>');
-        else $('#ingredients-table').after('<div class="ui message" display="block"><h5>Well, this is embarassing. Something went wrong when trying to save your recipe!</h5></div>');
+        if (response.savedRecipe) $('#ingredients-table').after('<div class="ui message result-message"><h5>Your recipe was saved!</h5></div>');
+        else $('#ingredients-table').after('<div class="ui message result-message"><h5>Well, this is embarassing. Something went wrong when trying to save your recipe!</h5></div>');
       });
     });
 
@@ -107,8 +111,8 @@ chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       </div>`);
       chrome.extension.sendMessage({ msg: 'createGroceryList', recipe, inGroceryList: true }, (response) => {
         $('#submit-loader').hide();
-        if (response.groceryListRecipe) $('#ingredients-table').after('<div class="ui message" display="block"><h5>Your recipe was added!</h5></div>');
-        else $('#ingredients-table').after('<div class="ui message" display="block"><h5>Well, this is embarassing. Something went wrong when trying to add your recipe!</h5></div>');
+        if (response.groceryListRecipe) $('#ingredients-table').after('<div class="ui message result-message"><h5>Your recipe was added!</h5></div>');
+        else $('#ingredients-table').after('<div class="ui message result-message"><h5>Well, this is embarassing. Something went wrong when trying to add your recipe!</h5></div>');
       });
     });
   });

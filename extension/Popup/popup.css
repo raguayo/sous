@@ -49,3 +49,11 @@
 #submit-loader {
   height: 6em;
 }
+
+.myheader {
+  margin: 0.857143em 0.857143em;
+}
+
+.result-message {
+  display: block;
+}
