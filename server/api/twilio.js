@@ -2,6 +2,7 @@ const router = require('express').Router();
 
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
+const twilioNum = process.env.TWILIO_NUMBER;
 const client = require('twilio')(accountSid, authToken);
 
 module.exports = router;
@@ -18,7 +19,7 @@ router.post('/', (req, res, next) => {
   client.messages
     .create({
       to: userNumber,
-      from: '+19708251391',
+      from: twilioNum,
       body: ingredientString,
     })
     .then(message => console.log(message.sid));
