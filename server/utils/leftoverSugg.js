@@ -117,5 +117,5 @@ module.exports = function findRecipeSuggestions(peapodIngredients) {
   return getLeftoverRecipes(leftovers)
     .then(leftoverRecipes => getLeftoverRecipeDetails(leftoverRecipes))
     .then(results => hasSufficientQuantities(leftovers, results));
-    // catch error when called by GList Component
+    // will catch error when called by GList Component
 };

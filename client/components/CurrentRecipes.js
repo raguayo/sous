@@ -50,7 +50,6 @@ class CurrentRecipe extends React.Component {
   hideLoader = () => this.setState({ displayLoader: false })
 
   render() {
-    console.log(this.state.displayLoader)
     const { handleAddRecipe, handleDeleteRecipes, groceryListRecipes, user } = this.props;
     return (
       <Container style={styles.container}>

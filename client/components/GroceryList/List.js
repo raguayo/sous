@@ -4,6 +4,17 @@ import { connect } from 'react-redux';
 import { Grid, Checkbox } from 'semantic-ui-react';
 import { postNewExcluded, deleteExcludedIngredient } from '../../store';
 
+const styles = {
+  textColorLineThrough: {
+    textDecoration: 'line-through',
+    fontSize: '1.1rem',
+  },
+  textColorNoLineThrough: {
+    textDecoration: 'none',
+    fontSize: '1.1rem',
+  },
+};
+
 const List = ({ ingredient, excludedIngredients, handleExcludedIngredient }) => {
   return (
 
@@ -19,8 +30,7 @@ const List = ({ ingredient, excludedIngredients, handleExcludedIngredient }) => 
           onClick={e =>
             handleExcludedIngredient(excludedIngredients, ingredient.id)}
           label={`${ingredient.displayQuantity} ${ingredient.displayUnit} ${ingredient.name}`}
-        >
-        </Grid.Column>
+        />
         : <Grid.Column
           as={Checkbox}
           floated="left"
@@ -30,11 +40,11 @@ const List = ({ ingredient, excludedIngredients, handleExcludedIngredient }) => 
           onClick={e =>
             handleExcludedIngredient(excludedIngredients, ingredient.id)}
           label={`${ingredient.displayQuantity} ${ingredient.displayUnit} ${ingredient.name}`}
-        >
-        </Grid.Column>}
+        />
+      }
     </Grid>
-  )
-}
+  );
+};
 
 const mapState = (state, ownProps) => {
   return {
@@ -61,15 +71,4 @@ List.propTypes = {
   ingredient: PropTypes.object.isRequired,
   excludedIngredients: PropTypes.array.isRequired,
   handleExcludedIngredient: PropTypes.func.isRequired,
-}
-
-const styles = {
-  textColorLineThrough: {
-    textDecoration: 'line-through',
-    fontSize: '1.1rem',
-  },
-  textColorNoLineThrough: {
-    textDecoration: 'none',
-    fontSize: '1.1rem',
-  },
-}
+};

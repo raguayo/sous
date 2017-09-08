@@ -15,13 +15,13 @@ class PurchaseModal extends React.Component {
   handlePeapodModalClose = () => this.setState({ modalOpen: false });
   handlePeapodModalOpen = () => this.setState({ modalOpen: true });
 
-  render(props) {
+  render() {
     const { peapodIngredients, handleCartPurchase } = this.props;
     return (
       <Modal
         trigger={<button onClick={this.handlePeapodModalOpen} className="appButton">Add to Peapod Cart</button>}
         basicSize="medium"
-        open={this.state.peapodModalOpen}
+        open={this.state.modalOpen}
         onClose={this.handlePeapodModalClose}
       >
         <Modal.Content>

@@ -13,7 +13,7 @@ const promisifiedSearch = function (ingredientName) {
       if (err) {
         return reject(err.message);
       }
-      success(result);
+      return success(result);
     });
   });
 };
@@ -28,14 +28,14 @@ module.exports = function mapToPeapod(ingObj) {
       const price = results.products[0].price;
       let size = results.products[0].size;
 
-      const newUnitArr = ['OZ', 'CT', 'PINT', 'LB', 'LTR', 'ML', 'BUNCH', 'GAL'];
+      const newUnitArr = ['OZ', 'CT', 'PINT', 'LB', 'LTR', 'ML', 'BUNCH', 'GAL', 'DOZ'];
       const newUnitRegEx = new RegExp("\\b(" + newUnitArr.join("|") + ")\\b");
-      // remove APX
+      // remove APX from size
       if (size.slice(0, 3) === 'APX') size = size.slice(4);
-      // make size just a number
+      // separate the number and unit of the size
       if (size.indexOf(unitMeasure) !== -1) size = size.slice(0, size.indexOf(unitMeasure));
       else {
-        // handle if unit and size don't match
+        // handle if unitMeasure and size unit don't match
         const newUnitMatchArr = size.match(newUnitRegEx);
         if (newUnitMatchArr) {
           unitMeasure = newUnitMatchArr[0];
@@ -61,22 +61,38 @@ module.exports = function mapToPeapod(ingObj) {
       if (unitMeasure === 'EA') unitMeasure = 'CT';
       // if (name === 'corn starch') name = 'cornstarch';
       // change Peapod unit and size to match our db
-      return axios.get(`https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/convert?ingredientName=${name}&sourceAmount=${size}&sourceUnit=${unitMeasure}&targetUnit=${ingObj.unitMeasure}`, {
-        baseURL: 'https://spoonacular-recipe-food-nutrition-v1.p.mashape.com',
-        headers: { 'X-Mashape-Key': process.env.RECIPE_API_KEY },
-      }).then(res => res.data)
-        .then((conversion) => {
-          return PeapodIngredient.findOrCreate({
-            where: {
-              prodId,
-            },
-            defaults: {
-              name: peapodName, price, size: conversion.targetAmount,
-            },
-          });
+      if (unitMeasure === 'DOZ') {
+        return PeapodIngredient.findOrCreate({
+          where: {
+            prodId,
+          },
+          defaults: {
+            name: peapodName, price, size: 12,
+          },
         })
-        .catch(console.error);
-      // do something better here
+      } else {
+        return axios.get(`https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/convert?ingredientName=${name}&sourceAmount=${size}&sourceUnit=${unitMeasure}&targetUnit=${ingObj.unitMeasure}`, {
+          baseURL: 'https://spoonacular-recipe-food-nutrition-v1.p.mashape.com',
+          headers: { 'X-Mashape-Key': process.env.RECIPE_API_KEY },
+        }).then(res => res.data)
+          .then((conversion) => {
+            if (conversion.targetAmount) {
+              return PeapodIngredient.findOrCreate({
+                where: {
+                  prodId,
+                },
+                defaults: {
+                  name: peapodName, price, size: conversion.targetAmount,
+                },
+              });
+            }
+            // if api doesn't handle the conversion correctly, dont add entry to database
+            return undefined;
+          })
+          .catch(console.error);
+        // handle the errors better
+      }
     })
-    .catch(err => console.log('Error in mtp: ', err));
-}
+    .catch(console.error);
+  // handle the errors better
+};

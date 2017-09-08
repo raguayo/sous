@@ -4,13 +4,7 @@ import { connect } from 'react-redux';
 import { Grid, Popup, Icon, Card, Image } from 'semantic-ui-react';
 import { deleteSavedRecipe, transferSavedRecipe, favoriteToggle } from '../store';
 
-const RecipeCard = ({
-  recipe,
-  currRecipeIds,
-  handleDelete,
-  handleFavorite,
-  handleTransfer,
-}) => {
+const RecipeCard = ({ recipe, currRecipeIds, handleDelete, handleFavorite, handleTransfer }) => {
   const imageSrc = recipe.imageUrl.includes('http') ? recipe.imageUrl : `https://webknox.com/recipeImages/${recipe.imageUrl}`;
   return (
     <Grid>

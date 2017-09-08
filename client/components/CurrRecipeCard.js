@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Grid, Icon, Card, Image, Form } from 'semantic-ui-react';
+import { Icon, Card, Image, Form } from 'semantic-ui-react';
 import { deleteRecipeFromList, updateRecipeQuantity } from '../store';
 
 const styles = {
