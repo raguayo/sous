@@ -1,10 +1,9 @@
 /* global describe beforeEach afterEach it */
 
 import { expect } from 'chai';
-import MockAdapter from 'axios-mock-adapter';
+import mockAxios from './mockAxios';
 import configureMockStore from 'redux-mock-store';
 import thunkMiddleware from 'redux-thunk';
-import axios from '../../../../client/axios';
 import history from '../../../../client/history';
 import {
   getSavedRecipes,
@@ -13,7 +12,6 @@ import {
   postNewRecipe,
 } from '../../../../client/store';
 
-const mockAxios = new MockAdapter(axios);
 const middlewares = [thunkMiddleware];
 const mockStore = configureMockStore(middlewares);
 

@@ -1,14 +1,12 @@
 /* global describe beforeEach afterEach it */
 
 import { expect } from 'chai';
-import axios from 'axios';
-import MockAdapter from 'axios-mock-adapter';
+import mockAxios from './mockAxios';
 import configureMockStore from 'redux-mock-store';
 import thunkMiddleware from 'redux-thunk';
 import history from '../../../../client/history';
 import { me, logout, getUser, removeUser } from '../../../../client/store';
 
-const mockAxios = new MockAdapter(axios);
 const middlewares = [thunkMiddleware];
 const mockStore = configureMockStore(middlewares);
 
