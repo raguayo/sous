@@ -1,14 +1,12 @@
 /* global describe beforeEach afterEach it */
 
 import { expect } from 'chai';
-import axios from 'axios';
-import MockAdapter from 'axios-mock-adapter';
 import configureMockStore from 'redux-mock-store';
 import thunkMiddleware from 'redux-thunk';
 import history from '../../../../client/history';
+import mockAxios from '../../../mockAdapter';
 import { me, logout, getUser, removeUser } from '../../../../client/store';
 
-const mockAxios = new MockAdapter(axios);
 const middlewares = [thunkMiddleware];
 const mockStore = configureMockStore(middlewares);
 
@@ -66,12 +64,20 @@ describe('User:', () => {
     });
 
     describe('logout', () => {
-      it('logout: eventually dispatches the REMOVE_USER action', () => {
+      it('eventually dispatches the REMOVE_USER action', () => {
         mockAxios.onPost('/auth/logout').replyOnce(204);
         return store.dispatch(logout()).then(() => {
           const actions = store.getActions();
           expect(actions[0].type).to.be.equal('REMOVE_USER');
           expect(history.location.pathname).to.be.equal('/');
+        });
+      });
+
+      it('eventually dispatches the ADD_ERROR action if receives an error', () => {
+        mockAxios.onPost('/auth/logout').networkError();
+        return store.dispatch(logout()).then(() => {
+          const actions = store.getActions();
+          expect(actions[0].type).to.be.equal('ADD_ERROR');
         });
       });
     });

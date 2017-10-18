@@ -1,11 +1,10 @@
 /* global describe beforeEach afterEach it */
 
 import { expect } from 'chai';
-import MockAdapter from 'axios-mock-adapter';
 import configureMockStore from 'redux-mock-store';
 import thunkMiddleware from 'redux-thunk';
-import axios from '../../../../client/axios';
 import history from '../../../../client/history';
+import mockAxios from '../../../mockAdapter';
 import {
   getSavedRecipes,
   removeSavedRecipe,
@@ -13,7 +12,6 @@ import {
   postNewRecipe,
 } from '../../../../client/store';
 
-const mockAxios = new MockAdapter(axios);
 const middlewares = [thunkMiddleware];
 const mockStore = configureMockStore(middlewares);
 
@@ -69,14 +67,19 @@ describe('Saved Recipes:', () => {
           title: 'Soup',
           ingredients: [{ name: 'broth' }, { name: 'vegetables' }],
         }];
-        console.log('Fetch saved recipes', fetchSavedRecipes)
         mockAxios.onGet('/api/recipes').replyOnce(200, fakeRecipes);
-        console.log('Store', store)
         return store.dispatch(fetchSavedRecipes()).then(() => {
           const actions = store.getActions();
-          console.log('Actions', actions)
           expect(actions[0].type).to.be.equal('GET_SAVED_RECIPES');
           expect(actions[0].recipes).to.be.deep.equal(fakeRecipes);
+        });
+      });
+
+      it('eventually dispatches the ADD_ERROR action if receives an error', () => {
+        mockAxios.onPost('/api/recipes').networkError();
+        return store.dispatch(fetchSavedRecipes()).then(() => {
+          const actions = store.getActions();
+          expect(actions[0].type).to.be.equal('ADD_ERROR');
         });
       });
     });

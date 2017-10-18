@@ -1,4 +1,4 @@
-import axios from '../axios';
+import axios from 'axios';
 import { removeRecipeFromList, getListRecipes } from './groceryListRecipes';
 import { addError } from './error';
 
@@ -30,13 +30,9 @@ export const fetchSavedRecipes = () =>
     axios.get('/api/recipes')
       .then(res => res.data)
       .then((recipes) => {
-        console.log('In the then with ', recipes)
         dispatch(getSavedRecipes(recipes));
       })
-      .catch(err => {
-        console.log('in catch', err);
-        addError(err)
-      });
+      .catch(addError);
 
 export const deleteSavedRecipe = recipeId =>
   dispatch =>
