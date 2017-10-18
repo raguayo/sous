@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from '../axios';
 import { removeRecipeFromList, getListRecipes } from './groceryListRecipes';
 import { addError } from './error';
 
@@ -18,8 +18,8 @@ const defaultRecipes = [];
 /**
  * ACTION CREATORS
  */
-const getSavedRecipes = recipes => ({ type: GET_SAVED_RECIPES, recipes });
-const removeSavedRecipe = recipeId => ({ type: REMOVE_SAVED_RECIPE, recipeId });
+export const getSavedRecipes = recipes => ({ type: GET_SAVED_RECIPES, recipes });
+export const removeSavedRecipe = recipeId => ({ type: REMOVE_SAVED_RECIPE, recipeId });
 const toggleFavoriteRecipe = recipe => ({ type: TOGGLE_FAVORITE_RECIPE, recipe });
 /**
  * THUNK CREATORS
@@ -30,9 +30,13 @@ export const fetchSavedRecipes = () =>
     axios.get('/api/recipes')
       .then(res => res.data)
       .then((recipes) => {
+        console.log('In the then with ', recipes)
         dispatch(getSavedRecipes(recipes));
       })
-      .catch(addError);
+      .catch(err => {
+        console.log('in catch', err);
+        addError(err)
+      });
 
 export const deleteSavedRecipe = recipeId =>
   dispatch =>

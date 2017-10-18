@@ -21,8 +21,8 @@ const defaultUser = {};
 /**
  * ACTION CREATORS
  */
-const getUser = user => ({ type: GET_USER, user });
-const removeUser = () => ({ type: REMOVE_USER });
+export const getUser = user => ({ type: GET_USER, user });
+export const removeUser = () => ({ type: REMOVE_USER });
 const updateUserName = user => ({ type: UPDATE_USER_NAME, user });
 const updateUserEmail = user => ({ type: UPDATE_USER_EMAIL, user });
 const updateUserPassword = user => ({ type: UPDATE_USER_PASSWORD, user });
@@ -37,6 +37,15 @@ export const me = () =>
         dispatch(getUser(res.data || defaultUser)))
       .catch(addError);
 
+export const logout = () =>
+        dispatch =>
+          axios.post('/auth/logout')
+            .then(() => {
+              dispatch(removeUser());
+              history.push('/');
+            })
+            .catch(addError);
+
 export const auth = (email, password, method, username) =>
   dispatch =>
     axios.post(`/auth/${method}`, { email, password, username })
@@ -49,14 +58,6 @@ export const auth = (email, password, method, username) =>
       .catch(error =>
         dispatch(getUser({ error })));
 
-export const logout = () =>
-  dispatch =>
-    axios.post('/auth/logout')
-      .then(() => {
-        dispatch(removeUser());
-        history.push('/');
-      })
-      .catch(addError);
 
 export const editUserName = updatedUser => dispatch =>
   axios.put(`/api/users/${updatedUser.id}`, { name: updatedUser.name })
