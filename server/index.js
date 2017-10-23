@@ -15,10 +15,17 @@ module.exports = app;
 if (process.env.NODE_ENV !== 'production') require('../secrets');
 
 // passport registration
-passport.serializeUser((user, done) => done(null, user.id))
+passport.serializeUser((user, done) => {
+  console.log('Passport User', user)
+  return done(null, user.id)
+})
+console.log('Outside pasport code')
 passport.deserializeUser((id, done) =>
   db.models.user.findById(id)
-    .then(user => done(null, user))
+    .then(user => {
+      console.log('Passport User', user)
+      return done(null, user);
+    })
     .catch(done));
 
 const createApp = () => {
