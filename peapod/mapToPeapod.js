@@ -18,7 +18,8 @@ const promisifiedSearch = function (ingredientName) {
   });
 };
 
-module.exports = function mapToPeapod(ingObj) {
+export function mapToPeapod(ingObj) {
+  console.log('In original mtP')
   return promisifiedSearch(ingObj.name)
     .then((results) => {
       const name = ingObj.name;
@@ -90,9 +91,9 @@ module.exports = function mapToPeapod(ingObj) {
             return undefined;
           })
           .catch(console.error);
-        // handle the errors better
+        // todo
       }
     })
     .catch(console.error);
-  // handle the errors better
-};
+  // todo
+}

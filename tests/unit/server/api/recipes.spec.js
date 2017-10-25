@@ -1,25 +1,24 @@
-/* global describe beforeEach it afterEach before */
+/* global describe beforeEach it afterEach before after */
 
-import axios from "axios";
+import mockAxios from "../../../mockAdapter";
+import rewire from 'rewire';
 
 const { expect } = require("chai");
 const request = require("supertest");
-// const agentRequest = require("superagent");
+const sinon = require("sinon");
 const db = require("../../../../server/db");
 const app = require("../../../../server");
+
+import * as peapodModule from '../../../../peapod/mapToPeapod';
 
 const {
   Recipe,
   User,
   Ingredient,
-  IngredientQuantity,
   PeapodIngredient,
-  SavedRecipe,
-  GrocerlyListRecipe
 } = require("../../../../server/db/models");
 
-// const Recipe = db.model('recipe');
-// const Ingredient = db.model('ingredient');
+const sampleAPIData = require('./sampleAPIData');
 
 describe("Recipes API", () => {
   afterEach(async () => db.sync({ force: true }));
@@ -29,8 +28,29 @@ describe("Recipes API", () => {
       describe("POST /:url", () => {
         let agent;
         let recipe;
-        before('mock api', async () => {
+        const newRecipeUrl = 'http://www.melskitchencafe.com/the-best-fudgy-brownies/';
+        let stub;
 
+        before('mock api', () => {
+          const formattedUrl = newRecipeUrl.replace(':', '%3A').replace('/', '%2F');
+          mockAxios
+            .onGet(`/recipes/extract?forceExtraction=false&url=${formattedUrl}`)
+            .reply(200, sampleAPIData);
+        });
+
+        before('stub mapToPeapod', () => {
+          const peapodProm = PeapodIngredient.create({
+            prodId: 1,
+            name: 'test',
+            price: 2.20,
+            size: 12
+          });
+          stub = sinon.stub(peapodModule, 'mapToPeapod')
+            .callsFake(() => peapodProm);
+        });
+
+        after('restore stub', () => {
+          stub.restore();
         });
 
         beforeEach('create seed data', async () => {
@@ -76,26 +96,28 @@ describe("Recipes API", () => {
             expect(res.body.savedRecipe).to.be.an("array");
             expect(res.body.savedRecipe[0].title).to.be.equal("Test Recipe");
             expect(res.body.savedRecipe[0].ingredients).to.be.an("array");
-            expect(res.body.savedRecipe[0].ingredients[0].name).to.be.equal(
-              "carrots" || "celery"
-            );
+            expect(res.body.savedRecipe[0].ingredients[0].name).to.be.oneOf(["carrots", "celery"]);
           });
         });
 
         describe("requests from web app", () => {
-          it("posts new recipes");
+
+          it("posts new recipes", async () => {
+            const formattedUrl = newRecipeUrl.replace(':', '%3A').split('/').join('%2F');
+            const res = await agent.post(`/api/recipes/${formattedUrl}`).expect(201);
+            expect(res.body).to.be.an("object");
+            expect(res.body.savedRecipe).to.be.an("array");
+            console.log('Result:', res.body.savedRecipe[0])
+          });
 
           it("finds existing recipes", async () => {
             const url = "testrecipe.com";
             const res = await agent.post(`/api/recipes/${url}`).expect(201);
             expect(res.body).to.be.an("object");
             expect(res.body.savedRecipe).to.be.an("array");
-            expect(res.body.savedRecipe).to.be.an("array");
             expect(res.body.savedRecipe[0].title).to.be.equal("Test Recipe");
             expect(res.body.savedRecipe[0].ingredients).to.be.an("array");
-            expect(res.body.savedRecipe[0].ingredients[0].name).to.be.equal(
-              "carrots" || "celery"
-            );
+            expect(res.body.savedRecipe[0].ingredients[0].name).to.be.oneOf(["carrots", "celery"]);
           });
         });
       });
