@@ -1,7 +1,7 @@
-/* global describe beforeEach it afterEach before after */
+/* global describe beforeEach it afterEach before after assert */
 
 import mockAxios from "../../../mockAdapter";
-import rewire from 'rewire';
+import * as peapodModule from '../../../../peapod/mapToPeapod';
 
 const { expect } = require("chai");
 const request = require("supertest");
@@ -9,7 +9,6 @@ const sinon = require("sinon");
 const db = require("../../../../server/db");
 const app = require("../../../../server");
 
-import * as peapodModule from '../../../../peapod/mapToPeapod';
 
 const {
   Recipe,
@@ -107,7 +106,31 @@ describe("Recipes API", () => {
             const res = await agent.post(`/api/recipes/${formattedUrl}`).expect(201);
             expect(res.body).to.be.an("object");
             expect(res.body.savedRecipe).to.be.an("array");
-            console.log('Result:', res.body.savedRecipe[0])
+            const recipeFromPost = res.body.savedRecipe[0];
+
+            // expect recipe information
+            expect(recipeFromPost.title).to.include('Fudgy Brownies');
+
+            // expect savedrecipeFromPost join information
+            expect(recipeFromPost.savedrecipe).to.be.an('object');
+            // expect(recipeFromPost.savedrecipe.isFavorite).to.equal(false);
+            expect(recipeFromPost.savedrecipe.userId).to.equal(2);
+            expect(recipeFromPost.savedrecipe.recipeId).to.equal(2);
+
+            // INGREDIENTS
+            expect(recipeFromPost.ingredients).to.be.an('array');
+            expect(recipeFromPost.ingredients[0]).to.be.an('object');
+            const ingredientFromPost = recipeFromPost.ingredients[0];
+
+            // expect eager loading ingredient and peapodIngredient information
+            expect(ingredientFromPost.name).to.equal('butter');
+            // expect(typeof ingredientFromPost.PeapodIngredientId).to.equal('number');
+
+            // expect quantity join information
+            expect(ingredientFromPost.ingredientQuantity).to.be.an('object');
+            expect(ingredientFromPost.ingredientQuantity.quantity).to.equal(10);
+            expect(ingredientFromPost.ingredientQuantity.recipeId).to.equal(2);
+            expect(ingredientFromPost.ingredientQuantity.ingredientId).to.equal(3);
           });
 
           it("finds existing recipes", async () => {
