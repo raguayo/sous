@@ -19,7 +19,6 @@ const promisifiedSearch = function (ingredientName) {
 };
 
 export function mapToPeapod(ingObj) {
-  console.log('In original mtP')
   return promisifiedSearch(ingObj.name)
     .then((results) => {
       const name = ingObj.name;

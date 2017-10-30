@@ -1,7 +1,8 @@
+import { mapToPeapod } from '../../peapod/mapToPeapod';
+
 const router = require('express').Router();
 const axios = require('axios');
 const { Recipe, Ingredient, IngredientQuantity, SavedRecipe } = require('../db/models');
-import { mapToPeapod } from '../../peapod/mapToPeapod';
 const Promise = require('bluebird');
 
 module.exports = router;
@@ -49,7 +50,6 @@ router.post('/:url', (req, res, next) => {
     req.recipe = req.body.recipe;
     inGroceryList = req.body.inGroceryList === 'true';
   }
-  // console.log('IN route', req.recipe)
   if (req.recipe.extendedIngredients) {
     // if it's from the API, then we need to add it to the database
     const { title, sourceUrl, imageUrls, servings } = req.recipe;
