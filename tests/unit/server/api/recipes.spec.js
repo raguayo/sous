@@ -1,7 +1,11 @@
-/* global describe beforeEach it afterEach before after assert */
+/* global describe beforeEach it afterEach before after */
 
 import mockAxios from "../../../mockAdapter";
 import * as peapodModule from "../../../../peapod/mapToPeapod";
+import {
+  validateIngredientProperties,
+  validateRecipeProperties,
+} from './utils/validatePost.spec';
 
 const { expect } = require("chai");
 const request = require("supertest");
@@ -40,7 +44,7 @@ describe("Recipes API", () => {
         });
 
         before("stub mapToPeapod", () => {
-          const incrementIdWrapper = () => {
+          const createPeapodIng = () => {
             let counter = 0;
             return () => {
               counter += 1;
@@ -58,7 +62,7 @@ describe("Recipes API", () => {
           };
           stub = sinon
             .stub(peapodModule, "mapToPeapod")
-            .callsFake(incrementIdWrapper());
+            .callsFake(createPeapodIng());
         });
 
         after("restore stub", () => {
@@ -66,6 +70,7 @@ describe("Recipes API", () => {
         });
 
         beforeEach("create seed data", async () => {
+          await db.sync({ force: true });
           recipe = await Recipe.create({
             title: "Test Recipe",
             recipeUrl: "testrecipe.com"
@@ -93,7 +98,18 @@ describe("Recipes API", () => {
         });
 
         describe("requests from chrome extension", () => {
-          it("posts new recipes");
+          it("posts new recipes", async () => {
+            const res = await agent
+            .post("/api/recipes/chrome")
+            .send({
+              isFromChromeExt: true,
+              recipe: sampleAPIData,
+              inGroceryList: "false"
+            })
+            .expect(201);
+            validateRecipeProperties(res, expect);
+            validateIngredientProperties(res, expect);
+          });
 
           it("finds existing recipes", async () => {
             const res = await agent
@@ -126,37 +142,8 @@ describe("Recipes API", () => {
               .post(`/api/recipes/${formattedUrl}`)
               .expect(201);
 
-            // SETUP RECIPES
-            expect(res.body).to.be.an("object");
-            expect(res.body.savedRecipe).to.be.an("array");
-            const recipeFromPost = res.body.savedRecipe[0];
-
-            // expect recipe information
-            expect(recipeFromPost.title).to.include("Fudgy Brownies");
-
-            // expect savedrecipeFromPost join information
-            expect(recipeFromPost.savedrecipe).to.be.an("object");
-            expect(recipeFromPost.savedrecipe.isFavorite).to.equal(null);
-            expect(recipeFromPost.savedrecipe.userId).to.equal(2);
-            expect(recipeFromPost.savedrecipe.recipeId).to.equal(2);
-
-            // SETUP INGREDIENTS
-            expect(recipeFromPost.ingredients).to.be.an("array");
-            expect(recipeFromPost.ingredients[0]).to.be.an("object");
-            const ingredientFromPost = recipeFromPost.ingredients[0];
-
-            // expect eager loading ingredient and peapodIngredient information
-            expect(ingredientFromPost.name).to.equal("butter");
-            expect(typeof ingredientFromPost.peapodIngredient).to.equal(
-              "object"
-            );
-            expect(ingredientFromPost.peapodIngredient.name).to.equal("test");
-
-            // expect quantity join information
-            expect(ingredientFromPost.ingredientQuantity).to.be.an("object");
-            expect(ingredientFromPost.ingredientQuantity.quantity).to.equal(10);
-            expect(ingredientFromPost.ingredientQuantity.recipeId).to.equal(2);
-            expect(ingredientFromPost.ingredientQuantity.ingredientId).to.equal(3);
+            validateRecipeProperties(res, expect);
+            validateIngredientProperties(res, expect);
           });
 
           it("finds existing recipes", async () => {
