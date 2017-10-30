@@ -1,16 +1,15 @@
-/* global describe beforeEach it afterEach before after */
+/* global describe beforeEach it before after */
 
 import mockAxios from "../../../mockAdapter";
 import * as peapodModule from "../../../../peapod/mapToPeapod";
 import {
   validateIngredientProperties,
   validateRecipeProperties,
-} from './utils/validatePost.spec';
+} from './utils/validatePost';
 
 const { expect } = require("chai");
 const request = require("supertest");
 const sinon = require("sinon");
-const db = require("../../../../server/db");
 const app = require("../../../../server");
 
 const {
@@ -23,8 +22,6 @@ const {
 const sampleAPIData = require("./sampleAPIData");
 
 describe("Recipes API", () => {
-  afterEach(async () => db.sync({ force: true }));
-
   describe("/api/recipes", () => {
     describe("/:url", () => {
       describe("POST /:url", () => {
@@ -44,7 +41,7 @@ describe("Recipes API", () => {
         });
 
         before("stub mapToPeapod", () => {
-          const createPeapodIng = () => {
+          const createPeapodIngHOF = () => {
             let counter = 0;
             return () => {
               counter += 1;
@@ -62,7 +59,7 @@ describe("Recipes API", () => {
           };
           stub = sinon
             .stub(peapodModule, "mapToPeapod")
-            .callsFake(createPeapodIng());
+            .callsFake(createPeapodIngHOF());
         });
 
         after("restore stub", () => {
@@ -70,7 +67,6 @@ describe("Recipes API", () => {
         });
 
         beforeEach("create seed data", async () => {
-          await db.sync({ force: true });
           recipe = await Recipe.create({
             title: "Test Recipe",
             recipeUrl: "testrecipe.com"
