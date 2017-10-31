@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 const db = require('../db');
 const Ingredient = require('./ingredient');
-console.log('Model Recipe ran')
+
 const Recipe = db.define('recipe', {
   title: {
     type: Sequelize.STRING,
