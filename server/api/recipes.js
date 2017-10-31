@@ -1,11 +1,8 @@
-import {
-  findOrCreateIngredientsAndAssociations,
-} from '../utils/postRecipeHelpers';
-
 const router = require("express").Router();
 const axios = require("axios");
 const { Recipe, SavedRecipe } = require("../db/models");
 const Promise = require("bluebird");
+const findOrCreateIngredientsAndAssociations = require('../utils/postRecipeHelpers');
 
 module.exports = router;
 

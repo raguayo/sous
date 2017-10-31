@@ -7,7 +7,7 @@ const {
 
 const Promise = require("bluebird");
 
-export const findOrCreateIngredientsAndAssociations = async (req, next, ingredients, recipe) => {
+const findOrCreateIngredientsAndAssociations = async (req, next, ingredients, recipe) => {
   const ingredientIds = [];
   await Promise.each(req.recipe.extendedIngredients, async (ingredient) => {
     try {
@@ -37,3 +37,5 @@ export const findOrCreateIngredientsAndAssociations = async (req, next, ingredie
     }
   });
 };
+
+module.exports = findOrCreateIngredientsAndAssociations;
