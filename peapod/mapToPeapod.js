@@ -90,12 +90,16 @@ function mapToPeapod(ingObj) {
             // return simlar array
             return [undefined, false];
           })
-          .catch(console.error);
-        // todo
+          .catch((err) => {
+            // errors will be forwarded to express error handler up the chain
+            return err;
+          });
       }
     })
-    .catch(console.error);
-  // todo
+    .catch((err) => {
+      // errors will be forwarded to express error handler up the chain
+      return err;
+    });
 }
 
 module.exports = {

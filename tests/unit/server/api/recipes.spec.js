@@ -1,4 +1,4 @@
-/* global describe beforeEach it before after */
+/* global describe beforeEach it before after afterEach */
 
 const { expect } = require("chai");
 const request = require("supertest");
@@ -23,6 +23,7 @@ describe("Recipes API", () => {
   describe("/api/recipes", () => {
     describe("/:url", () => {
       describe("POST /:url", () => {
+        // define variables
         let agent;
         let recipe;
         const newRecipeUrl =
@@ -42,7 +43,7 @@ describe("Recipes API", () => {
             .replyOnce(200, sampleAPIData);
         });
 
-        before("stub mapToPeapod", () => {
+        beforeEach("stub mapToPeapod", () => {
           const createPeapodIngWrapper = () => {
             let counter = 0;
             return () => {
@@ -64,8 +65,9 @@ describe("Recipes API", () => {
             .callsFake(createPeapodIngWrapper());
         });
 
-        after("restore stub", () => {
+        afterEach("restore stubs and mocks", () => {
           stub.restore();
+          mockAxios.reset();
         });
 
         beforeEach("create seed data", async () => {
@@ -105,8 +107,9 @@ describe("Recipes API", () => {
               inGroceryList: "false"
             })
             .expect(201);
+
             validateRecipeProperties(res, expect);
-            validateIngredientProperties(res, expect);
+            validateIngredientProperties(res, expect, true);
           });
 
           it("finds existing recipes", async () => {
@@ -118,6 +121,7 @@ describe("Recipes API", () => {
                 inGroceryList: "false"
               })
               .expect(201);
+
             expect(res.body).to.be.an("object");
             expect(res.body.savedRecipe).to.be.an("array");
             expect(res.body.savedRecipe).to.be.an("array");
@@ -137,12 +141,14 @@ describe("Recipes API", () => {
               .expect(201);
 
             validateRecipeProperties(res, expect);
-            validateIngredientProperties(res, expect);
+            validateIngredientProperties(res, expect, true);
           });
 
           it("finds existing recipes", async () => {
             const url = "testrecipe.com";
-            const res = await agent.post(`/api/recipes/${url}`).expect(201);
+            const res = await agent.post(`/api/recipes/${url}`)
+              .expect(201);
+
             expect(res.body).to.be.an("object");
             expect(res.body.savedRecipe).to.be.an("array");
             expect(res.body.savedRecipe[0].title).to.be.equal("Test Recipe");
@@ -160,19 +166,41 @@ describe("Recipes API", () => {
             mockAxios
               .onGet(`/recipes/extract?forceExtraction=false&url=${formattedUrlForRecipeAPI}`)
               .networkError();
+
             const res = await agent.post(`/api/recipes/${formattedUrlForPost}`)
               .expect(500);
+
             expect(res.error).to.be.an.object;
             expect(res.error.text).to.equal('Network Error');
           });
 
           it("responds descriptively if peapod API malfunctions", async () => {
+            stub.restore();
+            const errorMessage = 'mapToPeapod failed';
+            stub = sinon
+            .stub(peapodModule, "mapToPeapod")
+            .callsFake(() => new Error(errorMessage));
 
+            const res = await agent.post(`/api/recipes/${formattedUrlForPost}`)
+              .expect(500);
 
-            // const res = await agent.post(`/api/recipes/${formattedUrlForPost}`).expect(500);
-            // expect(res.error).to.be.an.object;
-            // expect(res.error.text).to.equal('Network Error');
-          })
+            expect(res.error).to.be.an.object;
+            expect(res.error.text).to.equal(errorMessage);
+          });
+
+          it("does not create an association if Peapod lacks an ingredient",
+            async () => {
+              stub.restore();
+              stub = sinon
+              .stub(peapodModule, "mapToPeapod")
+              .callsFake(() => [undefined, false]);
+
+              const res = await agent.post(`/api/recipes/${formattedUrlForPost}`)
+                .expect(201);
+
+              validateRecipeProperties(res, expect);
+              validateIngredientProperties(res, expect, false);
+            });
         });
       });
     });

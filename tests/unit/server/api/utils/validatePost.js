@@ -13,7 +13,7 @@ const validateRecipeProperties = (res, expect) => {
   expect(recipeFromPost.savedrecipe.recipeId).to.equal(2);
 };
 
-const validateIngredientProperties = (res, expect) => {
+const validateIngredientProperties = (res, expect, withPeapod) => {
   const recipeFromPost = res.body.savedRecipe[0];
   expect(recipeFromPost.ingredients).to.be.an("array");
   expect(recipeFromPost.ingredients[0]).to.be.an("object");
@@ -21,8 +21,12 @@ const validateIngredientProperties = (res, expect) => {
 
   // expect eager loading ingredient and peapodIngredient information
   expect(ingredientFromPost.name).to.equal("butter");
-  expect(typeof ingredientFromPost.peapodIngredient).to.equal("object");
-  expect(ingredientFromPost.peapodIngredient.name).to.equal("test");
+  if (withPeapod) {
+    expect(typeof ingredientFromPost.peapodIngredient).to.equal("object");
+    expect(ingredientFromPost.peapodIngredient.name).to.equal("test");
+  } else {
+    expect(ingredientFromPost.peapodIngredient).to.be.null;
+  }
 
   // expect quantity join information
   expect(ingredientFromPost.ingredientQuantity).to.be.an("object");

@@ -21,6 +21,7 @@ const findOrCreateIngredientsAndAssociations = async (req, next, ingredients, re
       });
       if (ingIsCreated) {
         const peapodIngredient = await peapodModule.mapToPeapod(createdIngredient);
+        if (peapodIngredient instanceof Error) throw peapodIngredient;
         await createdIngredient.setPeapodIngredient(peapodIngredient[0]);
       }
       ingredientIds.push(createdIngredient.id);
