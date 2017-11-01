@@ -1,17 +1,15 @@
 /* global describe beforeEach it before after */
 
-import mockAxios from "../../../mockAdapter";
-import * as peapodModule from "../../../../peapod/mapToPeapod";
-import {
-  validateIngredientProperties,
-  validateRecipeProperties,
-} from './utils/validatePost';
-
 const { expect } = require("chai");
 const request = require("supertest");
 const sinon = require("sinon");
 const app = require("../../../../server");
-
+const mockAxios = require("../../../mockAdapter");
+const {
+  validateIngredientProperties,
+  validateRecipeProperties,
+} = require('./utils/validatePost');
+const peapodModule = require("../../../../peapod/mapToPeapod");
 const {
   Recipe,
   User,

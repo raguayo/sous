@@ -1,11 +1,9 @@
-import { mapToPeapod } from "../../peapod/mapToPeapod";
-
+const Promise = require("bluebird");
+const peapodModule = require("../../peapod/mapToPeapod");
 const {
   Ingredient,
   IngredientQuantity,
 } = require("../db/models");
-
-const Promise = require("bluebird");
 
 const findOrCreateIngredientsAndAssociations = async (req, next, ingredients, recipe) => {
   const ingredientIds = [];
@@ -22,7 +20,7 @@ const findOrCreateIngredientsAndAssociations = async (req, next, ingredients, re
         }
       });
       if (ingIsCreated) {
-        const peapodIngredient = await mapToPeapod(createdIngredient);
+        const peapodIngredient = await peapodModule.mapToPeapod(createdIngredient);
         await createdIngredient.setPeapodIngredient(peapodIngredient[0]);
       }
       ingredientIds.push(createdIngredient.id);

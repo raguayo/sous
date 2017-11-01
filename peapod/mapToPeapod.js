@@ -18,7 +18,7 @@ const promisifiedSearch = function (ingredientName) {
   });
 };
 
-export function mapToPeapod(ingObj) {
+function mapToPeapod(ingObj) {
   return promisifiedSearch(ingObj.name)
     .then((results) => {
       const name = ingObj.name;
@@ -87,7 +87,8 @@ export function mapToPeapod(ingObj) {
               });
             }
             // if api doesn't handle the conversion correctly, dont add entry to database
-            return undefined;
+            // return simlar array
+            return [undefined, false];
           })
           .catch(console.error);
         // todo
@@ -96,3 +97,7 @@ export function mapToPeapod(ingObj) {
     .catch(console.error);
   // todo
 }
+
+module.exports = {
+  mapToPeapod,
+};

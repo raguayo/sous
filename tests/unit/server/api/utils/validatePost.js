@@ -1,4 +1,4 @@
-export const validateRecipeProperties = (res, expect) => {
+const validateRecipeProperties = (res, expect) => {
   expect(res.body).to.be.an("object");
   expect(res.body.savedRecipe).to.be.an("array");
   const recipeFromPost = res.body.savedRecipe[0];
@@ -13,7 +13,7 @@ export const validateRecipeProperties = (res, expect) => {
   expect(recipeFromPost.savedrecipe.recipeId).to.equal(2);
 };
 
-export const validateIngredientProperties = (res, expect) => {
+const validateIngredientProperties = (res, expect) => {
   const recipeFromPost = res.body.savedRecipe[0];
   expect(recipeFromPost.ingredients).to.be.an("array");
   expect(recipeFromPost.ingredients[0]).to.be.an("object");
@@ -29,4 +29,9 @@ export const validateIngredientProperties = (res, expect) => {
   expect(ingredientFromPost.ingredientQuantity.quantity).to.equal(10);
   expect(ingredientFromPost.ingredientQuantity.recipeId).to.equal(2);
   expect(ingredientFromPost.ingredientQuantity.ingredientId).to.equal(3);
+};
+
+module.exports = {
+  validateIngredientProperties,
+  validateRecipeProperties,
 };
