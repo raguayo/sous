@@ -17,7 +17,7 @@ const {
   PeapodIngredient,
 } = require("../../../../server/db/models");
 
-const sampleAPIData = require("./sampleAPIData");
+const sampleAPIData = require("./utils/sampleAPIData");
 
 describe("Recipes API", () => {
   describe("/api/recipes", () => {
@@ -26,20 +26,24 @@ describe("Recipes API", () => {
         let agent;
         let recipe;
         const newRecipeUrl =
-          "http://www.melskitchencafe.com/the-best-fudgy-brownies/";
+        "http://www.melskitchencafe.com/the-best-fudgy-brownies/";
         let stub;
+        const formattedUrlForRecipeAPI = newRecipeUrl
+        .replace(":", "%3A")
+        .replace("/", "%2F");
+        const formattedUrlForPost = newRecipeUrl
+          .replace(":", "%3A")
+          .split("/")
+          .join("%2F");
 
-        before("mock api", () => {
-          const formattedUrl = newRecipeUrl
-            .replace(":", "%3A")
-            .replace("/", "%2F");
+        beforeEach("mock api", () => {
           mockAxios
-            .onGet(`/recipes/extract?forceExtraction=false&url=${formattedUrl}`)
-            .reply(200, sampleAPIData);
+            .onGet(`/recipes/extract?forceExtraction=false&url=${formattedUrlForRecipeAPI}`)
+            .replyOnce(200, sampleAPIData);
         });
 
         before("stub mapToPeapod", () => {
-          const createPeapodIngHOF = () => {
+          const createPeapodIngWrapper = () => {
             let counter = 0;
             return () => {
               counter += 1;
@@ -57,7 +61,7 @@ describe("Recipes API", () => {
           };
           stub = sinon
             .stub(peapodModule, "mapToPeapod")
-            .callsFake(createPeapodIngHOF());
+            .callsFake(createPeapodIngWrapper());
         });
 
         after("restore stub", () => {
@@ -128,12 +132,8 @@ describe("Recipes API", () => {
 
         describe("requests from web app", () => {
           it("posts new recipes", async () => {
-            const formattedUrl = newRecipeUrl
-              .replace(":", "%3A")
-              .split("/")
-              .join("%2F");
             const res = await agent
-              .post(`/api/recipes/${formattedUrl}`)
+              .post(`/api/recipes/${formattedUrlForPost}`)
               .expect(201);
 
             validateRecipeProperties(res, expect);
@@ -152,6 +152,27 @@ describe("Recipes API", () => {
               "celery"
             ]);
           });
+        });
+
+        describe("error handling", () => {
+          it("responds descriptively if recipe API malfunctions", async () => {
+            mockAxios.reset();
+            mockAxios
+              .onGet(`/recipes/extract?forceExtraction=false&url=${formattedUrlForRecipeAPI}`)
+              .networkError();
+            const res = await agent.post(`/api/recipes/${formattedUrlForPost}`)
+              .expect(500);
+            expect(res.error).to.be.an.object;
+            expect(res.error.text).to.equal('Network Error');
+          });
+
+          it("responds descriptively if peapod API malfunctions", async () => {
+
+
+            // const res = await agent.post(`/api/recipes/${formattedUrlForPost}`).expect(500);
+            // expect(res.error).to.be.an.object;
+            // expect(res.error.text).to.equal('Network Error');
+          })
         });
       });
     });
