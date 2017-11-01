@@ -18,8 +18,8 @@ const defaultRecipes = [];
 /**
  * ACTION CREATORS
  */
-const getSavedRecipes = recipes => ({ type: GET_SAVED_RECIPES, recipes });
-const removeSavedRecipe = recipeId => ({ type: REMOVE_SAVED_RECIPE, recipeId });
+export const getSavedRecipes = recipes => ({ type: GET_SAVED_RECIPES, recipes });
+export const removeSavedRecipe = recipeId => ({ type: REMOVE_SAVED_RECIPE, recipeId });
 const toggleFavoriteRecipe = recipe => ({ type: TOGGLE_FAVORITE_RECIPE, recipe });
 /**
  * THUNK CREATORS
@@ -32,7 +32,7 @@ export const fetchSavedRecipes = () =>
       .then((recipes) => {
         dispatch(getSavedRecipes(recipes));
       })
-      .catch(addError);
+      .catch(err => dispatch(addError(err)));
 
 export const deleteSavedRecipe = recipeId =>
   dispatch =>
@@ -42,7 +42,7 @@ export const deleteSavedRecipe = recipeId =>
         dispatch(removeSavedRecipe(recipeId));
         dispatch(removeRecipeFromList(recipeId));
       })
-      .catch(addError);
+      .catch(err => dispatch(addError(err)));
 
 export const postNewRecipe = (url, inGroceryList) =>
   (dispatch) => {
@@ -55,7 +55,7 @@ export const postNewRecipe = (url, inGroceryList) =>
         }
         dispatch(getSavedRecipes(recipes.savedRecipe));
       })
-      .catch(addError);
+      .catch(err => dispatch(addError(err)));
   };
 
 export const favoriteToggle = recipeId => dispatch =>
@@ -64,7 +64,7 @@ export const favoriteToggle = recipeId => dispatch =>
     .then((toggled) => {
       dispatch(toggleFavoriteRecipe(toggled));
     })
-    .catch(addError);
+    .catch(err => dispatch(addError(err)));
 /**
  * REDUCER
  */
