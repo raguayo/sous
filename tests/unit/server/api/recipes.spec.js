@@ -170,7 +170,7 @@ describe("Recipes API", () => {
             const res = await agent.post(`/api/recipes/${formattedUrlForPost}`)
               .expect(500);
 
-            expect(res.error).to.be.an.object;
+            expect(res.error instanceof Error).to.equal(true);
             expect(res.error.text).to.equal('Network Error');
           });
 
@@ -184,7 +184,7 @@ describe("Recipes API", () => {
             const res = await agent.post(`/api/recipes/${formattedUrlForPost}`)
               .expect(500);
 
-            expect(res.error).to.be.an.object;
+            expect(res.error instanceof Error).to.equal(true);
             expect(res.error.text).to.equal(errorMessage);
           });
 

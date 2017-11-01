@@ -27,7 +27,7 @@ describe('User routes', () => {
       return request(app).get('/api/users').expect(200).then((res) => {
         expect(res.body).to.be.an('array');
         expect(res.body[0].email).to.be.equal(codysEmail);
-        expect(res.body[0].password).to.be.undefined;
+        expect(res.body[0].password).to.be.an('undefined');
         expect(res.body[0].id).to.be.equal(1);
       });
     });

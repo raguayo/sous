@@ -11,7 +11,7 @@ const promisifiedSearch = function (ingredientName) {
   return new Promise((success, reject) => {
     peapod.search(ingredientName, (err, result) => {
       if (err) {
-        return reject(err.message);
+        return reject(err);
       }
       return success(result);
     });
