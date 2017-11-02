@@ -1,7 +1,7 @@
 const Peapod = require('./api');
 const axios = require('axios');
 const PeapodIngredient = require('../server/db/models/peapodIng');
-const { adjustSizeAndUnit } = require('./utilityFuncs');
+const utils = require('./utilityFuncs');
 
 const config = { username: process.env.INIT_PEAPOD_USERNAME, password: process.env.INIT_PEAPOD_PASSWORD };
 
@@ -29,8 +29,7 @@ const mapToPeapod = async (ingObj) => {
       prodId,
       price,
     } = results.products[0];
-
-    const adjusted = adjustSizeAndUnit(size, unitMeasure, peapodName);
+    const adjusted = utils.adjustSizeAndUnit(size, unitMeasure, peapodName);
     let newSize = adjusted[0];
     const newUnitMeasure = adjusted[1];
 

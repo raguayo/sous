@@ -5,6 +5,7 @@ const sinon = require("sinon");
 
 const mockAxios = require('../../mockAdapter');
 const Peapod = require('../../../peapod/api');
+const utils = require('../../../peapod/utilityFuncs');
 const mapToPeapod = require('../../../peapod/mapToPeapod').mapToPeapod;
 
 const { PeapodIngredient } = require('../../../server/db/models');
@@ -29,6 +30,7 @@ describe('mapToPeapod', async () => {
     type: "CONVERSION",
   };
   let stub;
+  let adjustStub;
 
   beforeEach('stub peapod.search', () => {
     const peapodSearchResults = {
@@ -43,13 +45,19 @@ describe('mapToPeapod', async () => {
       });
   });
 
+  beforeEach('stub adjustSizeAndUnit', () => {
+    adjustStub = sinon.stub(utils, 'adjustSizeAndUnit')
+      .returns([1, 'LB']);
+  });
+
   beforeEach('mock conversion API', () => {
     mockAxios.onAny().reply(200, conversionResponse);
   });
 
-  afterEach('restore mock axios', () => {
+  afterEach('restore and reset stubs and mocks', () => {
     mockAxios.reset();
     stub.restore();
+    adjustStub.restore();
   });
 
   it('returns a promise that resolves to [instance, isCreated]',
