@@ -29,6 +29,7 @@ const mapToPeapod = async (ingObj) => {
       prodId,
       price,
     } = results.products[0];
+
     const adjusted = utils.adjustSizeAndUnit(size, unitMeasure, peapodName);
     let newSize = adjusted[0];
     const newUnitMeasure = adjusted[1];

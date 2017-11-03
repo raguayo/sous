@@ -23,7 +23,6 @@ function convertSizeToNumber(quantity) {
 }
 
 function adjustSizeAndUnit(origSize, origUnitMeasure, peapodName) {
-  console.log('orig')
   // copy to avoid modifying original values
   let size = origSize;
   let unitMeasure = origUnitMeasure;
