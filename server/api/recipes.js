@@ -21,7 +21,7 @@ router.param("url", async (req, res, next, url) => {
           {
             baseURL: "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com",
             headers: { "X-Mashape-Key": process.env.RECIPE_API_KEY }
-          },
+          }
         );
         recipe = apiResponse.data;
       }
@@ -64,7 +64,7 @@ router.post("/:url", async (req, res, next) => {
         req,
         next,
         req.recipe.extendedIngredients,
-        newRecipe,
+        newRecipe
       );
 
       // And set req.recipe to the created recipe instance

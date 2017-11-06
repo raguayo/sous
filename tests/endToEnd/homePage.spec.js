@@ -1,22 +1,45 @@
-/* global describe it */
+/* global describe it beforeEach afterEach */
 
 import { expect } from 'chai';
 import webdriver from 'selenium-webdriver';
 
+const User = require('../../server/db/models').User;
+
 const By = webdriver.By;
-// const until = webdriver.until;
+const until = webdriver.until;
 
 const driver = new webdriver.Builder()
   .forBrowser('firefox')
   .build();
 
 describe('End to end tests', () => {
+  const user = {
+    email: 'test@test.com',
+    password: 'test'
+  };
+
+  beforeEach('load webpage', function () {
+    this.timeout(5000);
+    return driver.get('http://localhost:8080');
+  });
+
+  afterEach('close driver', () => driver.quit());
+
   describe('Splash page', () => {
     it('loads successfully', async () => {
-      await driver.get('https://drsous.herokuapp.com/');
       const greeting = await driver.findElement(By.id('greeting')).getText();
       expect(greeting).to.equal('meet sous,');
-      return driver.quit();
     }).timeout(6000);
+  });
+
+  describe('Auth', () => {
+    it.only('successfully logs in a user', async () => {
+      driver.findElement(By.css('a[href="/login"]')).click();
+      driver.wait(until.elementLocated(By.name('login')), 1000);
+      await driver.findElement(By.name('email')).sendKeys(user.email);
+      await driver.findElement(By.name('password')).sendKeys(user.password);
+      await driver.findElement(By.css('form > button')).click();
+      return driver.wait(until.elementLocated(By.name('recipeUrl')), 1000);
+    }).timeout(3000);
   });
 });
