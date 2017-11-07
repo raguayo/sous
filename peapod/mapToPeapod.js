@@ -90,11 +90,17 @@ function mapToPeapod(ingObj) {
             // return simlar array
             return [undefined, false];
           })
-          .catch(console.error);
+          .catch((err) => {
+            console.error(err);
+            return [undefined, false];
+          });
         // todo
       }
     })
-    .catch(console.error);
+    .catch((err) => {
+      console.error(err);
+      return [undefined, false];
+    });
   // todo
 }
 

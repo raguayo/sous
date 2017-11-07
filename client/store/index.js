@@ -1,6 +1,8 @@
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import createLogger from 'redux-logger';
 import thunkMiddleware from 'redux-thunk';
+import { composeWithDevTools } from 'redux-devtools-extension';
+
 import user from './user';
 import groceryListRecipes from './groceryListRecipes';
 import savedRecipes from './savedRecipes';
@@ -11,7 +13,7 @@ import suggestedRecipesDirty from './suggestedRecipeDirty';
 
 const reducer = combineReducers({ user, groceryListRecipes, savedRecipes, excludedIngredients, error, suggestedRecipes, suggestedRecipesDirty });
 
-const middleware = applyMiddleware(thunkMiddleware, createLogger({ collapsed: true }));
+const middleware = composeWithDevTools(applyMiddleware(thunkMiddleware, createLogger({ collapsed: true })));
 
 const store = createStore(reducer, middleware);
 

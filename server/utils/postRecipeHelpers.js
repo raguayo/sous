@@ -6,9 +6,10 @@ const {
 } = require("../db/models");
 
 const findOrCreateIngredientsAndAssociations = async (req, next, ingredients, recipe) => {
-  const ingredientIds = [];
-  await Promise.each(req.recipe.extendedIngredients, async (ingredient) => {
-    try {
+  try {
+    const ingredientIds = [];
+    for (let i = 0; i < ingredients.length; i++) {
+      const ingredient = ingredients[i];
       if (ingredient.unit === "") ingredient.unit = "piece";
       const [createdIngredient, ingIsCreated] = await Ingredient.findOrCreate({
         where: {
@@ -24,16 +25,23 @@ const findOrCreateIngredientsAndAssociations = async (req, next, ingredients, re
         await createdIngredient.setPeapodIngredient(peapodIngredient[0]);
       }
       ingredientIds.push(createdIngredient.id);
-      await IngredientQuantity.create({
-        recipeId: recipe.id,
-        ingredientId: createdIngredient.id,
-        quantity: ingredient.amount
+      // todo: change this to hook to aggregate repeated ingredients
+      await IngredientQuantity.findOrCreate({
+        where: {
+          recipeId: recipe.id,
+          ingredientId: createdIngredient.id
+        },
+        defaults: {
+          quantity: ingredient.amount
+        }
       });
       await recipe.addIngredients(ingredientIds);
-    } catch (err) {
-      next(err);
     }
-  });
+  } catch (err) {
+    console.error(err);
+    // return error to be handled in the route
+    return err;
+  }
 };
 
 module.exports = findOrCreateIngredientsAndAssociations;
