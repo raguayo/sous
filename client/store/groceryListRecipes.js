@@ -45,7 +45,7 @@ export const fetchGroceryListRecipes = () => dispatch =>
     .then((recipes) => {
       dispatch(getListRecipes(recipes));
     })
-    .catch(addError);
+    .catch(err => dispatch(addError(err)));
 
 export const deleteRecipeFromList = recipeId => dispatch =>
   axios
@@ -54,14 +54,12 @@ export const deleteRecipeFromList = recipeId => dispatch =>
     .then(() => {
       dispatch(removeRecipeFromList(recipeId));
     })
-    .catch(addError);
+    .catch(err => dispatch(addError(err)));
 
 export const deleteRecipesFromList = () => dispatch =>
   axios
     .delete('/api/grocery-list/recipes')
-    .then((res) => {
-      return res.data;
-    })
+    .then(res => res.data)
     .then(() => {
       dispatch(clearList());
       dispatch(deleteExcludedIngredients());
