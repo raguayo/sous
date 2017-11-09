@@ -14,7 +14,7 @@
     "start-dev": "npm run build-client-watch & npm run start-server",
     "start-server": "NODE_ENV='development' nodemon server -e html,js,scss --ignore public",
     "unit-tests": "NODE_ENV='test' DATABASE_URL='postgres://localhost:5432/raww-test' mocha -w ./tests/index.js ./tests/unit/**/*.spec.js ./tests/unit/**/**/*.spec.js --compilers js:babel-register --require babel-polyfill",
-    "end-tests": "NODE_ENV='test' DATABASE_URL='postgres://localhost:5432/raww-test' npm run start-dev & SERVER_PID=$! & mocha ./tests/index.js ./tests/endToEnd/*.spec.js ./tests/endToEnd/**/*.spec.js ./tests/endToEnd/**/**/*.spec.js --compilers js:babel-register --require babel-polyfill & kill SERVER_PID"
+    "end-tests": "NODE_ENV='test' DATABASE_URL='postgres://localhost:5432/raww-test' mocha ./tests/index.js ./tests/endToEnd/*.spec.js ./tests/endToEnd/**/*.spec.js ./tests/endToEnd/**/**/*.spec.js --compilers js:babel-register --require babel-polyfill"
   },
   "author": "",
   "license": "ISC",
