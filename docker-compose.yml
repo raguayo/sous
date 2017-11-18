@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+  sous-postgres:
+    build:
+      context: .
+      dockerfile: Dockerfile.db
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.web
+    ports:
+      - 8080:8080
