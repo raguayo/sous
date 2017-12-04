@@ -1,0 +1,2 @@
+#! /usr/bin/env bash
+docker-compose run test npm run unit-tests
