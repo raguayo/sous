@@ -4,6 +4,6 @@ WORKDIR /code
 RUN npm install
 RUN npm install --only=dev
 COPY . /code
-ENV DATABASE_URL='postgres://postgres@sous-postgres:5432'
 CMD npm run start-dev
+
 EXPOSE 8080

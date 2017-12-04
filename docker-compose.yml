@@ -2,9 +2,9 @@ version: '3'
 
 services:
   sous-postgres:
-    build:
-      context: .
-      dockerfile: Dockerfile.db
+    image: postgres:9.6
+  sous-postgres-test:
+    image: postgres:9.6
   web:
     build:
       context: .
@@ -13,3 +13,34 @@ services:
       - .:/code
     ports:
       - 8080:8080
+    environment:
+      - DATABASE_URL=postgres://postgres@sous-postgres:5432
+  test:
+    build:
+      context: .
+      dockerfile: Dockerfile.web
+    volumes:
+      - .:/code
+    environment:
+      - DATABASE_URL=postgres://postgres@sous-postgres-test:5432
+  selenium-hub:
+    image: selenium/hub
+    ports:
+      - "4444:4444"
+  chrome:
+      image: selenium/node-chrome
+      volumes:
+        - /dev/shm:/dev/shm # Mitigates the Chromium issue described at https://code.google.com/p/chromium/issues/detail?id=519952
+      depends_on:
+        - selenium-hub
+      environment:
+        - HUB_PORT_4444_TCP_ADDR=selenium-hub
+        - HUB_PORT_4444_TCP_PORT=4444
+  firefox:
+      image: selenium/node-firefox
+      depends_on:
+        - selenium-hub
+      environment:
+        - HUB_PORT_4444_TCP_ADDR=selenium-hub
+        - HUB_PORT_4444_TCP_PORT=4444
+
