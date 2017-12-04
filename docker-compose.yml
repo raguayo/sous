@@ -15,6 +15,8 @@ services:
       - 8080:8080
     environment:
       - DATABASE_URL=postgres://postgres@sous-postgres:5432
+    depends_on:
+      - sous-postgres
   test:
     build:
       context: .
@@ -23,6 +25,10 @@ services:
       - .:/code
     environment:
       - DATABASE_URL=postgres://postgres@sous-postgres-test:5432
+    depends_on:
+      - firefox
+      - sous-postgres-test
+      - selenium-hub
   selenium-hub:
     image: selenium/hub
     ports:
