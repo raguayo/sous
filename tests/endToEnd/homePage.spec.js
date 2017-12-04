@@ -11,6 +11,7 @@ const until = webdriver.until;
 describe('End to end tests', () => {
   let driver;
   const user = {
+    name: 'Mr. Testerson',
     email: 'test@test.com',
     password: 'test'
   };
@@ -69,7 +70,10 @@ describe('End to end tests', () => {
       await driver.findElement(By.name('email')).sendKeys(user.email);
       await driver.findElement(By.name('password')).sendKeys(user.password);
       await driver.findElement(By.css('form > button')).click();
-      return driver.wait(until.elementLocated(By.name('recipeUrl')), 3000);
-    }).timeout(10000);
+      await driver.wait(until.elementLocated(By.tagName('h1')), 5000);
+      const welcomeMessage = await driver.findElement(By.tagName('h1'));
+      const welcomeText = await welcomeMessage.getText();
+      expect(welcomeText).to.include(user.name);
+    }).timeout(15000);
   });
 });
