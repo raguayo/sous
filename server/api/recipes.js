@@ -60,12 +60,14 @@ router.post("/:url", async (req, res, next) => {
       });
 
       // Find or create the ingredients and relevant associations
-      ingredientAssc = findOrCreateIngredientsAndAssociations(
+      ingredientAssc = await findOrCreateIngredientsAndAssociations(
         req,
         next,
         req.recipe.extendedIngredients,
         newRecipe
       );
+      // break if ingredients are not associated and created successfully
+      if (ingredientAssc instanceof Error) throw ingredientAssc;
 
       // And set req.recipe to the created recipe instance
       req.recipe = newRecipe;
@@ -78,7 +80,7 @@ router.post("/:url", async (req, res, next) => {
       null;
 
     // Ensure all the associations finish before proceeding
-    await Promise.all([ingredientAssc, savedRecipeAssc, groceryListAssc]);
+    await Promise.all([savedRecipeAssc, groceryListAssc]);
 
     // Get the recipes with all the association information included
     const [savedRecipe, groceryListRecipe] = await Promise.all([

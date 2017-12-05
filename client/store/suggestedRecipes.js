@@ -26,7 +26,7 @@ export const fetchRecipeSuggestions = peapodIngredients =>
     axios.post('/api/grocery-list/suggestions', { peapodIngredients })
     .then(res => res.data)
     .then(suggRecipes => dispatch(addSuggestedRecipes(suggRecipes)))
-    .catch(addError);
+    .catch(err => dispatch(addError(err)));
 
 /**
  * REDUCER
