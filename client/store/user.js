@@ -3,6 +3,7 @@ import history from '../history';
 import { fetchGroceryListRecipes } from './groceryListRecipes';
 import { fetchSavedRecipes } from './savedRecipes';
 import { addError } from './error';
+import { fetchExcludedIngredients } from './excludedIngredients';
 
 /**
  * ACTION TYPES
@@ -33,8 +34,14 @@ const updateUserPassword = user => ({ type: UPDATE_USER_PASSWORD, user });
 export const me = () =>
   dispatch =>
     axios.get('/auth/me')
-      .then(res =>
-        dispatch(getUser(res.data || defaultUser)))
+      .then((res) => {
+        dispatch(getUser(res.data || defaultUser));
+        if (res.data) {
+          dispatch(fetchGroceryListRecipes());
+          dispatch(fetchSavedRecipes());
+          dispatch(fetchExcludedIngredients());
+        }
+      })
       .catch(addError);
 
 export const logout = () =>
@@ -53,6 +60,7 @@ export const auth = (email, password, method, username) =>
         dispatch(getUser(res.data));
         dispatch(fetchGroceryListRecipes());
         dispatch(fetchSavedRecipes());
+        dispatch(fetchExcludedIngredients());
         history.push('/recipes');
       })
       .catch(error =>

@@ -24,7 +24,7 @@ export const fetchExcludedIngredients = () => dispatch =>
       });
       dispatch(getExcludedIngredients(excludedIds));
     })
-    .catch(addError);
+    .catch(err => dispatch(addError(err)));
 
 export const deleteExcludedIngredient = excludedId => dispatch =>
   axios.delete(`/api/grocery-list/excluded/${excludedId}`)
@@ -32,7 +32,7 @@ export const deleteExcludedIngredient = excludedId => dispatch =>
     .then(() => {
       dispatch(removeExcludedIngredient(excludedId));
     })
-    .catch(addError);
+    .catch(err => dispatch(addError(err)));
 
 export const deleteExcludedIngredients = () => dispatch =>
   axios.delete('/api/grocery-list/excluded')
@@ -40,7 +40,7 @@ export const deleteExcludedIngredients = () => dispatch =>
     .then(() => {
       dispatch(clearExcludedIngredients());
     })
-    .catch(addError);
+    .catch(err => dispatch(addError(err)));
 
 export const postNewExcluded = ingredientId => dispatch =>
   axios.post('/api/grocery-list/excluded', { ingredientId })
@@ -48,7 +48,7 @@ export const postNewExcluded = ingredientId => dispatch =>
     .then((excludedId) => {
       dispatch(addExcludedIngredient(excludedId));
     })
-    .catch(addError);
+    .catch(err => dispatch(addError(err)));
 
 export default function (state = defaultExcluded, action) {
   switch (action.type) {

@@ -8,8 +8,8 @@ import { Main, Login, Signup, CurrentRecipes, Splash, SavedRecipes, GroceryList,
 import { me, fetchGroceryListRecipes, fetchSavedRecipes, fetchExcludedIngredients } from './store';
 
 class Routes extends Component {
-  componentWillMount() {
-    this.props.loadInitialData();
+  componentDidMount() {
+    this.props.loadUser();
   }
 
   render() {
@@ -47,11 +47,8 @@ const mapState = (state) => {
 
 const mapDispatch = (dispatch) => {
   return {
-    loadInitialData() {
+    loadUser() {
       dispatch(me());
-      dispatch(fetchGroceryListRecipes());
-      dispatch(fetchSavedRecipes());
-      dispatch(fetchExcludedIngredients());
     },
   };
 };
@@ -59,6 +56,6 @@ const mapDispatch = (dispatch) => {
 export default connect(mapState, mapDispatch)(Routes);
 
 Routes.propTypes = {
-  loadInitialData: PropTypes.func.isRequired,
+  loadUser: PropTypes.func.isRequired,
   isLoggedIn: PropTypes.bool.isRequired,
 };
