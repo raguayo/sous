@@ -22,6 +22,48 @@ function convertSizeToNumber(quantity) {
   return quantity;
 }
 
+function adjustSizeAndUnit(origSize, origUnitMeasure, peapodName) {
+  // copy to avoid modifying original values
+  let size = origSize;
+  let unitMeasure = origUnitMeasure;
+
+  const newUnitArr = ['OZ', 'CT', 'PINT', 'LB', 'LTR', 'ML', 'BUNCH', 'GAL', 'DOZ'];
+  const newUnitRegEx = new RegExp("\\b(" + newUnitArr.join("|") + ")\\b");
+  // remove APX from size
+  if (size.slice(0, 3) === 'APX') size = size.slice(4);
+  // separate the number and unit of the size
+  if (size.indexOf(unitMeasure) !== -1) size = size.slice(0, size.indexOf(unitMeasure));
+  else {
+    // handle if unitMeasure and size unit don't match
+    const newUnitMatchArr = size.match(newUnitRegEx);
+    if (newUnitMatchArr) {
+      unitMeasure = newUnitMatchArr[0];
+      size = size.slice(0, size.indexOf(unitMeasure));
+    } else {
+      unitMeasure = 'piece';
+    }
+  }
+  // handle if there are pk and ct included in the ingredient name
+  const hyphenIdx = peapodName.lastIndexOf('-');
+  if (+hyphenIdx > (peapodName.length - 10)) {
+    const potentialAdjustmentArr = peapodName.slice(hyphenIdx + 1).split(' ');
+    if (potentialAdjustmentArr.includes('ct')) {
+      size = potentialAdjustmentArr.slice(0, potentialAdjustmentArr.indexOf('ct')).join();
+      unitMeasure = 'piece';
+    } else if (potentialAdjustmentArr[1] === 'pk') {
+      size *= +potentialAdjustmentArr[0];
+    }
+  }
+  // should handle hyphens, fractions, ignore other text
+  size = convertSizeToNumber(size);
+  // switch 'EA' with 'CT' to standardize
+  if (unitMeasure === 'EA') unitMeasure = 'CT';
+  // if (name === 'corn starch') name = 'cornstarch';
+  // change Peapod unit and size to match our db
+
+  return [size, unitMeasure];
+}
+
 module.exports = {
-  convertSizeToNumber,
+  adjustSizeAndUnit,
 };
