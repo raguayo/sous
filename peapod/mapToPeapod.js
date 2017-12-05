@@ -11,7 +11,7 @@ const promisifiedSearch = function (ingredientName) {
   return new Promise((success, reject) => {
     peapod.search(ingredientName, (err, result) => {
       if (err) {
-        return reject(err.message);
+        return reject(err);
       }
       return success(result);
     });
@@ -91,17 +91,15 @@ function mapToPeapod(ingObj) {
             return [undefined, false];
           })
           .catch((err) => {
-            console.error(err);
-            return [undefined, false];
+            // errors will be forwarded to express error handler up the chain
+            return err;
           });
-        // todo
       }
     })
     .catch((err) => {
-      console.error(err);
-      return [undefined, false];
+      // errors will be forwarded to express error handler up the chain
+      return err;
     });
-  // todo
 }
 
 module.exports = {

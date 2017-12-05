@@ -68,7 +68,7 @@ Peapod.prototype.request = function (method, path, params, cb) {
 Peapod.prototype.makeInitialRequest = function(cb) {
     var options = {
         method: 'GET',
-        url: 'http://www.peapod.com/shop/auth.jhtml',
+        url: 'http://www.peapod.com/shop/auth/index.jhtml',
         gzip: true,
         jar: this.jar
     };
@@ -131,7 +131,7 @@ Peapod.prototype.makeLoginRequest = function(cb) {
         if (err) {
             cb(err)
         } else if (res.statusCode !== 200) {
-            cb(new Error(body.msg));
+            cb(new Error(body.response.msg));
         } else {
             cb(null);
         }
