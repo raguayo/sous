@@ -1,0 +1,142 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <style>
+    .menu {
+      position: relative;
+      z-index: 10;
+    }
+
+    .menu-item {
+      position: relative;
+      display: block;
+      outline: none;
+      margin: 0 0 1.5em;
+      line-height: 1;
+    }
+
+    .menu-item-name,
+    .menu-item-label {
+      position: relative;
+      display: inline-block;
+    }
+
+    .menu-item-name {
+      font-size: 1.25em;
+    }
+
+    .menu-item-label {
+      margin: 0 0 0 0.5em;
+    }
+
+    .menu-raww {
+      font-size: 1.15em;
+      font-family: 'Nunito', sans-serif;
+    }
+
+    .menu-raww a {
+      color: #272727;
+    }
+
+    .menu-raww .menu-item {
+      margin: 0 0 1em;
+    }
+
+    .menu-raww .menu-item-name {
+      padding: 0 0.35em;
+      font-weight: bold;
+      line-height: 1.4;
+      transition: color 0.5s;
+      transition-timing-function: cubic-bezier(0.2,1,0.3,1);
+    }
+
+    .menu-raww .menu-item-name::before {
+      content: '';
+      position: absolute;
+      z-index: -1;
+      width: 100%;
+      height: 50%;
+      left: 0;
+      bottom: 0;
+      opacity: 0.3;
+      transform: scale3d(0,1,1);
+      transform-origin: 0% 50%;
+      transition: transform 0.5s;
+      transition-timing-function: cubic-bezier(0.2,1,0.3,1);
+    }
+
+    .menu-raww .menu-item-label {
+      font-size: 1em;
+      letter-spacing: 0.05em;
+      transform: translate3d(-0.5em,0,0);
+      transition: transform 0.5s, color 0.5s;
+      transition-timing-function: cubic-bezier(0.2,1,0.3,1);
+    }
+
+    .menu-raww .menu-item-label::before {
+      content: '';
+      position: absolute;
+      z-index: -1;
+      width: 25%;
+      height: 1px;
+      left: 0.05em;
+      top: 1.25em;
+      opacity: 0.3;
+      transform: scale3d(0,1,1);
+      transform-origin: 100% 50%;
+      transition: transform 0.5s;
+      transition-timing-function: cubic-bezier(0.2,1,0.3,1);
+    }
+
+    .menu-raww .menu-item:nth-child(odd) .menu-item-name::before {
+      background: #fe628e;
+    }
+
+    .menu-raww .menu-item:nth-child(even) .menu-item-name::before  {
+      background: #6265fe;
+    }
+
+    /* Hover */
+
+    .menu-raww .menu-item:nth-child(odd):hover{
+      color: #fe628e;
+    }
+
+    .menu-raww .menu-item:nth-child(even):hover {
+      color: #6265fe;
+    }
+
+    .menu-raww .menu-item:hover .menu-item-name::before,
+    .menu-raww .menu-item:focus .menu-item-name::before {
+      transform: scale3d(1,1,1);
+    }
+
+  </style>
+</head>
+
+<body>
+  <nav class="menu menu-raww">
+    <a class="menu-item" href="#">
+      <span class="menu-item-name">Artists</span>
+    </a>
+    <a class="menu-item" href="#">
+      <span class="menu-item-name">Exhibitions</span>
+    </a>
+    <a class="menu-item" href="#">
+      <span class="menu-item-name">Schedule</span>
+    </a>
+    <a class="menu-item" href="#">
+      <span class="menu-item-name">Mission</span>
+    </a>
+    <a class="menu-item" href="#">
+      <span class="menu-item-name">The Gardens</span>
+    </a>
+    <a class="menu-item" href="#">
+      <span class="menu-item-name">Buy Tickets</span>
+    </a>
+    <a class="menu-item" href="#">
+      <span class="menu-item-name">Contact</span>
+    </a>
+  </nav>
+</body>
+</html>
